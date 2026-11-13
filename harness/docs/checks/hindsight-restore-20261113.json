@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "baselineCommit": "69590054d0f82a26dfac988ac339f428c6d0d2fb",
+  "scope": "Real Hindsight 1.2.0 API and source-ledger same-version cold restore validation; external models are loopback synthetic providers",
+  "installerBuilt": false,
+  "productionInstalled": false,
+  "productImplementationChanged": false,
+  "dependenciesDownloaded": true,
+  "dependenciesUpgraded": false,
+  "realBusinessDataRead": false,
+  "paidModelCalls": 0,
+  "remotePublished": false,
+  "applicationActivationImplemented": false,
+  "engines": {
+    "hindsight": "1.2.0",
+    "pg0": "0.15.2",
+    "postgres": "18.1",
+    "restic": "0.19.1",
+    "hindsightWheelSha256": "fd170af576ab82de03047e1122eafd474d8fcfd410da8497305413d0f028520e",
+    "migrationHeads": [
+      "c7e2f9a4d1b8"
+    ]
+  },
+  "environment": {
+    "directory": "harness/.local/hindsight-restore-runtime/venv",
+    "python": "3.12.14",
+    "installedPackageRecords": 190,
+    "requirements": "harness/packaging/case-memory-requirements.lock",
+    "installation": "Clear PYTHONPATH, then pip --isolated install --ignore-installed --no-deps --require-hashes --only-binary=:all: -r packaging/case-memory-requirements.lock",
+    "pipCheckExit": 0,
+    "checkLog": "environment-check-final.log",
+    "dependencyVersionsFromExistingLock": true
+  },
+  "results": {
+    "target": {
+      "command": "node --test desktop/hindsight-restore.test.cjs",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "log": "native-green.log",
+      "note": "Before teardown fault-handling correction; final full run includes corrected cleanup."
+    },
+    "fullOfflineBeforeCleanup": {
+      "command": "npm test",
+      "exitCode": 0,
+      "node": {
+        "passed": 464,
+        "failed": 0,
+        "skipped": 2
+      },
+      "python": {
+        "passed": 472,
+        "failed": 0,
+        "skipped": 1,
+        "subtestsPassed": 36
+      },
+      "log": "full-offline.log"
+    },
+    "fullOfflineFinal": {
+      "command": "npm test",
+      "exitCode": 0,
+      "nodeFiles": 125,
+      "pythonFiles": 36,
+      "log": "full-offline-final.log",
+      "node": {
+        "passed": 464,
+        "failed": 0,
+        "skipped": 2
+      },
+      "python": {
+        "passed": 472,
+        "failed": 0,
+        "skipped": 1,
+        "subtestsPassed": 36
+      }
+    },
+    "measured": {
+      "cases": 2,
+      "restoredMemories": 2,
+      "copyAfterAppend": 3,
+      "modelExtractionCalls": 4,
+      "embeddingCalls": 14,
+      "reindexedOnRead": false,
+      "migrationHeadsMatchPinnedPackage": true,
+      "clusterIdentityPreserved": true,
+      "sourceAndCopyIndependent": true,
+      "originalAndCopyRestart": true,
+      "sourceProvenancePreserved": true,
+      "crossCaseAccessDenied": true,
+      "keywordFallbackNotAccepted": true,
+      "restoreReviewMarkersPreserved": true,
+      "pythonNetworkGuardNegativeProbe": true,
+      "wholeProcessTreeNetworkIsolation": false
+    }
+  },
+  "independentReviews": {
+    "Spec": {
+      "initialFindings": 0,
+      "unresolvedFindings": 0,
+      "command": "node --test --test-concurrency=1 desktop/hindsight-restore.test.cjs",
+      "exitCode": 0,
+      "passed": 2,
+      "skipped": 0,
+      "report": "spec-review/results.json",
+      "note": "Independent native run before teardown correction; updated static review confirms final cleanup source."
+    },
+    "Standards": {
+      "initialFindings": 1,
+      "severity": "P2",
+      "unresolvedFindings": 0,
+      "finding": "First stop rejection prevented remaining synthetic runtimes and registrations from being cleaned up.",
+      "initialProbeExitCode": 0,
+      "initial": "standards-review/cleanup-failure.log",
+      "recheckCommand": "node cleanup-failure-green.cjs",
+      "recheckExitCode": 0,
+      "recheck": "standards-review/cleanup-failure-green.log",
+      "report": "standards-review/standards-final.md",
+      "observed": {
+        "secondRuntimeStopped": true,
+        "failedRootRetained": true,
+        "healthyRegistrationDeleted": true,
+        "badRegistrationRetained": true,
+        "providerClosed": true
+      },
+      "note": "Independent probe reuses actual teardown with controlled objects; does not start PostgreSQL."
+    }
+  },
+  "auxiliaryFailures": [
+    {
+      "logs": [
+        "environment-install.log",
+        "environment-check.log",
+        "native-first.log"
+      ],
+      "installExitCode": 0,
+      "checkExitCode": 1,
+      "testExitCode": 1,
+      "reason": "Inherited development PYTHONPATH made some pinned dependencies appear installed outside the venv; real server lacked uvicorn. Reinstalled with empty PYTHONPATH and ignore-installed; final pip check0."
+    },
+    {
+      "log": "environment-check-isolated.log",
+      "exitCode": 1,
+      "reason": "Intermediate check while isolated installation was still in progress; not final environment result."
+    },
+    {
+      "logs": [
+        "native-isolated.log",
+        "native-diagnostic.log",
+        "native-diagnostic-output.log"
+      ],
+      "exitCode": 1,
+      "reason": "Test-only network hook rejected byte-form loopback host names; normalized bytes before IP classification."
+    },
+    {
+      "logs": [
+        "native-loopback-fixed.log",
+        "network-guard.log"
+      ],
+      "exitCode": 1,
+      "reason": "Windows CRLF mismatch in network-probe assertion. Real Hindsight integration passed in native-loopback-fixed.log; final assertion normalized line ending."
+    }
+  ],
+  "limits": [
+    "Same-version restore and empty-schema startup migration only; no cross-Hindsight-version upgrade.",
+    "LLM and embeddings are deterministic loopback synthetic; no semantic-quality or real ONNX model-resource acceptance.",
+    "Restored delivery remains guarded; synthetic activation fixture only. Settings application, credentials, pending work, manual activation and desktop entry remain pending.",
+    "No installer, installed product change, real business material, paid model call, cross-machine, power-loss, disk-full or large-data acceptance.",
+    "Python audit hook is not an operating-system firewall or isolation of native subprocess networking."
+  ],
+  "retainedTemporaryDirectories": {
+    "reason": "Automatic approval review rejected the explicit recursive deletion command with 'blocked by policy'; no alternative deletion attempted.",
+    "paths": [
+      "D:/CodexChecks/AI-Shixiong-hindsight-restore-20261113/tmp/qx-hindsight-restore-FtygEH",
+      "D:/CodexChecks/AI-Shixiong-hindsight-restore-20261113/tmp/qx-hindsight-restore-lQN9K9",
+      "D:/CodexChecks/AI-Shixiong-hindsight-restore-20261113/tmp/qx-hindsight-restore-u1Iq31"
+    ]
+  },
+  "evidenceRoot": "D:/CodexChecks/AI-Shixiong-hindsight-restore-20261113",
+  "checkedAt": "2026-11-13T08:07:12.7950330Z",
+  "sourceFiles": [
+    {
+      "path": "harness/desktop/hindsight-restore.test.cjs",
+      "sha256": "e27a6417a75d563c449d2a51de77788021658878528b058253710eba9460c798"
+    },
+    {
+      "path": "harness/tests/hindsight-restore-fixture.py",
+      "sha256": "ee64ab159d36c3841faec04d9a2aff6c8033ff75dba58e9942dea70583d9993a"
+    },
+    {
+      "path": "harness/tests/hindsight-loopback/sitecustomize.py",
+      "sha256": "2a79753415c2602de37e068bd08916685ab0c36e6efee69f279b1bab299156ce"
+    },
+    {
+      "path": "harness/desktop/case-memory-runtime.cjs",
+      "sha256": "22ba683b6241b44597d97716ddf5e2fd69b3e5ab8be9f6b4357903a25145e310"
+    },
+    {
+      "path": "harness/desktop/local-backup.cjs",
+      "sha256": "5f12b2b7493113ab16a49a0cd092ff1cedb4445a8b06fba5f68c03b12bc1aa42"
+    },
+    {
+      "path": "harness/bridge/case_memory.py",
+      "sha256": "322dec1ce44ff9c8a46f8d6fa7cdcf9b375338ccade531772d00be69e8317183"
+    },
+    {
+      "path": "harness/bridge/business_store.py",
+      "sha256": "d3206090e83f9509d16f20ff0f7bbe5f45d07e445f070037972a9fc954449f95"
+    },
+    {
+      "path": "harness/packaging/case-memory-requirements.lock",
+      "sha256": "c5aec9a4360e61667720c7440e038d6d38acd6232cd00164f8c16a2f986742e1"
+    },
+    {
+      "path": "harness/config/postgres-backup-runtime.json",
+      "sha256": "857aa6a48e1bf58fc8e1c2860fa685447df37d72dfbb0156f203558c82a1e922"
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "path": "api-wheel.log",
+      "sha256": "b8474ab519248c24dfb2ec8c48cf2b8a5688eecb9357ea83b2200d1243cae64a"
+    },
+    {
+      "path": "environment-check-final.log",
+      "sha256": "672aec65a45bed50e70229c70934a7eebf0462595c459b83023027645d57cccf"
+    },
+    {
+      "path": "environment-check-isolated.log",
+      "sha256": "e2ff7c8103a54073b25d7bf32cf05a11029c2a0ace88e20ce666b0e777dea15d"
+    },
+    {
+      "path": "environment-check.log",
+      "sha256": "d1538ee4315c083bf9414de1a0ed099f4f0185b2385ac9187dda9d448f6872c7"
+    },
+    {
+      "path": "environment-install.log",
+      "sha256": "d2ab2343fc3d57ff54a3f7f877f5f24c2f9bdecafcef5c8a3c18b553f4a1b155"
+    },
+    {
+      "path": "environment-isolated-install.log",
+      "sha256": "7f1cbb6984d4e28075eed4c1d96594b51223871b74e0ba81f61c38c093a927d0"
+    },
+    {
+      "path": "environment-packages.json",
+      "sha256": "0a5154fa234325f336bc514382c1fdabfc0cfe5af2afc19dd2c1d475c907bee6"
+    },
+    {
+      "path": "full-offline-final.log",
+      "sha256": "1510dcf39fa05027415b36dd44736b71bcc110c6561405d7d990e37360560d75"
+    },
+    {
+      "path": "full-offline.log",
+      "sha256": "a2d8624bee3212327cc32e640e8911886e33296e7581ed1d78a8099de7b061c3"
+    },
+    {
+      "path": "native-diagnostic-output.log",
+      "sha256": "c3e74d23628f3c0a63dace2e8ad463e15683f79b106e2ed84b5aa6b2f3647fea"
+    },
+    {
+      "path": "native-diagnostic.log",
+      "sha256": "2f6ce5b41b5b0235c32486858ca3458bd21c04fbd516b4f77439978b0d598b72"
+    },
+    {
+      "path": "native-first.log",
+      "sha256": "f6a9bf66023c418e0f40a21ccaabaaab2fddd6dda10dd37163badfdd4fa96354"
+    },
+    {
+      "path": "native-green.log",
+      "sha256": "dea2f731b3dad0b955407f6d51256248eeff8cc1812d54d0eece18383a22c34a"
+    },
+    {
+      "path": "native-isolated.log",
+      "sha256": "e1138926e5980d9423bb96a26c84328ff5ab1918adfe4d3f558ba2a9383e9260"
+    },
+    {
+      "path": "native-loopback-fixed.log",
+      "sha256": "31ee0d360d735bcff1e2f49368762eb5237304371a81cbb833de960900ae7aec"
+    },
+    {
+      "path": "network-guard.log",
+      "sha256": "e85188a19fde6f4a098d0073c54527b160ce9213ce16c8eaeab6e3dc58a5e329"
+    },
+    {
+      "path": "spec-review/native-review.exit",
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "spec-review/native-review.log",
+      "sha256": "8c0a4e37b565288ccbe2b2fd0651f289cfbd0f653ee4c6208c8cfbf5ce72508e"
+    },
+    {
+      "path": "spec-review/results.json",
+      "sha256": "bb936fa645828d6e37b52a27d9e6ddefd0fe046d7f35dd95a83707518d57cc82"
+    },
+    {
+      "path": "standards-review/cleanup-failure-green.cjs",
+      "sha256": "43c49eea85ecc84aab492cc47f165737427ea89c35bea940561d76a38e2c45b1"
+    },
+    {
+      "path": "standards-review/cleanup-failure-green.log",
+      "sha256": "b8aaaa22cc71384db2eb7b6f82a89adb0feffce6df01aadbb92a071e459cbaa2"
+    },
+    {
+      "path": "standards-review/cleanup-failure.cjs",
+      "sha256": "5d7ebd8a7cd03301e9486928473dd027b3cbcdc929724e3930e55d69d69f85f6"
+    },
+    {
+      "path": "standards-review/cleanup-failure.log",
+      "sha256": "e84071481f30fbb414c719aeeba1ff043d3585f0f151e04cf7d697d19f398d61"
+    },
+    {
+      "path": "standards-review/standards-final.md",
+      "sha256": "7b7b4e39f8b0d2b03df32b9d56936b7f27b00b464fa833bcd8050e8a228dc3fd"
+    }
+  ]
+}

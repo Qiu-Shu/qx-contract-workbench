@@ -4,7 +4,7 @@
 
 2026-11-11 审核后的首批源码整改与验证见 [R01–R05 交付记录](docs/2026-11-11-audit-reliability-delivery.md)。该分支尚未发布或安装新版。
 
-2026-11-12–13 新增源码侧[本地业务快照、加密保存与隔离恢复](docs/2026-11-12-local-backup-delivery.md)、[PostgreSQL冷备与恢复校验](docs/2026-11-12-postgres-backup-delivery.md)、[配置保留、只读审核与启动保护](docs/2026-11-12-restore-review-delivery.md)及[pg0目录绑定与停机确认](docs/2026-11-13-memory-database-binding-delivery.md)，复用[数据范围与离线维护检查](docs/2026-11-12-backup-data-scope.md)。固定组件下的合成数据已通过实际restic加密、数据库及向量索引恢复验证；同身份另一路径副本使用不同登记，三类配置仅保留待审。Hindsight业务迁移/API、设置应用/凭据重新授权、启用流程及桌面入口待接入。安装版未更新，未构建安装包。
+2026-11-12–13 新增源码侧[本地业务快照、加密保存与隔离恢复](docs/2026-11-12-local-backup-delivery.md)、[PostgreSQL冷备与恢复校验](docs/2026-11-12-postgres-backup-delivery.md)、[配置保留、只读审核与启动保护](docs/2026-11-12-restore-review-delivery.md)及[pg0目录绑定与停机确认](docs/2026-11-13-memory-database-binding-delivery.md)，复用[数据范围与离线维护检查](docs/2026-11-12-backup-data-scope.md)。固定组件下的合成数据已通过实际restic加密、数据库及向量索引恢复验证；同身份另一路径副本使用不同登记，三类配置仅保留待审。[真实Hindsight同版本API/来源账本恢复](docs/2026-11-13-hindsight-restore-delivery.md)也已实测，外部模型为本机合成响应，不计语义质量。设置应用/凭据重新授权、启用流程及桌面入口仍待；具体恢复副本保持审核阻断。安装版未更新，未构建安装包。
 
 本版修复更新下载失败后的恢复、取消清理和错误提示，增量不可用时自动转完整包并继续校验。官方0.2.14或0.2.15可沿原目录安装；旧版下载失败需手动下载本安装包升级一次。保留技能与工具调用、启动和重连、律师账号运营入口、统一知识库及每轮共享16 KiB预算。
 
