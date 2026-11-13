@@ -8,6 +8,19 @@ function assertRestoreReviewed(data){
     catch(error){if(error.code==='ENOENT')continue;throw error;}
     throw Object.assign(Error('恢复副本尚未完成启用核对，不能直接作为运行目录。'),{code:'BACKUP_RESTORE_REVIEW_REQUIRED'});
   }
+  let receipt,stat;
+  try{stat=fs.lstatSync(path.join(data,'.local/restore-activation.json'));}
+  catch(error){
+    if(error.code!=='ENOENT')throw error;
+    try{fs.lstatSync(path.join(data,'.local/restore-prepared-manifest.json'));}
+    catch(missing){if(missing.code==='ENOENT')return;throw missing;}
+    throw Object.assign(Error('恢复副本的启用记录缺失，请重新检查恢复副本。'),{code:'BACKUP_RESTORE_REVIEW_REQUIRED'});
+  }
+  try{
+    if(!stat.isFile()||stat.isSymbolicLink()||stat.nlink!==1||stat.size>65536)throw Error();
+    receipt=JSON.parse(fs.readFileSync(path.join(data,'.local/restore-activation.json'),'utf8'));
+    if(receipt?.schema!==1||receipt.phase!=='ready'||typeof receipt.data!=='string'||path.resolve(receipt.data).toLowerCase()!==path.resolve(data).toLowerCase())throw Error();
+  }catch{throw Object.assign(Error('恢复副本尚未完成启用核对，不能直接作为运行目录。'),{code:'BACKUP_RESTORE_REVIEW_REQUIRED'});}
 }
 function processAlive(pid){if(!Number.isInteger(pid)||pid<=0)return false;try{process.kill(pid,0);return true}catch{return false}}
 async function hostProcessAlive(record){

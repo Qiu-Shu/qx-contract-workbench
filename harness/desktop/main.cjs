@@ -20,6 +20,7 @@ function runtimeUrl(){
   return url;
 }
 let window,origin;
+const replacingWindows=new WeakSet();
 const unavailableUrl=pathToFileURL(join(__dirname,'unavailable.html')).href;
 global.qxIsRecoveryPage=()=>Boolean(window&&!window.isDestroyed()&&window.webContents.getURL()===unavailableUrl);
 const ownsConnection=event=>window&&!window.isDestroyed()&&event.sender===window.webContents&&
@@ -61,6 +62,7 @@ global.qxTryReconnectInPlace=async runtime=>{
 };
 let reconnecting=false;
 async function reconnect(){
+  if(global.qxIsMaintenance?.())return {ok:false};
   if(reconnecting||!window||window.isDestroyed())return {ok:false};reconnecting=true;
   try{
     if(window.webContents.getURL()!==unavailableUrl){
@@ -75,6 +77,7 @@ async function reconnect(){
   }finally{reconnecting=false}
 }
 function showWechat(){
+  if(global.qxIsMaintenance?.()){global.qxOpenBackup?.();return;}
   if(!window||window.isDestroyed())return;
   window.show();window.focus();
   void window.webContents.executeJavaScript("window.__qxOpenWechatRequested=true;window.dispatchEvent(new Event('qx-open-wechat'));").catch(()=>{});
@@ -142,9 +145,10 @@ async function createWindow(){
     global.qxDesktopLog?.('page_script_error',{errorName,code});
   });
   window.on('unresponsive',()=>global.qxDesktopLog?.('window_unresponsive'));
+  window.on('close',function(event){if(global.qxBackupBusy?.()&&!replacingWindows.has(this))event.preventDefault();});
   window.on('responsive',()=>global.qxDesktopLog?.('window_responsive'));
   window.webContents.on('page-title-updated',event=>{event.preventDefault();window.setTitle('AI师兄法律助手平台');});
-  window.once('ready-to-show',()=>{if(process.env.QX_DESKTOP_HIDDEN!=='1')window.show();});
+  window.once('ready-to-show',()=>{if(process.env.QX_DESKTOP_HIDDEN!=='1'&&!global.qxIsMaintenance?.())window.show();});
   window.webContents.on('will-navigate',(event,target)=>{if(new URL(target).origin!==origin){event.preventDefault();if(/^https?:/.test(target))void shell.openExternal(target);}});
   window.webContents.setWindowOpenHandler(({url})=>{
     const target=new URL(url);
@@ -158,6 +162,7 @@ async function createWindow(){
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     {label:'工作台',submenu:[{label:'手机微信',click:showWechat},
       ...(global.qxOpenApiSettings?[{label:'API 设置',click:()=>global.qxOpenApiSettings()}]:[]),
+      ...(global.qxOpenBackup?[{label:'备份与恢复',click:()=>global.qxOpenBackup()}]:[]),
       {label:'打开材料文件夹',click:()=>void shell.openPath(join(root,'workspace'))},
       {label:'重新连接',click:()=>void reconnect()},
       {label:'打开运行日志',click:()=>void shell.openPath(join(root,'.local'))},
@@ -177,13 +182,14 @@ async function createWindow(){
   }
 }
 global.qxReloadMain=async()=>{
+  if(global.qxIsMaintenance?.())return;
   const previous=window;
   await createWindow();
-  if(previous&&!previous.isDestroyed())previous.close();
+  if(previous&&!previous.isDestroyed()){replacingWindows.add(previous);previous.close();}
 };
 if(!app.requestSingleInstanceLock())app.quit();
 else{
-  app.on('second-instance',(_event,argv)=>{if(window){if(window.isMinimized())window.restore();window.show();window.focus();if(argv.includes('--wechat'))showWechat();}});
+  app.on('second-instance',(_event,argv)=>{if(global.qxIsMaintenance?.()){global.qxOpenBackup?.();return;}if(window){if(window.isMinimized())window.restore();window.show();window.focus();if(argv.includes('--wechat'))showWechat();}});
   ipcMain.handle('qx:paste-files',pasteCopiedFiles);
   ipcMain.handle('qx:connection-state',event=>ownsConnection(event)?global.qxConnection?.state()||null:null);
   ipcMain.handle('qx:startup-state',event=>ownsConnection(event)?global.qxStartupState||null:null);

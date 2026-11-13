@@ -67,6 +67,9 @@ const policy={
   '.local/content-watch/runtime/xiaohongshu-mcp.exe':'rebuild',
   '.local/content-watch/runtime/xiaohongshu-mcp':'rebuild','.local/content-watch/runtime/LICENSE.xiaohongshu-mcp.txt':'rebuild',
   '.local/content-watch/run.lock':'runtime',
+  '.local/restore-original':'protect','.local/restore-pending.json':'protect','.local/migrations':'protect',
+  '.local/restore-activation.json':'runtime','.local/restore-prepared-manifest.json':'runtime',
+  '.local/backup-runtime':'rebuild','.local/data-location.json':'runtime',
   '.local/case-memory-runtime/database':'cold-postgres','.local/case-memory-runtime/instance.json':'cold-postgres',
   '.local/case-memory-runtime/pg0':'rebuild','.local/case-memory-runtime/models':'rebuild',
   '.local/case-memory-runtime/venv':'rebuild','.local/case-memory-runtime/service.py':'rebuild',
@@ -84,6 +87,7 @@ const branches=new Set(['','.local','.local/dsh-home','.local/dsh-home/.local','
 const contentUuid='[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}';
 const contentReport=new RegExp('^\\.local/content-watch/reports/'+contentUuid+'(?:\\.json|(?:-draft-[0-5])?\\.md)$');
 const contentTemporary=new RegExp('^\\.local/content-watch/(?:(?:state|session|connection)\\.json\\.'+contentUuid+'|runtime/\\.component-'+contentUuid+')\\.tmp$');
+const locationRecord=new RegExp('^\\.local/data-location\\.json(?:\\.previous(?:\\.'+contentUuid+')?|\\.'+contentUuid+'\\.tmp)?$');
 function inspectScope(data){
   const scopes=[],files=[];
   function walk(relative,disposition,depth=0){
@@ -103,6 +107,7 @@ function inspectScope(data){
       if(branches.has(next)){visit(next);continue;}
       const stat=fs.lstatSync(path.join(data,next));
       let disposition=policy[next]||(relative==='.local/dsh-home/qx-wechat'?'reauthorize-review':'unclassified');
+      if(locationRecord.test(next))disposition=stat.isFile()?'runtime':'unclassified';
       if(next.startsWith('.local/content-watch/')){
         // Preserve durable records without admitting unknown stores or restoring credentials and job locks.
         if(!stat.isFile())disposition='unclassified';

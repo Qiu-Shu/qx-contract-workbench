@@ -2,6 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {spawn}=require('node:child_process');
 const {withBackupPause,inspectScope}=require('./backup-preparation.cjs');
+const historicalRoot=value=>require('./data-location.cjs').normalized(value,{allowUnavailable:true});
 const ENGINE_SHA='b0dd1fd21eea5d8fe1325f55f7118213c21f36de8a261e04c0624a5ab9fd7830';
 const WORKER=path.join(__dirname,'../bridge/backup_snapshot.py');
 function fail(code){throw Object.assign(Error(code),{code});}
@@ -118,7 +119,7 @@ async function restoreLocalBackup(options){
   const manifestText=await engine(restic,repo,null,['dump',receipt.snapshotId,'/snapshot/backup-manifest.json'],undefined,options.password);
   if(crypto.createHash('sha256').update(manifestText).digest('hex')!==receipt.manifestSha256)fail('BACKUP_RECEIPT_MISMATCH');
   let manifest;try{manifest=JSON.parse(manifestText);}catch{fail('BACKUP_INVALID_MANIFEST');}
-  disjoint(local(manifest.sourceRoot),destination,bundle);
+  disjoint(historicalRoot(manifest.sourceRoot),destination,bundle);
   if(manifest.postgres&&!options.pgTools)fail('BACKUP_POSTGRES_TOOLS_REQUIRED');
   const parent=path.dirname(destination),stage=path.join(parent,'.qx-restore-'+crypto.randomUUID());
   let owned=false;
@@ -131,7 +132,7 @@ async function restoreLocalBackup(options){
     const restored=path.join(extracted,'snapshot');
     const checked=await worker(python,{action:'verify',root:restored,pgTools:options.pgTools});
     if(checked.manifestSha256!==receipt.manifestSha256||checked.fileCount!==receipt.fileCount||checked.databaseCount!==receipt.databaseCount||checked.postgresIncluded!==Boolean(receipt.postgresIncluded)||checked.settingsCount!==(receipt.settingsCount??0))fail('BACKUP_RECEIPT_MISMATCH');
-    disjoint(local(checked.sourceRoot),destination,bundle);
+    disjoint(historicalRoot(checked.sourceRoot),destination,bundle);
     absent(destination);
     // Re-create the published root with a protected DACL; restic's restored metadata is not trusted.
     const publish=path.join(stage,'publish');await worker(python,{action:'private-directory',path:publish});

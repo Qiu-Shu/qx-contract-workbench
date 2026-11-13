@@ -10,13 +10,39 @@ test('runner overlay includes new backup entry points without shipping developme
   require('./stage.cjs').copyDesktopRunners(source,payload,manifest);
   require('./stage.cjs').copyBackupConfiguration(source,payload,manifest);
   const runner=path.join(payload,'desktop-runner');
-  for(const name of ['backup-preparation.cjs','local-backup.cjs','installed-stop.cjs','installed-runtime.cjs']){
+  for(const name of ['backup-preparation.cjs','local-backup.cjs','installed-stop.cjs','installed-runtime.cjs',
+    'restore-activation.cjs','restore-pending.cjs','data-location.cjs']){
     assert.deepEqual(fs.readFileSync(path.join(runner,name)),fs.readFileSync(path.join(source,'desktop',name)));
     assert.equal(manifest.filter(item=>item.target==='resources/workbench/desktop-runner/'+name).length,1);
   }
   assert.equal(typeof require(path.join(runner,'backup-preparation.cjs')).inspectScope,'function');
   assert.equal(typeof require(path.join(runner,'local-backup.cjs')).createLocalBackup,'function');
   assert.equal(fs.readdirSync(runner).some(name=>name.includes('.test.')||name.startsWith('check-')),false);
+});
+
+test('desktop overlay adds maintenance files absent from the old app and records each source once',t=>{
+  const temp=fs.mkdtempSync(path.join(os.tmpdir(),'qx-maintenance-app-overlay-'));
+  t.after(()=>fs.rmSync(temp,{recursive:true,force:true}));
+  const source=path.join(temp,'source'),desktop=path.join(source,'desktop'),app=path.join(temp,'app'),manifest=[];
+  fs.mkdirSync(desktop,{recursive:true});fs.mkdirSync(app);
+  const added=['backup.html','backup.css','backup.js','backup-preload.cjs','backup-controller.cjs','backup-window.cjs','backup-runtime.cjs','data-location.cjs'];
+  for(const name of ['main.cjs',...added])fs.writeFileSync(path.join(desktop,name),'synthetic current '+name);
+  fs.writeFileSync(path.join(desktop,'backup-ui.test.cjs'),'must not ship');
+  fs.writeFileSync(path.join(desktop,'check-synthetic.cjs'),'must not ship');
+  fs.writeFileSync(path.join(app,'main.cjs'),'old bootstrap');
+  fs.writeFileSync(path.join(app,'backup.js'),'old maintenance version');
+  fs.writeFileSync(path.join(app,'third-party.txt'),'preserved dependency');
+  require('./stage.cjs').copyDesktopApp(source,app,manifest);
+  for(const name of ['main.cjs',...added]){
+    assert.deepEqual(fs.readFileSync(path.join(app,name)),fs.readFileSync(path.join(desktop,name)));
+    assert.equal(manifest.filter(item=>item.target==='app.asar/'+name).length,1);
+  }
+  assert.equal(manifest.length,added.length+1);
+  assert.equal(fs.readFileSync(path.join(app,'third-party.txt'),'utf8'),'preserved dependency');
+  assert.equal(fs.existsSync(path.join(app,'backup-ui.test.cjs')),false);
+  assert.equal(fs.existsSync(path.join(app,'check-synthetic.cjs')),false);
+  fs.unlinkSync(path.join(desktop,'backup-controller.cjs'));
+  assert.throws(()=>require('./stage.cjs').copyDesktopApp(source,app,[]),/ENOENT/);
 });
 
 test('source overlay supplies the snapshot worker configurations without building an installer',{skip:process.platform!=='win32'||!process.env.QX_TEST_PYTHON},t=>{
@@ -30,7 +56,9 @@ test('source overlay supplies the snapshot worker configurations without buildin
   fs.mkdirSync(path.join(payload,'bridge'));fs.copyFileSync(path.join(source,'bridge/backup_snapshot.py'),path.join(payload,'bridge/backup_snapshot.py'));
   const target=path.join(root,'private');
   const result=spawnSync(process.env.QX_TEST_PYTHON,[path.join(payload,'bridge/backup_snapshot.py')],{encoding:'utf8',windowsHide:true,input:JSON.stringify({action:'private-directory',path:target})});
-  assert.equal(result.status,0,result.stderr);assert.equal(JSON.parse(result.stdout).path,target);assert.ok(fs.statSync(target).isDirectory());
+  assert.equal(result.status,0,result.stderr);
+  assert.equal(fs.realpathSync.native(JSON.parse(result.stdout).path),fs.realpathSync.native(target));
+  assert.ok(fs.statSync(target).isDirectory());
 });
 
 test('registry validation rejects invalid configuration before replacing the payload',t=>{

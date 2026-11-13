@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-13",
+  "status": "source-and-isolated-windows-verified",
+  "baseline": "2e6d3396dd2ef2a16e00ee7e607346c7674c3a22",
+  "branch": "codex/audit-0216-fixes",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "evidenceRoot": "D:/CodexChecks/AI-Shixiong-restore-activation-20261113",
+  "scope": {
+    "syntheticOnly": true,
+    "installerBuilt": false,
+    "dailyInstallationChanged": false,
+    "realModelRequests": 0,
+    "externalMessages": 0,
+    "realAccountReauthorizationTested": false
+  },
+  "tests": [
+    {
+      "name": "offline",
+      "command": "node scripts/test-suite.cjs offline",
+      "cwd": "harness",
+      "exitCode": 0,
+      "node": {
+        "total": 656,
+        "passed": 644,
+        "skipped": 12,
+        "failed": 0
+      },
+      "python": {
+        "passed": 479,
+        "skipped": 1,
+        "failed": 0,
+        "subtestsPassed": 36
+      },
+      "log": "root/full-offline.log",
+      "result": "root/full-offline-result.json"
+    },
+    {
+      "name": "native-backend-flow",
+      "command": "node --test harness/desktop/restore-flow.test.cjs",
+      "environment": {
+        "QX_RESTORE_FLOW": "1",
+        "QX_RESTORE_FLOW_KEEP": "1",
+        "QX_TEST_APP": "D:/CodexBuilds/AI-Shixiong-content-merge-20261113/stage/win-unpacked/resources/workbench",
+        "QX_TEST_RESTIC_ZIP": "D:/CodexChecks/AI-Shixiong-candidate-admission-20261112/restic/downloads/restic_0.19.1_windows_amd64.zip"
+      },
+      "exitCode": 0,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 207454.2959,
+      "protectedFilesUnchanged": 2734,
+      "repeatBackupFiles": 2762,
+      "pending": 6,
+      "drafts": 1,
+      "consumerCalls": 0,
+      "longestRestoredFileCharacters": 324,
+      "result": "pending/flow-evidence.json",
+      "log": "pending/flow-green-final.log"
+    },
+    {
+      "name": "snapshot-worker",
+      "command": "python -m unittest test_backup_snapshot",
+      "cwd": "harness/bridge",
+      "exitCode": 0,
+      "passed": 14,
+      "log": "backend/python-utf8-long-final-2.log"
+    },
+    {
+      "name": "native-postgres",
+      "command": "node --test harness/desktop/local-backup-postgres.test.cjs",
+      "exitCode": 0,
+      "passed": 7,
+      "log": "backend/extended-pg-final.log"
+    },
+    {
+      "name": "desktop-wiring",
+      "command": "node --test harness/desktop/main-maintenance.test.cjs harness/desktop/backup-window.test.cjs harness/desktop/installed-maintenance.test.cjs harness/desktop/installed-startup.test.cjs harness/desktop/backup-ui.test.cjs harness/desktop/host-recovery.test.cjs harness/desktop/setup-service.test.cjs",
+      "exitCode": 0,
+      "passed": 34,
+      "log": "ui/wiring-final.log"
+    },
+    {
+      "name": "browser",
+      "command": "node harness/tests/restore-ui.mjs",
+      "exitCode": 0,
+      "passedGroups": 9,
+      "fixture": "real Chrome with synthetic IPC",
+      "widths": [
+        390,
+        1440
+      ],
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": "ui/browser-result.json",
+      "log": "ui/browser-wired.log"
+    },
+    {
+      "name": "native-electron",
+      "entry": "harness/tests/restore-electron-entry.cjs",
+      "launch": "copied Electron runtime/resources/app/index.cjs requires source test entry; QX_RESTORE_ELECTRON_PLAN supplies synthetic fixture",
+      "result": "native/plan.json",
+      "verification": "root/final-native-verification.json",
+      "verificationExitCode": 0,
+      "childExitCodes": "not independently collected; all 3 processes exited and final checkpoint/selector verified",
+      "passedCheckpoints": 4,
+      "distinctProcesses": 3,
+      "actualRelaunches": 2,
+      "finalSelection": "original",
+      "installer": false,
+      "directoryDialog": "scripted",
+      "windowsPreloadIpcAndStorage": "real",
+      "network": "disabled"
+    },
+    {
+      "name": "packaging-copy",
+      "exitCode": 0,
+      "passed": 11,
+      "log": "ui/stage-final.log",
+      "installerBuilt": false,
+      "command": "node --test harness/packaging/stage.test.cjs harness/packaging/content-watch-stage.test.cjs harness/packaging/verify-stage.test.cjs"
+    },
+    {
+      "name": "style-detector",
+      "exitCode": 2,
+      "warnings": 1,
+      "disposition": "intentional 3px selected-tab underline; visually reviewed, not a rounded-card accent",
+      "status": "warning-accepted"
+    },
+    {
+      "name": "source-whitespace",
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "counting": "Related/targeted tests overlap offline coverage; totals must not be added.",
+  "reviews": {
+    "standards": {
+      "openBlocking": 0,
+      "openDocumentedRuleViolations": 0,
+      "nonblockingJudgements": 1,
+      "note": "P3 duplicated Windows local path validation retained as later maintenance",
+      "report": "root/review-standards.md"
+    },
+    "spec": {
+      "openActionable": 0,
+      "report": "root/review-spec.md"
+    },
+    "resolved": [
+      "missing activation receipt with prepared seal must block startup",
+      "rollback chooses true previous root even if current root/drive is missing",
+      "unavailable historical source drive is logical metadata only"
+    ]
+  },
+  "firstFailuresPreserved": [
+    "migration history unclassified",
+    "UTF-8 worker input decoded as GBK",
+    "internal long paths",
+    "PostgreSQL native argument extended-prefix compatibility",
+    "missing receipt startup bypass",
+    "wrong rollback root",
+    "unavailable historical drive",
+    "test-only Electron absolute main entry did not enter acceptance"
+  ],
+  "toolsNotEvidence": [
+    "Windows-MCP snapshot did not return and was terminated"
+  ],
+  "deferred": [
+    "different physical computer",
+    "real account login after restore",
+    "cross-version database migration",
+    "real ONNX and model semantics",
+    "long-running workloads",
+    "power loss",
+    "disk full",
+    "large data scale",
+    "lawyer business acceptance",
+    "installer and daily rollout"
+  ],
+  "sourceSha256": {
+    "harness/bridge/backup_snapshot.py": "99deef25ed6e94172af2752914814fd367453fc25c0ddf62ad8f3b060bc05e17",
+    "harness/bridge/backup_engine.py": "d6837bba079db5dcd0a6866fdd8322f12721b0c8b90b9fe138965713f136bc28",
+    "harness/desktop/backup-controller.cjs": "335e5e758922102a55fb3c1e16e335d4e66cf6100e1f6597d92e42948683ba41",
+    "harness/desktop/backup-runtime.cjs": "7a24513b75850a56fd2c66da9a1d88b2452214429c644885363bea1df8c1c1f0",
+    "harness/desktop/backup-window.cjs": "af325e423fc9e1d9d781151e7437d7a3d2156952ff90299bb012b49dcfabda39",
+    "harness/desktop/backup-preload.cjs": "9c7d7ac8d34cb0f9973d8c56ab8d8a00195c0d7fb3b3c3a1e78e83a50e6d717d",
+    "harness/desktop/backup.html": "b1c11d89692898e84e8ac858d781b573d5df91103ad63cb60fa7101d71cd5aa1",
+    "harness/desktop/backup.css": "e6b2d078b7053e680f8a0d02ffe9761ad653562245b68963ba362cfecb9767d2",
+    "harness/desktop/backup.js": "e8578f88ab8ffbbe0337c43c6b3cae3191705c9956c8f3b183e44482dc98cbe5",
+    "harness/desktop/backup-preparation.cjs": "f39d8666ec0be87b004f29aeeac69ba87c3e29f8f86288593c74b17c08177494",
+    "harness/desktop/data-location.cjs": "c6d35c51568066e1c6a9f46750e01d13b986ff2f0aa92f44d81aed594b2919ae",
+    "harness/desktop/restore-activation.cjs": "9124e8e79c5c9bff0307b4c2d022881b0a23321bcf20c5133f7580fdfb653216",
+    "harness/desktop/restore-pending.cjs": "8d80d7b8107c05bab713118bbc5a634425b1265799cac88d39dee31611b17744",
+    "harness/desktop/installed.cjs": "f3d2f6382ff9b5688964f68cd1805f320fe22362b2f2d0f71c1f1448d6493b59",
+    "harness/desktop/main.cjs": "87f1d8cef2aec1aca75c785a7bf865243b36f42a7a612e1a4d94d5987b9fd885",
+    "harness/desktop/installed-runtime.cjs": "81f8df7b576d14000255e6d681317184a6e2a307688790f0f9ddbf8a6a851af0",
+    "harness/desktop/installed-stop.cjs": "88deaa4244879bddb12748b485d0bcc951f1a7d0ed798fbbf715c0c03c32af18",
+    "harness/desktop/local-backup.cjs": "8fd36f1cd88d653858610fdc28398b4e70d7c013a2af13dc0879b3010e18f0bf",
+    "harness/desktop/stop-installed.cjs": "faa92eed4c39bf19b5ade8e745ee8afeccc91c62ce14209468da3f6e25668525",
+    "harness/packaging/stage.cjs": "b1d1de9df04241959007166d9574216319ece76583a0d0d0cdef44e8143a0efc",
+    "harness/sources/restic-BSD-2-Clause.txt": "6f08a01a9fab5b24e139a09f15cc24a73087c7bc09e3bacf099fdf2d767bf897"
+  }
+}

@@ -11,6 +11,10 @@ async function boot({saved=true,healthy=false}={}){
   context.require=name=>{
     if(name==='electron')return {app,BrowserWindow:Window,ipcMain:{handle(){}},shell:{},safeStorage:{},dialog:{showErrorBox(){seen.dialogs++}}};
     if(name==='node:fs')return {mkdirSync(){}};
+    if(name==='./data-location.cjs')return {resolveDataLocation:anchor=>({anchor,data:anchor})};
+    if(name==='./installed-stop.cjs')return {assertRestoreReviewed(){},claimLauncher:async()=>({close:async()=>{}})};
+    if(name==='./backup-controller.cjs')return {createBackupController:()=>({isBusy:()=>false})};
+    if(name==='./backup-window.cjs')return {createBackupWindow:()=>({show(){},isOpen:()=>false,getWindow:()=>null})};
     if(name==='./model-credentials.cjs')return {createModelCredentialStore:()=>({status:async()=>({status:saved?'saved':'missing'}),save(){seen.secretWrites++}})};
     if(name==='./setup-service.cjs')return {};
     if(name==='./installed-runtime.cjs')return runtime;

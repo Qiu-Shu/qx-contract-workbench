@@ -4,6 +4,7 @@ document.querySelector('#reveal').onclick=event=>{
   event.target.textContent=visible?'隐藏':'显示';event.target.setAttribute('aria-pressed',String(visible));
 };
 document.querySelector('#get-key').onclick=()=>window.setup.openKeys();
+document.querySelector('#open-backup').onclick=()=>window.setup.openBackup();
 form.onsubmit=async event=>{
   event.preventDefault();submit.disabled=true;key.disabled=true;status.textContent='正在验证账户并启动工作台…';
   try{const result=await window.setup.save(key.value);status.textContent=result.message||'';if(result.ok)key.value='';}

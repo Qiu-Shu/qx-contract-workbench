@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self';">
+  <title>备份与恢复 · AI师兄法律助手平台</title>
+  <link rel="stylesheet" href="backup.css">
+</head>
+<body>
+<main id="backup-app" aria-busy="true">
+  <header class="page-header">
+    <h1>备份与恢复</h1>
+    <p>在本机保存加密备份，将资料恢复到独立目录。核对完成后，再决定是否启用。</p>
+  </header>
+
+  <section class="current" aria-labelledby="current-title">
+    <div class="section-heading"><h2 id="current-title">当前资料</h2><span id="maintenance-state" class="state-label">正在读取状态</span></div>
+    <p id="data-path" class="path">正在读取资料目录…</p>
+    <div id="previous-row" hidden><p class="note">可撤回的原目录</p><p id="previous-path" class="path"></p></div>
+    <div id="resume-row" class="actions" hidden><button type="button" id="resume" disabled>结束维护并返回工作台</button></div>
+  </section>
+
+  <div id="feedback" tabindex="-1">
+    <p id="busy-message" role="status" aria-live="polite">正在读取本机维护状态…</p>
+    <p id="result-message" role="status" aria-live="polite" hidden></p>
+    <p id="result-details" class="note path" hidden></p>
+    <p id="error-message" role="alert" hidden></p>
+  </div>
+
+  <section id="engine-section" class="notice" aria-labelledby="engine-title" hidden>
+    <h2 id="engine-title">准备备份组件</h2>
+    <p>首次使用需下载经过校验的固定版本组件。下载完成后即可在本机备份和恢复，不会上传你的资料。</p>
+    <button type="button" id="prepare-engine" disabled>下载并准备备份组件</button>
+  </section>
+
+  <section id="pause-section" class="maintenance" aria-labelledby="pause-title">
+    <h2 id="pause-title">先停止后台</h2>
+    <p>请先保存编辑内容，等待模型回答、文档处理、微信和内容采集任务结束。维护期间这些功能会暂停，关闭工作台窗口本身不会停止后台。</p>
+    <label class="check"><input id="pause-confirm" type="checkbox" disabled><span>我已保存内容，并确认没有正在进行的任务</span></label>
+    <button type="button" id="pause" class="primary" disabled>停止后台并进入维护</button>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="备份与恢复操作">
+    <button type="button" id="tab-backup" role="tab" aria-selected="true" aria-controls="panel-backup" tabindex="0">创建备份</button>
+    <button type="button" id="tab-restore" role="tab" aria-selected="false" aria-controls="panel-restore" tabindex="-1">恢复备份</button>
+    <button type="button" id="tab-review" role="tab" aria-selected="false" aria-controls="panel-review" tabindex="-1">检查与启用</button>
+  </nav>
+
+  <section id="panel-backup" role="tabpanel" aria-labelledby="tab-backup">
+    <h2>创建本机加密备份</h2>
+    <p class="section-intro">每次备份会自动建立一个新文件夹。请妥善保存备份口令，恢复时需要同一口令。</p>
+    <form id="backup-form">
+      <fieldset>
+        <legend class="sr-only">备份位置与口令</legend>
+        <label id="backup-parent-label">保存位置</label>
+        <div class="folder-row"><p id="backup-parent-path" class="path empty" aria-labelledby="backup-parent-label">尚未选择保存位置</p><button type="button" data-choose="backupParent" disabled>选择保存位置</button></div>
+        <div class="password-grid">
+          <div><label for="backup-password">备份口令</label><input id="backup-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" aria-describedby="backup-password-note" required disabled></div>
+          <div><label for="backup-password-confirm">再次输入口令</label><input id="backup-password-confirm" type="password" autocomplete="new-password" minlength="12" maxlength="128" required disabled></div>
+        </div>
+        <p id="backup-password-note" class="note">使用 12–128 个字符。口令不会保存到设置中；遗失后无法恢复这份备份。</p>
+        <div class="actions"><button type="submit" id="backup-submit" class="primary" disabled>创建加密备份</button></div>
+      </fieldset>
+    </form>
+  </section>
+
+  <section id="panel-restore" role="tabpanel" aria-labelledby="tab-restore" hidden>
+    <h2>恢复到独立目录</h2>
+    <p class="section-intro">选择包含完整备份的文件夹，再选择恢复位置。程序会自动建立新目录，当前资料保留。</p>
+    <form id="restore-form">
+      <fieldset>
+        <legend class="sr-only">备份来源与恢复位置</legend>
+        <label id="bundle-label">备份文件夹</label>
+        <div class="folder-row"><p id="bundle-path" class="path empty" aria-labelledby="bundle-label">尚未选择备份</p><button type="button" data-choose="bundle" disabled>选择备份文件夹</button></div>
+        <label id="restore-parent-label">恢复位置</label>
+        <div class="folder-row"><p id="restore-parent-path" class="path empty" aria-labelledby="restore-parent-label">尚未选择恢复位置</p><button type="button" data-choose="restoreParent" disabled>选择恢复位置</button></div>
+        <label for="restore-password">这份备份的口令</label><input id="restore-password" type="password" autocomplete="off" minlength="12" maxlength="128" required disabled>
+        <div class="actions"><button type="submit" id="restore-submit" class="primary" disabled>恢复到新目录</button></div>
+      </fieldset>
+    </form>
+    <p class="note">恢复完成后请前往“检查与启用”。恢复目录不会自动成为当前资料目录。</p>
+  </section>
+
+  <section id="panel-review" role="tabpanel" aria-labelledby="tab-review" hidden>
+    <h2>检查恢复副本</h2>
+    <p class="section-intro">核对完整性、可迁移设置和待处理任务，然后准备一个独立的启用副本。</p>
+    <label id="review-root-label">恢复副本</label>
+    <div class="folder-row"><p id="review-root-path" class="path empty" aria-labelledby="review-root-label">尚未选择恢复副本</p><button type="button" data-choose="reviewRoot" disabled>选择恢复副本</button></div>
+    <button type="button" id="review" disabled>检查恢复副本</button>
+
+    <div id="review-details" hidden>
+      <div class="review-summary"><h3>检查结果</h3><p id="review-counts"></p></div>
+      <section class="review-section" aria-labelledby="settings-title">
+        <h3 id="settings-title">可迁移的设置</h3><ul id="settings-list" class="plain-list"></ul>
+        <label class="check"><input id="apply-settings" type="checkbox" disabled><span>应用检查通过的可迁移设置</span></label>
+        <p class="note">只应用受支持的设置。自定义命令、模型密钥和账号登录状态需另行设置。</p>
+      </section>
+      <section class="review-section" aria-labelledby="pending-title">
+        <h3 id="pending-title">待处理任务</h3>
+        <p class="note">逐项选择：保留待处理、继续为草稿，或取消。继续为草稿只生成本机可检查的内容；不会自动发微信、采集资料或调用模型。</p>
+        <div id="pending-list"></div>
+      </section>
+      <section class="review-section" aria-labelledby="reauth-title">
+        <h3 id="reauth-title">启用后重新授权</h3><ul id="reauthorization-list" class="plain-list"></ul>
+        <p class="note">重新打开后会进入 API 设置；微信及其他账号需要重新登录。</p>
+      </section>
+      <section class="review-section" aria-labelledby="prepare-title">
+        <h3 id="prepare-title">准备启用副本</h3>
+        <label id="activation-parent-label">启用副本位置</label>
+        <div class="folder-row"><p id="activation-parent-path" class="path empty" aria-labelledby="activation-parent-label">尚未选择启用副本位置</p><button type="button" data-choose="activationParent" disabled>选择启用位置</button></div>
+        <button type="button" id="prepare" class="primary" disabled>按以上选择准备副本</button>
+      </section>
+    </div>
+
+    <section id="prepared-section" class="prepared" aria-labelledby="prepared-title" hidden>
+      <h3 id="prepared-title">副本已准备，等待确认启用</h3><p id="prepared-path" class="path"></p>
+      <p>启用后将使用此目录并重新打开程序。原资料目录保留，可从本页撤回；未处理任务不会自动执行。</p>
+      <p class="note">启用后请重新填写 API Key，并重新登录微信及其他账号。恢复草稿需你核对后手工发送。如需修改上面的处理选择，请重新检查恢复副本。</p>
+      <div class="actions"><button type="button" id="open-drafts" disabled>查看恢复草稿</button></div>
+      <label class="check"><input id="activate-confirm" type="checkbox" disabled><span>我已核对副本，确认切换到这个资料目录</span></label>
+      <button type="button" id="activate" class="primary" disabled>确认启用并重新打开</button>
+    </section>
+  </section>
+
+  <section id="rollback-section" class="rollback" aria-labelledby="rollback-title" hidden>
+    <h2 id="rollback-title">撤回到原资料目录</h2>
+    <p>撤回会重新打开原目录，两份资料都会保留。当前目录中新增的内容不会自动合并到原目录。</p>
+    <label class="check"><input id="rollback-confirm" type="checkbox" disabled><span>我已保存当前内容，确认撤回到上方显示的原目录</span></label>
+    <button type="button" id="rollback" disabled>撤回并重新打开</button>
+  </section>
+  <footer>AI师兄法律助手平台 · 本机维护。备份文件与恢复副本请保存在有权访问的位置。</footer>
+</main>
+<script src="backup.js"></script>
+</body>
+</html>

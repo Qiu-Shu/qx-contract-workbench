@@ -36,8 +36,23 @@ function copyDesktopRunners(sourceRoot,payload,manifest){
   const runner=path.join(payload,'desktop-runner');
   fs.mkdirSync(runner,{recursive:true});
   for(const name of ['case-memory-runtime.cjs','host-recovery.cjs','installed-host.cjs','installed-migrations.cjs',
-    'installed-runtime.cjs','installed-stop.cjs','stop-installed.cjs','backup-preparation.cjs','local-backup.cjs'])
+    'installed-runtime.cjs','installed-stop.cjs','stop-installed.cjs','backup-preparation.cjs','local-backup.cjs',
+    'restore-activation.cjs','restore-pending.cjs','data-location.cjs'])
     copySource(path.join(sourceRoot,'desktop',name),path.join(runner,name),'resources/workbench/desktop-runner/'+name,manifest);
+}
+function copyDesktopApp(sourceRoot,app,manifest){
+  fs.mkdirSync(app,{recursive:true});
+  const desktop=path.join(sourceRoot,'desktop');
+  const names=new Set(fs.readdirSync(app,{withFileTypes:true})
+    .filter(entry=>entry.isFile()&&fs.existsSync(path.join(desktop,entry.name))).map(entry=>entry.name));
+  // The immutable bootstrap predates these files; enumerating that app alone would omit them.
+  for(const name of ['backup.html','backup.css','backup.js','backup-preload.cjs','backup-controller.cjs',
+    'backup-window.cjs','backup-runtime.cjs','data-location.cjs'])names.add(name);
+  for(const name of names){
+    const source=path.join(desktop,name),stat=fs.lstatSync(source);
+    if(stat.isSymbolicLink()||!stat.isFile())throw Error('Desktop app source must be a regular file: '+name);
+    copySource(source,path.join(app,name),'app.asar/'+name,manifest);
+  }
 }
 function copyMediaRegistry(source,payload,manifest){
   const registry=JSON.parse(fs.readFileSync(source,'utf8')),ids=new Set();
@@ -67,7 +82,7 @@ function copySkillLabels(source,payload,manifest){
   return {target:'resources/workbench/'+relative,sha256:crypto.createHash('sha256').update(updated).digest('hex')};
 }
 function copyContentWatchAssets(payload,manifest){
-  for(const relative of ['scripts/prepare-content-watch.mjs','sources/xiaohongshu-mcp-Apache-2.0.txt']){
+  for(const relative of ['scripts/prepare-content-watch.mjs','sources/xiaohongshu-mcp-Apache-2.0.txt','sources/restic-BSD-2-Clause.txt']){
     const target=path.join(payload,relative);
     fs.mkdirSync(path.dirname(target),{recursive:true});
     copySource(path.join(root,relative),target,'resources/workbench/'+relative,manifest);
@@ -121,7 +136,7 @@ async function refresh(stage){
   for(const name of ['component-install.py','python-tool.py'])copySource(path.join(__dirname,name),path.join(payload,name),'resources/workbench/'+name,manifest);
   copyContentWatchAssets(payload,manifest);
   copyDesktopRunners(root,payload,manifest);
-  for(const name of fs.readdirSync(app))if(fs.statSync(path.join(app,name)).isFile()&&fs.existsSync(path.join(root,'desktop',name)))copySource(path.join(root,'desktop',name),path.join(app,name),'app.asar/'+name,manifest);
+  copyDesktopApp(root,app,manifest);
   copySource(path.join(__dirname,'app-template.json'),path.join(app,'package.json'),'app.asar/package.json',manifest);
   for(const target of ['desktop/integration','node_modules/@qunxing/desktop-session'])overlay(path.join(root,'desktop/integration'),path.join(payload,target),manifest,'resources/workbench/'+target);
   // The initialization identifier is generated from source, never hashed into itself.
@@ -140,4 +155,4 @@ async function refresh(stage){
   console.log(JSON.stringify({stage,base,candidate,sourceFiles:manifest.length}));
 }
 if(require.main===module)main().catch(error=>{console.error(error);process.exitCode=1});
-module.exports={overlay,digest,copyMediaRegistry,copySkillLabels,copyBackupConfiguration,copyDesktopRunners,copyContentWatchAssets};
+module.exports={overlay,digest,copyMediaRegistry,copySkillLabels,copyBackupConfiguration,copyDesktopRunners,copyDesktopApp,copyContentWatchAssets};

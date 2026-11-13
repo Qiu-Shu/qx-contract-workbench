@@ -14,6 +14,7 @@ import struct
 import subprocess
 import sys
 import time
+from urllib.parse import quote
 
 MAX_FILES = 20000
 MAX_BYTES = 2 * 1024**3
@@ -38,14 +39,24 @@ def member(value):
     return value
 
 
+class _LocalPath(type(Path())):
+    """Only validated worker paths carry the Win32 extended prefix internally."""
+
+
+def public_path(path):
+    value=str(path)
+    return value[4:] if isinstance(path,_LocalPath) and value.startswith('\\\\?\\') else value
+
+
 def local_path(value):
-    path = Path(value)
+    path = Path(public_path(value))
     if os.name != 'nt' or not path.is_absolute() or not re.match(r'^[a-zA-Z]:[\\/]', str(path)):
         fail('BACKUP_LOCAL_WINDOWS_PATH_REQUIRED')
     if '..' in path.parts or ':' in str(path)[2:]:
         fail('BACKUP_INVALID_PATH')
     for part in path.parts[1:]:
         member(part)
+    path = _LocalPath('\\\\?\\'+str(path))
     for item in [path, *path.parents]:
         try:
             s = item.lstat()
@@ -55,7 +66,7 @@ def local_path(value):
             fail('BACKUP_LINKED_PATH')
         if not stat.S_ISDIR(s.st_mode) and (not stat.S_ISREG(s.st_mode) or s.st_nlink != 1):
             fail('BACKUP_LINKED_PATH')
-    return Path(os.path.realpath(path))
+    return _LocalPath(os.path.realpath(path))
 
 
 def private_directory(value):
@@ -68,7 +79,7 @@ def private_directory(value):
     advapi.OpenProcessToken.argtypes = [wintypes.HANDLE, wintypes.DWORD, ctypes.POINTER(wintypes.HANDLE)]
     advapi.GetTokenInformation.argtypes = [wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)]
     flags = wintypes.DWORD()
-    if not kernel.GetVolumeInformationW(path.anchor, None, 0, None, None, ctypes.byref(flags), None, 0) or not flags.value & 8:
+    if not kernel.GetVolumeInformationW(Path(public_path(path)).anchor, None, 0, None, None, ctypes.byref(flags), None, 0) or not flags.value & 8:
         fail('BACKUP_ACL_UNSUPPORTED')
     token = wintypes.HANDLE()
     kernel.GetCurrentProcess.restype = wintypes.HANDLE
@@ -115,7 +126,7 @@ def frozen(paths):
     handles = []
     try:
         for path in sorted(set(paths), key=lambda p: (len(p.parts), str(p))):
-            local_path(path)
+            path = local_path(path)
             handle = kernel.CreateFileW(str(path), 0x80000000, 1, None, 3, 0x02200000, None)
             if handle == ctypes.c_void_p(-1).value:
                 fail('BACKUP_SOURCE_BUSY')
@@ -183,7 +194,7 @@ def check_postgres_wal(database, control, check):
         header = stream.read(40)
     if struct.unpack_from('<QII',header,24) != (int(control['Database system identifier']),segment_size,int(control['WAL block size'])):
         fail('BACKUP_POSTGRES_CHECK_FAILED')
-    record = check('pg_waldump.exe',['-p',str(database/'pg_wal'),'-s',checkpoint,'-t',timeline,'-n','1'])
+    record = check('pg_waldump.exe',['-p',public_path(database/'pg_wal'),'-s',checkpoint,'-t',timeline,'-n','1'])
     match = re.fullmatch(r'rmgr: XLOG\s+.*?lsn: ([0-9A-F]+/[0-9A-F]+),.*?desc: CHECKPOINT_SHUTDOWN redo ([0-9A-F]+/[0-9A-F]+); tli ([0-9]+);.*',record.strip())
     if not match or lsn(match[1]) != lsn(checkpoint) or lsn(match[2]) != lsn(checkpoint) or match[3] != timeline:
         fail('BACKUP_POSTGRES_CHECK_FAILED')
@@ -228,13 +239,14 @@ def inspect_postgres(root, tools):
     env = {k:v for k,v in os.environ.items() if k.upper() in ('SYSTEMROOT','WINDIR','TEMP','TMP')}
     env.update(LC_ALL='C',LANG='C',LANGUAGE='C')
     def check(name,args):
-        result = subprocess.run([str(tools/'bin'/name),*args],cwd=tools/'bin',env=env,stdin=subprocess.DEVNULL,
+        # Native PostgreSQL tools append forward-slash suffixes, which Win32 extended paths reject.
+        result = subprocess.run([public_path(tools/'bin'/name),*args],cwd=public_path(tools/'bin'),env=env,stdin=subprocess.DEVNULL,
                                 capture_output=True,timeout=120,creationflags=subprocess.CREATE_NO_WINDOW)
         if result.returncode or result.stderr or len(result.stdout)>65536:
             fail('BACKUP_POSTGRES_CHECK_FAILED')
         return result.stdout.decode('utf-8')
     control = {}
-    for line in check('pg_controldata.exe',[str(database)]).splitlines():
+    for line in check('pg_controldata.exe',[public_path(database)]).splitlines():
         if ':' in line:
             key,value=line.split(':',1);control[key.strip()]=value.strip()
     if control.get('Database cluster state') != 'shut down':
@@ -247,14 +259,19 @@ def inspect_postgres(root, tools):
     if not re.fullmatch(r'[0-9]+',system_id):
         fail('BACKUP_POSTGRES_CHECK_FAILED')
     check_postgres_wal(database,control,check)
-    check('pg_checksums.exe',['--check','-D',str(database)])
+    check('pg_checksums.exe',['--check','-D',public_path(database)])
     return {'major':pin['major'],'controlVersion':pin['controlVersion'],'catalogVersion':pin['catalogVersion'],
             'systemIdentifier':system_id,'instanceId':identity['id'],'checksumVersion':1,
             'controlSha256':digest(database/'global/pg_control')}
 
 
+def readonly_database_uri(path):
+    # Encode the device prefix as a filename, not a URI authority; preserve read-only validation.
+    return 'file:'+quote(str(local_path(path)),safe=':')+'?mode=ro&immutable=1'
+
+
 def check_database(path):
-    with contextlib.closing(sqlite3.connect(path.as_uri() + '?mode=ro&immutable=1', uri=True)) as db:
+    with contextlib.closing(sqlite3.connect(readonly_database_uri(path), uri=True)) as db:
         if db.execute('PRAGMA integrity_check').fetchall() != [('ok',)] or db.execute('PRAGMA foreign_key_check').fetchone():
             fail('BACKUP_DATABASE_INVALID')
 
@@ -264,7 +281,7 @@ def check_references(root):
         database = root / base / '.qx-materials/index.sqlite'
         if not database.exists():
             continue
-        with contextlib.closing(sqlite3.connect(database.as_uri() + '?mode=ro&immutable=1', uri=True)) as db:
+        with contextlib.closing(sqlite3.connect(readonly_database_uri(database), uri=True)) as db:
             if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='materials'").fetchone():
                 continue
             for name, size, sha in db.execute('SELECT path,size,sha256 FROM materials'):
@@ -381,7 +398,7 @@ def create_snapshot(source, destination, plan, pg_tools=None):
                   'mtimeNs': (destination/relocated.get(n,n)).stat().st_mtime_ns,
                   'kind': 'sqlite' if n in databases else 'file'} for n in sorted(before) if n not in sidefiles]
         manifest = {'schema': 1, 'scope': 'business-data', 'applicationComplete': False,
-                    'activation': 'manual-review-required', 'sourceRoot': str(source),
+                    'activation': 'manual-review-required', 'sourceRoot': public_path(source),
                     'scopes': plan['scopes'], 'files': files,
                     'settings': settings,
                     'directories': sorted(p.relative_to(destination).as_posix() for p in destination.rglob('*') if p.is_dir())}
@@ -488,11 +505,94 @@ def review_frozen_snapshot(root, pg_tools):
         blockers.extend(['postgres-instance-registration','hindsight-api-validation'])
     return {'schema':1,'verified':True,'activation':'blocked','applicationComplete':False,
             'fileCount':checked['fileCount'],'postgresIncluded':checked['postgresIncluded'],'settings':settings,
+            'databaseCount':checked['databaseCount'],'manifestSha256':checked['manifestSha256'],'sourceRoot':checked['sourceRoot'],
             'reauthorization':['model-api-keys','wechat-login','other-profile-secrets'],'blockers':blockers}
 
 
+def copy_verified_snapshot(root, destination, manifest_sha256, pg_tools=None):
+    """Copy a frozen verified restore; the delivered restore remains the immutable reference."""
+    root=local_path(root);destination=local_path(destination)
+    source=local_path(read_json(root/MANIFEST)['sourceRoot'])
+    for original in (root,source):
+        if original==destination or original in destination.parents or destination in original.parents:
+            fail('BACKUP_OVERLAPPING_PATHS')
+    if destination.exists():
+        fail('BACKUP_TARGET_EXISTS')
+    scopes=[{'path':p.name,'policy':'protect'} for p in root.iterdir()]
+    directories=set();before=inventory(root,scopes,directories=directories)
+    owned=False
+    try:
+        with frozen([root,*(root/n for n in before),*(root/n for n in directories)]):
+            checked=verify_snapshot(root,pg_tools)
+            if checked['manifestSha256']!=manifest_sha256:
+                fail('BACKUP_REVIEW_STALE')
+            if shutil.disk_usage(destination.parent).free < sum(v[0] for v in before.values())+64*1024**2:
+                fail('BACKUP_SPACE_REQUIRED')
+            private_directory(destination);owned=True
+            for name in sorted(directories):
+                (destination/name).mkdir(parents=True,exist_ok=True)
+            for name in before:
+                shutil.copy2(root/name,destination/name)
+            observed_dirs=set()
+            if inventory(root,[{'path':p.name,'policy':'protect'} for p in root.iterdir()],directories=observed_dirs)!=before or observed_dirs!=directories:
+                fail('BACKUP_SOURCE_CHANGED')
+            result=verify_snapshot(destination,pg_tools)
+            if result['manifestSha256']!=manifest_sha256:
+                fail('BACKUP_REVIEW_STALE')
+            return result
+    except BaseException:
+        if owned:
+            shutil.rmtree(destination)
+        raise
+
+
+PREPARED_MANIFEST='.local/restore-prepared-manifest.json'
+ACTIVATION_RECEIPT='.local/restore-activation.json'
+
+
+def prepared_contents(root):
+    directories=set()
+    found=inventory(root,[{'path':p.name,'policy':'protect'} for p in root.iterdir()],directories=directories)
+    files=[]
+    for name in sorted(found):
+        if name in (PREPARED_MANIFEST,ACTIVATION_RECEIPT):
+            continue
+        target=root/name
+        files.append({'path':name,'bytes':target.stat().st_size,'sha256':digest(target),'mtimeNs':str(target.stat().st_mtime_ns)})
+    return {'schema':1,'files':files,'directories':sorted(directories)}
+
+
+def seal_prepared(root):
+    root=local_path(root)
+    if (root/PREPARED_MANIFEST).exists():
+        fail('BACKUP_TARGET_EXISTS')
+    manifest=prepared_contents(root)
+    (root/PREPARED_MANIFEST).write_text(json.dumps(manifest,ensure_ascii=False,sort_keys=True),encoding='utf-8')
+    return {'preparedManifestSha256':digest(root/PREPARED_MANIFEST),'fileCount':len(manifest['files'])}
+
+
+def verify_prepared(root, destination=None):
+    root=local_path(root);expected=local_path(destination) if destination else root
+    directories=set();scopes=[{'path':p.name,'policy':'protect'} for p in root.iterdir()]
+    before=inventory(root,scopes,directories=directories)
+    with frozen([root,*(root/n for n in before),*(root/n for n in directories)]):
+        receipt=read_json(root/ACTIVATION_RECEIPT)
+        if (receipt.get('schema')!=1 or receipt.get('phase')!='prepared' or
+            local_path(receipt.get('data',''))!=expected or
+            not re.fullmatch(r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}',str(receipt.get('id',''))) or
+            digest(root/PREPARED_MANIFEST)!=receipt.get('preparedManifestSha256') or
+            (root/MANIFEST).exists() or (root/'.qx-restore-review').exists()):
+            fail('BACKUP_PREPARED_CHANGED')
+        if read_json(root/PREPARED_MANIFEST)!=prepared_contents(root):
+            fail('BACKUP_PREPARED_CHANGED')
+        observed_dirs=set()
+        if inventory(root,[{'path':p.name,'policy':'protect'} for p in root.iterdir()],directories=observed_dirs)!=before or observed_dirs!=directories:
+            fail('BACKUP_PREPARED_CHANGED')
+        return receipt
+
+
 def main():
-    request = json.load(sys.stdin)
+    request = json.loads(sys.stdin.buffer.read().decode('utf-8'))
     action = request['action']
     if action == 'create':
         result = create_snapshot(request['source'], request['destination'], request['plan'], request.get('pgTools'))
@@ -500,8 +600,14 @@ def main():
         result = verify_snapshot(request['root'],request.get('pgTools'))
     elif action == 'review':
         result = review_snapshot(request['root'],request.get('pgTools'))
+    elif action == 'copy-verified':
+        result = copy_verified_snapshot(request['root'],request['destination'],request['manifestSha256'],request.get('pgTools'))
+    elif action == 'seal-prepared':
+        result = seal_prepared(request['root'])
+    elif action == 'verify-prepared':
+        result = verify_prepared(request['root'],request.get('destination'))
     elif action == 'private-directory':
-        result = {'path': str(private_directory(request['path']))}
+        result = {'path': public_path(private_directory(request['path']))}
     elif action == 'publish':
         source = local_path(request['source']); target = local_path(request['target'])
         # Windows rename fails if the destination already exists, including an empty directory.

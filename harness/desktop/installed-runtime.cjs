@@ -26,8 +26,10 @@ function redactedLines(secret,write){
   };
 }
 
-function initialize(payload,data){
-  assertRestoreReviewed(data);
+const PREPARED_RESTORE=Symbol('prepared restore initialization');
+function initialize(payload,data,capability){
+  if(capability!==PREPARED_RESTORE)assertRestoreReviewed(data);
+  else if(['backup-manifest.json','.qx-restore-review'].some(name=>fs.existsSync(path.join(data,name))))throw Object.assign(Error('BACKUP_RESTORE_REVIEW_REQUIRED'),{code:'BACKUP_RESTORE_REVIEW_REQUIRED'});
   const local=path.join(data,'.local'),profile=path.join(local,'dsh-home/profiles/web');
   const marker=path.join(local,'initialized-payload.json');
   let identity=null,previous=null;
@@ -89,6 +91,21 @@ function initialize(payload,data){
     (lazyTools.status==='deferred'&&JSON.stringify(template).includes('@APP@/plugins/lazy-mcp/'));
   if(identity&&!pending)writeJson(marker,identity);
   return {status:'initialized'};
+}
+async function initializePreparedRestore(payload,data){
+  data=require('./data-location.cjs').normalized(data);
+  const lease=await require('./installed-stop.cjs').claimLauncher(data);
+  try{
+    const {verifyPreparedRestore}=require(path.join(payload,'desktop-runner/restore-activation.cjs'));
+    const receipt=await verifyPreparedRestore({root:data,python:path.join(payload,'runtime/python/python.exe')});
+    if(receipt.phase!=='prepared'||path.resolve(receipt.data).toLowerCase()!==data.toLowerCase())throw Object.assign(Error('BACKUP_RESTORE_NOT_PREPARED'),{code:'BACKUP_RESTORE_NOT_PREPARED'});
+    initialize(payload,data,PREPARED_RESTORE);
+    const initialized=JSON.parse(fs.readFileSync(path.join(data,'.local/initialized-payload.json'),'utf8'));
+    if(initialized.schema!==2||path.resolve(initialized.data).toLowerCase()!==data.toLowerCase())throw Object.assign(Error('BACKUP_INITIALIZATION_INCOMPLETE'),{code:'BACKUP_INITIALIZATION_INCOMPLETE'});
+    const ready={...receipt,phase:'ready',readyAt:new Date().toISOString()};
+    writeJson(path.join(data,'.local/restore-activation.json'),ready);
+    return ready;
+  }finally{await lease.close();}
 }
 async function readRuntime(data){
   try{
@@ -192,4 +209,4 @@ async function runHost({payload,data,store,app}){
   }
   return supervisor;
 }
-module.exports={initialize,readRuntime,readControl,readHostState,inspectHost,runHost,stopRuntime,stopInstalledHost,restartRuntime,redactedLines};
+module.exports={initialize,initializePreparedRestore,readRuntime,readControl,readHostState,inspectHost,runHost,stopRuntime,stopInstalledHost,restartRuntime,redactedLines};
