@@ -2,7 +2,7 @@
 
 面向律师的 Windows 桌面工作台：在一个输入框里处理接待、合同审查、材料整理和模拟法庭，也可按业务方向持续整理拓客内容。
 
-**0.2.18 正在进行发布验收；当前公开版为 0.2.16。** [公开下载](https://github.com/Qiu-Shu/qx-contract-workbench/releases/latest) · [0.2.18 验证记录](harness/docs/2026-11-13-0.2.18发布.md) · [使用说明](harness/README.md) · [源码构建](harness/packaging/README.md)
+**当前正式版：0.2.18。** [下载 Windows 安装包](https://github.com/Qiu-Shu/qx-contract-workbench/releases/download/v0.2.18/Qunxing-Workbench-0.2.18-Setup.exe) · [发布说明](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.18) · [验证记录](harness/docs/2026-11-13-0.2.18发布.md) · [使用说明](harness/README.md) · [源码构建](harness/packaging/README.md)
 
 ## 0.2.18 的更新
 

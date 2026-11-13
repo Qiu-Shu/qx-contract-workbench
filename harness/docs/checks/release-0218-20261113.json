@@ -1,0 +1,143 @@
+{
+  "version": "0.2.18",
+  "checkedAt": "2026-11-13T12:47:57.217Z",
+  "release": "https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.18",
+  "releaseTagCommit": "b10336996cce6d959d9e4017a2749886c118e975",
+  "passed": true,
+  "regression": {
+    "offlineNode": {
+      "passed": 647,
+      "skipped": 19
+    },
+    "offlinePython": {
+      "passed": 544,
+      "skipped": 5,
+      "subtests": 36
+    },
+    "windowsNode": {
+      "passed": 56,
+      "skipped": 0
+    },
+    "windowsPython": {
+      "passed": 57,
+      "skipped": 0
+    },
+    "entryPointExitCodes": [
+      0,
+      0
+    ]
+  },
+  "package": {
+    "files": 53262,
+    "sourceRecords": 3431,
+    "allSourcesMatchBuild": true,
+    "fullArchiveMatchesDeltaInputs": true,
+    "originalUpdateSignatureVerified": true,
+    "installerSha512Verified": true
+  },
+  "upgradeReplays": {
+    "baselines": [
+      "0.2.14",
+      "0.2.15",
+      "0.2.16",
+      "0.2.17"
+    ],
+    "allPassed": true,
+    "loopbackDownloadReconstruction": [
+      "0.2.14",
+      "0.2.15",
+      "0.2.16"
+    ]
+  },
+  "interface": {
+    "isolatedContentChecks": 6,
+    "chineseToolCards": 5,
+    "packagedStdioChecks": 21,
+    "packagedStdioCalls": 21,
+    "toolDefinitionsUnchanged": 13,
+    "chineseMappings": 153,
+    "realProvidersCalled": false
+  },
+  "localInstall": {
+    "fromVersion": "0.2.17",
+    "toVersion": "0.2.18",
+    "exitCode": 0,
+    "userFilesVerified": 3295,
+    "userHashesAndMtimesPreservedBeforeFirstLaunch": true,
+    "changedProgramFiles": 48,
+    "runtimeGeneratedComCachesPreserved": 4,
+    "transactionFinalized": true,
+    "started": true,
+    "existingSessions": 20,
+    "runningTasks": 0,
+    "contentConfigurationVisible": true,
+    "backupMenuVisible": true,
+    "updateMenuShowsLatest": true
+  },
+  "publicDownload": {
+    "passed": true,
+    "checkedAt": "2026-11-13T12:45:53.059Z",
+    "release": "https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.18",
+    "publicLatest": true,
+    "authenticatedRequests": false,
+    "originalUpdateSignatureVerified": true,
+    "completeInstallerDownloadVerified": true,
+    "installerBytes": 591361943,
+    "archiveRangeVerified": true,
+    "assets": [
+      {
+        "name": "latest.yml",
+        "size": 1506,
+        "digest": "sha256:9931aaee3b47f6724bcdc83f5daa5154f98a7c238ef3c50efc48dd6473462374"
+      },
+      {
+        "name": "Qunxing-Workbench-0.2.17-baseline-archive.exe",
+        "size": 590859223,
+        "digest": "sha256:7d97e21085f3c873f21cb604232fa4f269a64dd056e99216fe9e223a326dcbdd"
+      },
+      {
+        "name": "Qunxing-Workbench-0.2.18-Setup.exe",
+        "size": 591361943,
+        "digest": "sha256:cdbe224ebc684e7c0b8b9b62903c5f9756c77b239d0ce017a819cab2bfb2a954"
+      },
+      {
+        "name": "Qunxing-Workbench-0.2.18-Setup.exe.blockmap",
+        "size": 590158,
+        "digest": "sha256:b3af46fc970f16327fa7f888edf7962ad5abf54e442b7d7c9db1d2d74cc081d1"
+      },
+      {
+        "name": "SHA256SUMS.txt",
+        "size": 401,
+        "digest": "sha256:facb9a39341d292e9a8caeb2ff3e3364c84109ba016a81ac6185549df765f0e4"
+      }
+    ]
+  },
+  "cleanup": {
+    "passed": true,
+    "removedVersions": [
+      "0.2.1",
+      "0.2.2",
+      "0.2.3",
+      "0.2.4",
+      "0.2.5"
+    ],
+    "removedAssets": 16,
+    "removedBytes": 3160696264,
+    "retainedReleases": [
+      "v0.2.6",
+      "v0.2.7",
+      "v0.2.9",
+      "v0.2.10",
+      "v0.2.14",
+      "v0.2.15",
+      "v0.2.16",
+      "v0.2.18"
+    ],
+    "historyAndTagsRetained": true
+  },
+  "incomplete": [
+    "73-hour real-clock observation remains running until approximately 2026-11-16 20:20 Asia/Shanghai; synthetic providers",
+    "Cross-machine acceptance and real-account reconnect",
+    "Human legal-quality review"
+  ]
+}
