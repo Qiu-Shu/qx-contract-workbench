@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "baseline": "ba5b09eb90c2738f1e9f537c9cac9321d7b4b63f",
+  "workspace": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目",
+  "evidenceRoot": "D:/CodexChecks/AI-Shixiong-document-privacy-20261113",
+  "recordedAt": "2026-11-13T11:58:12.264127+00:00",
+  "installerBuilt": false,
+  "dailyInstallationChanged": false,
+  "realCustomerDataUsed": false,
+  "externalModelOrProviderCalls": 0,
+  "newRuntimeDependencies": 0,
+  "finalTarget": {
+    "cwd": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目/harness",
+    "finishedAt": "2026-11-13T11:52:52.7021091Z",
+    "startedAt": "2026-11-13T11:51:09.2363568Z",
+    "exitCode": 0,
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.local\\release-0216\\stage\\base\\resources\\workbench\\runtime\\python\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "bridge/test_privacy_context.py",
+      "bridge/test_privacy.py",
+      "bridge/test_privacy_modes.py",
+      "bridge/test_privacy_review.py",
+      "bridge/test_pdf_layers.py",
+      "bridge/test_scan_grid_boundaries.py",
+      "bridge/test_document_complexity.py",
+      "--basetemp",
+      "D:/CodexChecks/AI-Shixiong-document-privacy-20261113/root/final-target-fixtures"
+    ],
+    "passed": 116,
+    "failed": 0,
+    "skipped": 0,
+    "privacyCases": 108,
+    "newPrivacyCases": 45,
+    "documentCases": 8,
+    "actualOcrCases": 4,
+    "controlledDocumentCases": 4,
+    "log": "root/final-target.log"
+  },
+  "finalStricterLayerAssertions": {
+    "exitCode": 0,
+    "command": [
+      "D:\\Documents\\ChatGPT\\律所项目\\.local\\release-0216\\stage\\base\\resources\\workbench\\runtime\\python\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "bridge/test_pdf_layers.py"
+    ],
+    "cwd": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目/harness",
+    "passed": 2,
+    "log": "documents/layers-final.log",
+    "scope": "per-row assertions added after broad runs to rule out offsetting duplicate/deletion counts; product code unchanged"
+  },
+  "fullOffline": {
+    "finishedAt": "2026-11-13T11:57:05.9776755Z",
+    "startedAt": "2026-11-13T11:54:56.0276117Z",
+    "command": [
+      "D:/CodexBuilds/AI-Shixiong-content-merge-20261113/stage/win-unpacked/resources/workbench/runtime/node.exe",
+      "scripts/test-suite.cjs",
+      "offline"
+    ],
+    "exitCode": 0,
+    "cwd": "C:/Users/Administrator/.codex/worktrees/audit-0216-fixes/律所项目/harness",
+    "node": {
+      "total": 666,
+      "passed": 651,
+      "failed": 0,
+      "skipped": 15
+    },
+    "python": {
+      "passed": 528,
+      "skipped": 5,
+      "subtestsPassed": 36,
+      "failed": 0
+    },
+    "temp": "D:/CodexChecks/doc-privacy-20261113/test-temp",
+    "log": "root/full-offline-final2.log"
+  },
+  "frozenGold": {
+    "samples": 12,
+    "modeChecks": 24,
+    "unchangedFromBaseline": true,
+    "expectedEntityMentions": 11,
+    "scope": "exact replacement sets and preserved facts, not population-wide accuracy"
+  },
+  "review": {
+    "standardsUnresolved": 0,
+    "specUnresolved": 0,
+    "standardsChecks": 9,
+    "standardsEvidence": "standards/final-paragraph-probe/result.json",
+    "specEvidence": "spec/review-final.json"
+  },
+  "observationProtection": {
+    "checkedAt": "2026-11-13T11:57:45.1694017Z",
+    "pid": 23604,
+    "identityVerified": true,
+    "frozenFiles": 14,
+    "sourceMismatches": [],
+    "status": "running",
+    "threeDayVerificationComplete": false
+  },
+  "retainedFailures": [
+    {
+      "log": "documents/baseline.log",
+      "exitCode": 1,
+      "failed": 1,
+      "passed": 2,
+      "cause": "phantom columns prevent continuation headers"
+    },
+    {
+      "log": "documents/grid-red.log",
+      "exitCode": 1,
+      "failed": 2,
+      "cause": "same product defect with controlled OCR"
+    },
+    {
+      "log": "documents/green.log",
+      "exitCode": 2,
+      "cause": "test launch missing QX_LEGACY_ROOT"
+    },
+    {
+      "log": "documents/layers-red.log",
+      "exitCode": 1,
+      "failed": 1,
+      "passed": 1,
+      "cause": "mixed row duplication; different-location assertion later strengthened to avoid compensating errors"
+    },
+    {
+      "log": "documents/layers-green.log",
+      "exitCode": 1,
+      "failed": 1,
+      "passed": 7,
+      "cause": "actual OCR drops printed English space; retained limitation"
+    },
+    {
+      "log": "privacy/evidence.json",
+      "scope": "initial privacy RED and review fixes"
+    },
+    {
+      "log": "privacy/paragraph-evidence.json",
+      "scope": "numbered paragraph RED3/GREEN64"
+    },
+    {
+      "log": "root/full-offline.log",
+      "exitCode": 1,
+      "pythonPassed": 517,
+      "pythonFailed": 1,
+      "cause": "252-character SQLite index path fails in baseline and current"
+    },
+    {
+      "log": "root/full-offline-final.log",
+      "exitCode": 1,
+      "pythonPassed": 527,
+      "pythonFailed": 1,
+      "cause": "short TEMP makes existing long-path test fixture only 286 characters; expected >300; cleanup also fails"
+    }
+  ],
+  "remainingLimitations": [
+    "Actual OCR SCANNED BODY -> SCANNEDBODY; final inline check permits whitespace normalization only.",
+    "MaterialStore SQLite index at 252-character path fails in both baseline/current; 119-character path succeeds. Separate long-directory compatibility work remains.",
+    "Bounded name contexts only; not general NER or complete anonymity.",
+    "73-hour observation still running; second machine/accounts, cross-version and human legal validation pending."
+  ],
+  "sourceHashes": {
+    "harness/bridge/material_scan_grid.py": "168aeecbdea764996569e9afda1f5bb6ce4aab77857cc1a37e88169eb33c808f",
+    "harness/bridge/material_scan.py": "d97ceb763b3eb3f608ed1274028b81fcea7d6897d39050e4704f8ae76345a4db",
+    "harness/bridge/reader.py": "db71baa37e2642151790dcf019636a12a2ff32169b6ebbe35fff67418c1eb052",
+    "harness/bridge/privacy.py": "3736f966c3a1d9faeef6db48b45d874ebad22590b8d29017b6fee06003b4d907",
+    "harness/bridge/privacy_sources.md": "473d6382c277188c4b034d5c2c29615c1b5b3990ab86877129cd63edc6bbb6ad",
+    "harness/bridge/test_scan_grid_boundaries.py": "fe6157dfbdde301926c1eb8442ea44cfec5fb44b875bbf3c8ba356286cff0208",
+    "harness/bridge/test_pdf_layers.py": "c22c47f3517b5eef718268e7e1bb54e06022c224191d2c8e177b0ed1d8b1817d",
+    "harness/bridge/test_document_complexity.py": "aeec3bf6ab78f8678d416dca0233c4ba1b5c30ef30ce8f996985606eeb4fbbce",
+    "harness/bridge/test_privacy_context.py": "305d9eb1a352f1e1bd817dd28f5bd8ac92ee1c14348efd85046f473b2b7738c8",
+    "harness/tests/document_complexity_fixture.py": "cf7a0b75ba559c1d5d50c3acc097a3a1b0d131eb878964aee971af1a7c29ada8",
+    "harness/experiments/candidate-admission/privacy-docling-fixtures.json": "cdbb21b7ae38578642a2998852ccc158c635ab132e4f72abebd268fb2f850797"
+  }
+}

@@ -26,13 +26,19 @@ def detect_cells(image):
     for x,y,w,h in rectangles:
         if w<max(120,width*.2) or h<60:continue
         ys=_clusters(np.flatnonzero(np.count_nonzero(horizontal[y:y+h,x:x+w],axis=1)>=max(20,width//30))+y)
-        all_x=_clusters(np.flatnonzero(np.count_nonzero(vertical[y:y+h,x:x+w],axis=0)>=h*.15)+x)
-        if len(ys)<3 or len(all_x)<3:continue
-        bands=[];band_rows=[];previous={}
+        if len(ys)<3:continue
+        boundaries=[]
         for number,(top,bottom) in enumerate(zip(ys,ys[1:]),1):
             if bottom-top<10:continue
             xs=_clusters(np.flatnonzero(np.count_nonzero(vertical[top+3:bottom-2,x:x+w],axis=0)>=(bottom-top-5)*.65)+x)
             if len(xs)<2:continue
+            boundaries.append((number,top,bottom,xs))
+        # Only row-spanning rules define columns. Repeated short glyph strokes can
+        # accumulate enough ink over a whole table to look like phantom columns.
+        all_x=_clusters(sorted({edge for _,_,_,xs in boundaries for edge in xs}))
+        if len(all_x)<3:continue
+        bands=[];band_rows=[];previous={}
+        for number,top,bottom,xs in boundaries:
             cells=[]
             for left,right in zip(xs,xs[1:]):
                 a=min(range(len(all_x)),key=lambda i:abs(all_x[i]-left))

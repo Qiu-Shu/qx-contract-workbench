@@ -2,6 +2,8 @@
 
 当前发布：**0.2.16（2026-11-10），Windows x64**。
 
+审核分支进展（2026-11-13，尚未发行）：扫描续表列号/表头、混合 PDF 重复文字和中文姓名/OCR 空白脱敏已补强；目标116项及完整离线回归通过。未构建安装包或更新日常安装。材料索引超长目录兼容、73小时拓客观察及真实换机/业务验收仍待；已知 OCR 空格误差保留说明。[交付与验证边界](harness/docs/2026-11-13-document-privacy-delivery.md)。
+
 - [下载安装包与更新说明](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.16)
 - [本版完整应用源码](harness/) · [可移植构建与安装说明](harness/packaging/README.md)
 - [0.2.16 发布与验证记录](harness/docs/2026-11-10-0.2.16发布.md)

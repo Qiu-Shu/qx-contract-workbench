@@ -162,7 +162,31 @@ def _oriented_blocks(image,recognize,recognize_orientation=None):
     return best,rotation,size,list(dict.fromkeys(warnings))
 
 
-def ocr_rows(image, page=1, prefix='page', recognize=None):
+def _native_duplicate(block, regions, rotation, size):
+    """Text equality alone cannot distinguish another printed occurrence on the page."""
+    try:
+        text=re.sub(r'\s+','',block[1]);bounds=_bounds(_json_value(block[0]))
+    except (IndexError,TypeError,KeyError):return False
+    if not text or bounds is None:return False
+    width,height=size
+    def point(x,y):
+        if rotation==90:return y,width-x
+        if rotation==180:return width-x,height-y
+        if rotation==270:return height-y,x
+        return x,y
+    left,top,right,bottom=bounds;area=(right-left)*(bottom-top)
+    for region in regions:
+        if text!=re.sub(r'\s+','',region['text']):continue
+        x1,y1,x2,y2=region['box']
+        corners=[point(x,y) for x,y in ((x1,y1),(x2,y1),(x2,y2),(x1,y2))]
+        xs,ys=zip(*corners);a,b,c,d=min(xs),min(ys),max(xs),max(ys)
+        other=(c-a)*(d-b)
+        overlap=max(0,min(right,c)-max(left,a))*max(0,min(bottom,d)-max(top,b))
+        if min(area,other)>0 and overlap>=.8*min(area,other) and overlap>=.6*max(area,other):return True
+    return False
+
+
+def ocr_rows(image, page=1, prefix='page', recognize=None, native_regions=()):
     """Return ({value, location, page} rows, warnings) without dropping uncertain text.
 
     Location layout JSON contains aligned original ``boxes`` and ``scores`` arrays,
@@ -192,6 +216,8 @@ def ocr_rows(image, page=1, prefix='page', recognize=None):
             except Exception:
                 warnings.append('本机增强重识别未完成，原件保留；其他页继续处理。')
             finally:frame.close()
+    if native_regions:
+        blocks=[block for block in blocks if not _native_duplicate(block,native_regions,rotation,image.size)]
     reviews={}
     if review_locally:
         from material_ocr_review import review_blocks

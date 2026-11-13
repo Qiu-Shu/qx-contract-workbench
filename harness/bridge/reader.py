@@ -99,13 +99,11 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
                     (key,index,page,location+(f':chars:{offset}-{offset+len(part)}'),part))
                 ordinal+=1
         total_pages=None;next_page=None
-        def scan(image,number,prefix='page',native=''):
+        def scan(image,number,prefix='page',native='',native_regions=()):
             from material_scan import ocr_rows
-            rows,issues=ocr_rows(image,number,prefix)
-            native_lines={re.sub(r'\s+','',line) for line in native.splitlines() if line.strip()}
+            rows,issues=ocr_rows(image,number,prefix,**({'native_regions':native_regions} if native_regions else {}))
             for row in rows:
-                if re.sub(r'\s+','',row['value']) not in native_lines:
-                    add(row['value'],row['location'],number)
+                add(row['value'],row['location'],number)
             warnings.extend(issues)
             warnings.append('OCR 文字需核对数字、日期及否定词；位置框基于识别用图像。')
             if not native.strip() and not rows:warnings.append(f'{prefix}:{number} 未识别到文字，可对照原图；其他页继续处理。')
@@ -132,7 +130,17 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
                     try:
                         page=document[number-1]
                         textpage=page.get_textpage()
-                        try:value=textpage.get_text_bounded()
+                        native_rects=[]
+                        try:
+                            value=textpage.get_text_bounded()
+                            if value.strip():
+                                try:
+                                    for index in range(textpage.count_rects()):
+                                        rect=textpage.get_rect(index)
+                                        native_rects.append((rect,textpage.get_text_bounded(*rect)))
+                                except Exception:
+                                    native_rects=[]
+                                    warnings.append(f'page:{number} 原生文字定位未完成，保留全部识别文字供核对，可能有重复。')
                         finally:textpage.close()
                         # Image-backed pages can contain only a native watermark/header.
                         images=any(obj.type==3 for obj in page.get_objects())
@@ -140,7 +148,13 @@ def parse(store,path,start_page=1,page_count=20,force_ocr=False,revision_mode='o
                         if force_ocr or not value.strip() or images:
                             width,height=page.get_size()
                             bitmap=page.render(scale=min(2,2400/max(width,height)))
-                            try:scan(bitmap.to_pil().convert('RGB'),number,native=value)
+                            try:
+                                regions=[];converter=bitmap.get_posconv(page)
+                                for (left,bottom,right,top),text in native_rects:
+                                    corners=[converter.to_bitmap(x,y) for x,y in ((left,bottom),(right,bottom),(right,top),(left,top))]
+                                    xs,ys=zip(*corners)
+                                    regions.append({'text':text,'box':[min(xs),min(ys),max(xs),max(ys)]})
+                                scan(bitmap.to_pil().convert('RGB'),number,native=value,native_regions=regions)
                             finally:bitmap.close()
                     except Exception as error:page_done(number,error)
                     else:page_done(number)

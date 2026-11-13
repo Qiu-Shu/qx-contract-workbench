@@ -104,10 +104,28 @@ def _extract(document_dir, original):
     return text
 
 
+# A numbered paragraph begins a new clause, including when a dictionary name shares its letters.
+_OCR_NEWLINE = r'\r?\n[ \t]{0,4}(?![一二三四五六七八九十百零〇两]+[ \t]*[、.．)）])'
+_OCR_GAP = r'[ \t]{0,4}(?:'+_OCR_NEWLINE+r')?'
+_HAN = r'[\u3400-\u9fff]'
+_NEXT_FIELD = _HAN+r'{1,16}[ \t]*[:：]'
+_NAME_JOIN = r'(?:[ \t]{1,4}(?!'+_NEXT_FIELD+r')|(?='+_HAN+r'))'
+_INLINE_PERSON = _HAN+r'(?:'+_NAME_JOIN+_HAN+r'){1,3}'
+# Unknown line-wrapped names only join a final single character, never a following word/field.
+_BROKEN_PERSON = _HAN+r'(?:'+_NAME_JOIN+_HAN+r'){1,2}[ \t]{0,4}'+_OCR_NEWLINE+r'(?!'+_NEXT_FIELD+r')'+_HAN
+_PERSON_VALUE = r'(?:'+_BROKEN_PERSON+'|'+_INLINE_PERSON+r'|[\u3400-\u9fff·]{2,8})'
 _LABEL_NAMES = re.compile(
     r'(?:姓名|联系人|法定代表人|负责人|经办人|签署人|委托代理人|法定代理人|原告|被告|申请人|被申请人|甲方|乙方)'
-    r'\s*[:：]\s*(?P<value>[\u3400-\u9fff·]{2,8})(?=$|[\s，。；:：、,;.（(])')
-_TITLE_NAMES = re.compile(r'(?<![\u3400-\u9fff])(?P<value>[\u3400-\u9fff]{2,4})(?:先生|女士)')
+    r'[ \t]*[:：][ \t]*(?:\r?\n[ \t]*(?!'+_NEXT_FIELD+r'))?(?P<value>'+_PERSON_VALUE+r')(?=$|[\s，。；:：、,;.（(])')
+_TITLE_NAMES = re.compile(r'(?<![\u3400-\u9fff])(?P<value>'+_BROKEN_PERSON+'|'+_INLINE_PERSON+r')(?:先生|女士)')
+# A surname alone is not evidence: these candidates also require an explicit receipt/transfer clause.
+_CONTEXT_SURNAME = '赵钱孙李周吴郑王冯陈褚卫蒋沈韩杨朱秦许何吕施张孔曹严华金魏陶姜谢邹喻柏水窦章云苏潘葛范彭鲁韦马苗方俞任袁柳鲍史唐费薛雷贺倪汤滕殷罗毕郝安常乐于傅齐康伍余顾孟黄萧尹姚邵汪毛戴宋茅熊纪舒董梁杜阮蓝闵季贾江颜郭盛林钟徐邱骆高夏蔡田樊胡霍虞万柯卢莫房裘解应丁邓洪石崔龚程陆荣翁荀羊甄曲封芮储靳段巫焦巴侯谷车全秋宫宁仇栾甘厉戎祖武符刘景詹龙叶黎白蒲鄂赖卓谭劳申冉桑桂牛温庄柴阎连习艾鱼容向古易廖曾欧尚聂简饶曾游权盖巩关查岳缪燕荆隋文包池左谌司韶郁桑沙宗牛龚'
+_CONTEXT_PERSON = '['+_CONTEXT_SURNAME+r'][\u3400-\u9fff]{1,3}'
+_CONTEXT_NAMES = [
+    re.compile(r'(?<![\u3400-\u9fffA-Za-z0-9])(?P<value>'+_CONTEXT_PERSON+r')(?=已签收(?:材料|文件|通知|文书|快递|包裹|附件|合同|[，。；,;]))'),
+    re.compile(r'(?<![\u3400-\u9fffA-Za-z0-9])(?P<value>'+_CONTEXT_PERSON+r')(?=将[^。；;\n\r]{1,80}?转交给)'),
+    re.compile(r'转交给[ \t]*(?P<value>'+_CONTEXT_PERSON+r')(?=$|[\s，。；:：、,;.（(])'),
+]
 _ADDRESSES = re.compile(
     r'(?:住所地?|住址|联系地址|送达地址|通讯地址|地址|户籍地|居住地)\s*[:：]\s*'
     r'(?P<value>[^\n\r，,。；;]{3,120})')
@@ -115,7 +133,8 @@ _STREET = re.compile(r'[\u3400-\u9fff]{2,30}(?:省|市|区|县)[\u3400-\u9fff0-9
                      r'(?:路|街|巷|弄)[0-9一二三四五六七八九十百\-]{1,10}号(?:[0-9A-Za-z一二三四五六七八九十栋幢单元室楼层\-]{0,20})')
 _ORGANIZATIONS = re.compile(
     r'[\u3400-\u9fffA-Za-z0-9（）()·]{2,80}?'
-    r'(?:有限责任公司|股份有限公司|有限公司|合伙企业|律师事务所|会计师事务所|研究院|研究所|医院|学校|银行)')
+    r'(?:'+'|'.join(_OCR_GAP.join(word) for word in ('有限责任公司','股份有限公司','有限公司','合伙企业',
+                   '律师事务所','会计师事务所','研究院','研究所','医院','学校','银行'))+r')')
 _LABELED_NUMBERS = re.compile(
     r'(?P<label>银行卡(?:号)?|银行账号|银行账户|收款账号|账户号码|账号|身份证(?:号码|号)?|统一社会信用代码|护照(?:号码|号)?)'
     r'\s*[:：]?\s*(?P<value>[A-Za-z0-9][A-Za-z0-9 \-]{5,35}[A-Za-z0-9])')
@@ -200,6 +219,16 @@ def _specific_name(value):
             and not re.fullmatch(r'[\d\s.\-/]+', value))
 
 
+_PERSON_NON_NAMES = set('陈述 说明 申请 请求 费用 金额 日期 通知 材料 文件 资料 合同 协议 证明 证据 报告 收据 回执 订单 快递 包裹 法院 原告 被告 双方 客户 员工 股东 收款人 付款人 签收人 经办人 联系人 申请人 被申请人 委托方 受托方 工作人员 向东 平安'.split())
+
+
+def _person_name(value):
+    value=re.sub(r'\s+','',value)
+    return (_specific_name(value) and value not in _PERSON_NON_NAMES and not value.startswith('许多')
+            and not re.search(r'经理|主管|主任|律师|法官|人员|先生|女士|总$',value)
+            and not re.fullmatch(r'周[一二三四五六日天末]',value))
+
+
 def _product_identity(value, known=()):
     value = _ENTITY_PREFIX.sub('', value)
     if not _specific_name(value):
@@ -240,12 +269,17 @@ def _candidates(text, custom_terms, privacy_mode='standard'):
         add(match['value'], kind)
     for match in _ORGANIZATIONS.finditer(text):
         value = re.sub(r'^(?:本合同由|甲方|乙方|原告|被告|申请人|被申请人|与|和|向|由|及)+', '', match.group())
-        if not _generic_organization(value):
+        if value.count('\n')<=1 and not _generic_organization(re.sub(r'\s+','',value)):
             add(value, '组织')
     for pattern in (_LABEL_NAMES, _TITLE_NAMES):
         for match in pattern.finditer(text):
-            if _specific_name(match['value']):
+            if match['value'].count('\n')<=1 and _specific_name(re.sub(r'\s+','',match['value'])):
                 add(match['value'], '姓名')
+    for pattern in _CONTEXT_NAMES:
+        for match in pattern.finditer(text):
+            value=match['value']
+            if _person_name(value):
+                add(value,'姓名')
     for pattern in (_NAMED_LABELLED, _NAMED_QUOTED, _NAMED_AFTER_QUOTE):
         for match in pattern.finditer(text):
             value = match['value'].strip()
@@ -312,6 +346,17 @@ def _redact(text, custom_terms, mapping_path, privacy_mode='standard'):
         rows = db.execute('SELECT original,kind,token FROM replacements').fetchall()
         mapping = {original: token for original, _, token in rows}
         kinds = {original: kind for original, kind, _ in rows}
+        # Formatting variants get separate reversible tokens; only an established identity supplies their letters.
+        for original,kind in (kinds | candidates).items():
+            compact=re.sub(r'\s+','',original)
+            if kind not in {'姓名','组织'} or not 2<=len(compact)<=(4 if kind=='姓名' else 80):
+                continue
+            if not (_specific_name(compact) if kind=='姓名' else not _generic_organization(compact)):
+                continue
+            variant=re.compile(_OCR_GAP.join(re.escape(character) for character in compact))
+            for match in variant.finditer(text):
+                if match.group().count('\n')<=1:
+                    candidates.setdefault(match.group(),kind)
         for original, kind in candidates.items():
             if original not in mapping:
                 token = '【脱敏-' + prefix + '-' + kind + '-' + str(len(mapping) + 1) + '】'
@@ -328,12 +373,12 @@ def _redact(text, custom_terms, mapping_path, privacy_mode='standard'):
             if kind in _DEEP_KINDS or kind == '自定义':
                 return False
             if kind == '组织':
-                return not _generic_organization(original)
+                return not _generic_organization(re.sub(r'\s+','',original))
             if kind == '专名':
                 known = [name for name, category in candidates.items() if category == '专名' and name != original]
                 return _product_identity(original, known) == original
             if kind == '姓名':
-                return _specific_name(original)
+                return _specific_name(re.sub(r'\s+','',original))
             return True
         relevant = [original for original in mapping if original in text and active(original)]
         if not relevant:
