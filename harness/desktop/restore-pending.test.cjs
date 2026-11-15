@@ -71,6 +71,33 @@ test('real queue consumers do not replay restored work when connected or ticked'
  const watch=await createContentWatch({stateDir:path.join(opts.root,'.local/content-watch'),client:{checkLogin:async()=>{calls++;}},deliver:async()=>{calls++;}});
  try{await watch.tick();assert.equal(calls,0);}finally{await watch.dispose();}
 });
+
+test('Feishu pending, active and failed work enters restore decisions with full text and never replays',async t=>{
+ const opts=fixture(t),queue='.local/feishu/inbox.json',seen='.local/feishu/seen.json';
+ const state={version:1,pending:[{id:'pending',items:[{id:'m1',text:'合成原始文字',lines:['合成原始文字','附件位置：workspace/inbox/合同.txt'],error:'合成附件未完成'}]}],active:{id:'active',items:[{id:'m2',lines:['合成已提交待核对']}]},failed:[{id:'failed',items:[{id:'m3',lines:['合成失败正文']}],error:'合成发送未确认'}],history:[{id:'old',status:'completed',messageIds:['old-message']}]};
+ write(opts.root,queue,state);write(opts.root,seen,[{id:'app:old-message',sessionId:'case',status:'accepted',receivedAt:1}]);
+ const original=fs.readFileSync(path.join(opts.root,queue)),seenBefore=fs.readFileSync(path.join(opts.root,seen));
+ const preview=await api().inspectRestoredState(opts);assert.equal(preview.pending.length,3);
+ assert.ok(preview.pending.every(item=>item.kind==='feishu'&&item.label==='飞书待办'));
+ const draft=preview.pending.find(item=>item.status==='pending'),cancel=preview.pending.find(item=>item.status==='failed');
+ assert.match(draft.preview,/附件位置：workspace\/inbox\/合同.txt/);assert.match(draft.preview,/合成附件未完成/);assert.match(cancel.preview,/合成发送未确认/);
+ const result=await api().prepareRestoredState({...opts,decisions:{[draft.id]:'draft',[cancel.id]:'cancel'}});
+ const restored=read(opts.root,queue);assert.deepEqual(restored.pending,[]);assert.equal(restored.active,null);assert.deepEqual(restored.failed,state.failed);assert.deepEqual(restored.history,state.history);
+ assert.deepEqual(fs.readFileSync(path.join(opts.root,'.local/restore-original',queue)),original);assert.deepEqual(fs.readFileSync(path.join(opts.root,seen)),seenBefore);
+ const text=fs.readFileSync(path.join(opts.root,result.drafts[0]),'utf8');assert.match(text,/附件位置：workspace\/inbox\/合同.txt/);assert.match(text,/合成附件未完成/);assert.equal(text.split('合成原始文字').length,2);
+ assert.deepEqual(read(opts.root,'.local/restore-pending.json').pending.map(item=>item.decision).sort(),['cancel','draft','hold']);
+ let calls=0;const {MessageCoalescer}=await import('../plugins/wechat/qx-coalescer.js');
+ const consumer=new MessageCoalescer({state:restored,persist:async()=>{},process:async()=>{calls++;}});await consumer.recover();consumer.resume();await consumer.flush();await consumer.idle();consumer.pause();assert.equal(calls,0);
+});
+
+test('Feishu malformed inbox records fail before any restored file changes',async t=>{
+ const opts=fixture(t),queue='.local/feishu/inbox.json';
+ for(const value of [null,{version:2,pending:[],active:null,failed:[],history:[]},{version:1,pending:[{id:'bad',items:null}],active:null,failed:[],history:[]},{version:1,pending:[],active:'bad',failed:[],history:[]}]){
+  write(opts.root,queue,value);const before=fs.readFileSync(path.join(opts.root,queue));
+  await assert.rejects(api().prepareRestoredState(opts),/RESTORE_PENDING_FORMAT/);assert.deepEqual(fs.readFileSync(path.join(opts.root,queue)),before);
+  assert.equal(fs.existsSync(path.join(opts.root,'.local/restore-pending.json')),false);
+ }
+});
 async function libs(){const req=createRequire(path.join(payload,'package.json')),load=name=>import(pathToFileURL(req.resolve('@deepseek-ai/'+name)).href);return {load,...await load('cordis'),...await load('dsh-session'),persistence:await load('dsh-session-persistence-jsonl'),...await load('dsh-session-format-catalog')};}
 async function offline(lib,root,compression,run){const ctx=new lib.Context(),fiber=ctx.plugin(lib.persistence,{root,compression});try{await fiber.await();return await run(ctx.sessionPersistence);}finally{await fiber.dispose();}}
 test('fixed Harness zstd: clear inbox by appended events; preserve original and message content; restore new cwd', {skip:!payload},async t=>{

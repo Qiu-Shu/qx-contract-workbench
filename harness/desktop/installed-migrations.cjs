@@ -311,6 +311,10 @@ function migrateInstalledContentWatch(options){
   if(!findIds(options.portableConfig).has('qx-content-watch'))return {status:'deferred',changedFiles:[]};
   return migrateInstalled(options,{version:'content-watch-v1',ids:['qx-content-watch']});
 }
+function migrateInstalledFeishu(options){
+  if(!findIds(options.portableConfig).has('qx-feishu'))return {status:'deferred',changedFiles:[]};
+  return migrateInstalled(options,{version:'feishu-v1',ids:['qx-feishu']});
+}
 function migrateInstalledSkillRoots({data,payload,portableConfig}){
   const desired=findIds(portableConfig).get('skill-filesystem');
   if(!desired?.config?.customSkillDirs)return {status:'deferred'};
@@ -493,4 +497,4 @@ function migrateSkillFiles({data,payload},{version,defaults,targets={}}){
   return {status:pending.length?'deferred':'applied',backupDirectory,changedFiles,preservedCustom};
 }
 
-module.exports={migrateInstalledMedia,migrateInstalledLazyTools,relocateInstalledPaths,migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContentWatch,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery,migrateInstalledSkillRoots};
+module.exports={migrateInstalledMedia,migrateInstalledLazyTools,relocateInstalledPaths,migrateInstalledKnowledge,migrateInstalledPrivacy,migrateInstalledContentWatch,migrateInstalledFeishu,migrateInstalledContract,migrateInstalledModelRecovery,migrateInstalledSkillFixes,migrateInstalledSkillQuality,migrateInstalledLegalSearch,migrateInstalledCaseMemory,migrateInstalledAgentDesktop,migrateInstalledVerifiedDelivery,migrateInstalledSkillRoots};

@@ -155,3 +155,30 @@ test('an archive identifier collision refuses publication without replacing earl
   assert.equal(fs.existsSync(options.destination),false);assert.deepEqual(tree(options.root),before);
   assert.ok(!fs.readdirSync(options.temp).some(name=>name.startsWith('.qx-activation-')));
 });
+
+test('Feishu restored portable configuration stays disconnected at every insert depth',{skip:process.platform!=='win32'},async t=>{
+  const options=fixture(t),module=api();
+  put(options.payload,'config/portable.json',JSON.stringify([{id:'qx-feishu',config:{stateDir:'@DATA@/.local/feishu',autoConnect:true}},{insert:[{insert:[{id:'qx-feishu',config:{workspace:'@DATA@/workspace',autoConnect:true}}]}]}]));
+  const review=await module.inspectRestoreActivation(options);
+  assert.ok(review.reauthorization.includes('feishu-app-login'));
+  await module.prepareRestoreActivation({...options,reviewToken:review.reviewToken});
+  const profile=JSON.parse(fs.readFileSync(path.join(options.destination,'.local/dsh-home/profiles/web/cordis.patch.yml')));
+  assert.equal(profile[0].config.autoConnect,false);assert.equal(profile[1].insert[0].insert[0].config.autoConnect,false);
+  assert.equal(profile[0].config.stateDir,options.destination.replaceAll('\\','/')+'/.local/feishu');
+});
+
+test('Feishu verified snapshot omits settings, preserves dedup and quarantines restored inbox',{skip:process.platform!=='win32'},async t=>{
+  const queue='.local/feishu/inbox.json',seen='.local/feishu/seen.json',settings='.local/feishu/settings.json';
+  const options=fixture(t,source=>{
+    put(source,settings,JSON.stringify({version:1,feishu:{appId:'synthetic-app',appSecret:'dpapi:synthetic-private-feishu'},owner:{openId:'synthetic-owner'},paused:false}));
+    put(source,seen,JSON.stringify([{id:'synthetic-app:message',sessionId:'case',status:'accepted',receivedAt:1}]));
+    put(source,queue,JSON.stringify({version:1,pending:[{id:'pending',items:[{id:'message',lines:['合成飞书恢复正文']}]}],active:null,history:[],failed:[]}));
+  });
+  const sourceBefore=tree(options.source),restoredBefore=tree(options.root),module=api(),review=await module.inspectRestoreActivation(options);
+  assert.equal(fs.existsSync(path.join(options.root,settings)),false);assert.equal(review.pending.length,1);assert.equal(review.pending[0].kind,'feishu');assert.doesNotMatch(JSON.stringify(review),/synthetic-private-feishu|synthetic-owner/);
+  const prepared=await module.prepareRestoreActivation({...options,reviewToken:review.reviewToken,decisions:{[review.pending[0].id]:'draft'}});
+  assert.deepEqual(tree(options.source),sourceBefore);assert.deepEqual(tree(options.root),restoredBefore);
+  assert.equal(fs.existsSync(path.join(options.destination,settings)),false);assert.deepEqual(fs.readFileSync(path.join(options.destination,seen)),fs.readFileSync(path.join(options.source,seen)));
+  assert.deepEqual(JSON.parse(fs.readFileSync(path.join(options.destination,queue))).pending,[]);assert.match(fs.readFileSync(path.join(options.destination,prepared.drafts[0]),'utf8'),/合成飞书恢复正文/);
+  assert.equal((await module.verifyPreparedRestore({root:options.destination,python})).id,prepared.id);
+});

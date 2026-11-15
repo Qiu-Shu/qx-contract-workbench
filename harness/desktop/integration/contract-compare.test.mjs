@@ -5,6 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
+import {spawnSync} from 'node:child_process';
 import * as compare from './attachment-preview.mjs';
 import * as engine from './contract-compare.mjs';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -22,6 +23,50 @@ test('indexed uploaded contract aliases can be selected without exposing other h
   assert.deepEqual(await engine.indexedContractPaths(root),[key]);assert.equal((await compare.compareContracts({root,sessionId:'s'},key,'b.txt')).status,'complete');
 });
 async function fixture(t){const root=await mkdtemp(join(tmpdir(),'qx-compare-'));t.after(()=>rm(root,{recursive:true,force:true}));return root;}
+
+test('aligned reading rows reconstruct both extracted documents including unchanged context',async t=>{
+  const root=await fixture(t),before='采购合同\n删除整段\n保留上下文\n价款100元\n结尾不变\n',after='采购合同\n保留上下文\n价款200元\n结尾不变\n新增条款\n';
+  await writeFile(join(root,'a.txt'),before);await writeFile(join(root,'b.txt'),after);
+  const result=await engine.compareContracts({root,sessionId:'s'},'a.txt','b.txt');
+  assert.ok(Array.isArray(result.rows),'full reading rows missing');
+  for(const [side,text] of [['before',before],['after',after]])assert.equal(result.rows.map(row=>(row.changeIndex===undefined?row:result.changes[row.changeIndex])[side]?.text||'').join(''),text);
+  assert.deepEqual(result.changes.map(c=>c.kind),['deleted','modified','added']);
+  const unchanged=result.rows.find(row=>row.before?.text==='保留上下文\n');
+  assert.equal((await engine.resolveContractReference({root,sessionId:'s'},unchanged.after.reference)).text,'保留上下文\n');
+});
+
+test('fact filters identify changed amounts and dates, without treating unchanged values or liability wording as risk',async t=>{
+  const root=await fixture(t);
+  const before='价款人民币10,000.00元。\n截至2026年12月1日，应在30日内付款。\n违约金每日1%，上限5%。\n价款100元，现金支付。\n';
+  const after='价款人民币20,000.00元。\n截至2026年12月15日，应在15日内付款。\n违约金每日2%，上限10%。\n价款100元，转账支付。\n';
+  await writeFile(join(root,'a.txt'),before);await writeFile(join(root,'b.txt'),after);
+  const {changes}=await engine.compareContracts({root,sessionId:'s'},'a.txt','b.txt');
+  assert.deepEqual(changes.map(c=>c.facets),[['amount'],['date'],['liability'],[]]);
+  assert.equal(changes.some(c=>'risk' in c||'legalImpact' in c),false);
+});
+
+test('equal readable documents still have full reading rows; unreadable input never masquerades as an empty document',async t=>{
+  const root=await fixture(t);await writeFile(join(root,'a.txt'),'同一合同\n未改条款');await writeFile(join(root,'b.txt'),'同一合同\n未改条款');
+  const result=await engine.compareContracts({root,sessionId:'s'},'a.txt','b.txt');assert.equal(result.equal,true);assert.equal(result.rows.length,2);
+  await writeFile(join(root,'b.txt'),Buffer.from([0xff]));const bad=await engine.compareContracts({root,sessionId:'s'},'a.txt','b.txt');assert.equal(bad.equal,null);assert.deepEqual(bad.rows,[]);
+});
+
+test('format-only money and date changes remain highlighted without claiming a changed value',async t=>{
+  const root=await fixture(t);
+  for(const [before,after] of [['价款100元','价款100 元'],['人民币0100.00元','￥100元'],['金额1万元','金额10,000元'],['交付2026-01-02','交付2026-1-2'],['交付2026年1月2日','交付2026/01/02'],['期限030日','期限30日']]){
+    await writeFile(join(root,'a.txt'),before);await writeFile(join(root,'b.txt'),after);
+    const result=await engine.compareContracts({root,sessionId:'s'},'a.txt','b.txt');
+    assert.equal(result.changes.length,1);assert.equal(result.equal,false);
+    assert.deepEqual(result.changes[0].facets,[],before+' → '+after);
+  }
+});
+
+test('long digit-only extracted text cannot stall fact classification',async t=>{
+  const root=await fixture(t);await writeFile(join(root,'a.txt'),'9'.repeat(100000)+'a');await writeFile(join(root,'b.txt'),'9'.repeat(100000)+'b');
+  const code=`import {compareContracts} from ${JSON.stringify(new URL('./contract-compare.mjs',import.meta.url).href)}; const r=await compareContracts(${JSON.stringify({root,sessionId:'s'})},'a.txt','b.txt');if(r.changes.length!==1)process.exit(2);`;
+  const child=spawnSync(process.execPath,['--input-type=module','-e',code],{timeout:4000,encoding:'utf8',windowsHide:true});
+  assert.equal(child.status,0,child.error?.message||child.stderr);
+});
 test('Chinese paragraph and Unicode changes preserve both originals and exact source lines',async t=>{
   assert.equal(typeof compare.compareContracts,'function','contract comparison entry is missing');
   const root=await fixture(t),old='第一条 保密义务。\n第二条 价款为人民币100元😀。\n第三条 旧条款。',next='第一条 保密义务。\n第二条 价款为人民币200元𠮷。\n第三条 新条款。\n第四条 新增。';

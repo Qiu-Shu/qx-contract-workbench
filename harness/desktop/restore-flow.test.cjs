@@ -99,7 +99,7 @@ test('native Windows encrypted desktop restore: review, prepare, initialize, sel
  picks.bundle=backup.lastResult.bundle;await choose(controller,'bundle');await choose(controller,'restoreParent');const restored=await action(controller,'restore',{password});const reviewRoot=restored.lastResult.destination;
  credentialFree(reviewRoot);const restoredBefore=tree(reviewRoot);checkpoint('restic-restored',{reviewRoot});
  assert.throws(()=>installed.initialize(payload,reviewRoot),{code:'BACKUP_RESTORE_REVIEW_REQUIRED'});
- const inspected=await action(controller,'review');assert.ok(inspected.review.pending.length>=5);assert.equal(inspected.review.reauthorization.length,4);
+ const inspected=await action(controller,'review');assert.ok(inspected.review.pending.length>=5);assert.deepEqual(inspected.review.reauthorization,['model-api-keys','wechat-login','feishu-app-login','content-provider-login','other-profile-secrets']);
  const decisions=Object.fromEntries(inspected.review.pending.map(item=>[item.id,item.kind==='wechat'?'draft':item.kind==='schedule'?'cancel':'hold']));
  await choose(controller,'activationParent');const preparedState=await action(controller,'prepare',{reviewToken:inspected.review.reviewToken,applySettings:true,decisions});const prepared=preparedState.prepared.destination;
  checkpoint('prepared',{prepared,pending:preparedState.prepared.pending.length,drafts:preparedState.prepared.drafts.length});

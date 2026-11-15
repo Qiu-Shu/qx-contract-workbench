@@ -24,6 +24,17 @@ export function installKnowledge(ctx,{store=new KnowledgeStore(join(resolve(proc
   ctx.provide?.('qxKnowledge',knowledge);
   async function ensureScope(session){contentScope(session);return isContentSession(session)?CONTENT_PROJECT:runner.ensureScope(session);}
   ctx.on?.('qx/knowledge/resolve-session',async session=>{await ensureScope(id(session));return store.bindingInfo(session);});
+  // Read existing attachment references only. No extraction, upload or model call.
+  ctx.on?.('qx/knowledge/compare-scope',async session=>{
+    await ensureScope(id(session));const binding=store.bindingInfo(session);
+    const description=await source.describe(session);
+    const materials=source.materials?await source.materials(session,description):[];
+    if(source.current&&await source.current(session)!==description.version)fail('资料来源正在更新，请稍后重试',409);
+    const paths=[...new Set(materials.map(item=>source.materialPath?.(item.attachment)).filter(p=>typeof p==='string'))].sort();
+    const after=store.bindingInfo(session);
+    if(after.project!==binding.project||after.revision!==binding.revision)fail('案件归属已变化',409);
+    return {...binding,paths};
+  });
   ctx.on?.('qx/knowledge/document',async data=>{const project=await ensureScope(id(data.session)),binding=store.bindingInfo(data.session);if(data.scope?.project!==project||data.scope?.revision!==binding.revision)fail('上传期间工作归属已变化',409);return store.resource(project,{document:id(data.document),title:text(data.title,120)});});
   const sessionFor=exec=>id(exec.agent?.session?.id||'no-session');
   const checkScope=(session,scope)=>{const current=store.bindingInfo(session);if(current.project!==scope.project||current.revision!==scope.revision||scope.budget&&budgets.get(session)!==scope.budget)fail('对话归属或轮次已变化，请重新检索',409);};

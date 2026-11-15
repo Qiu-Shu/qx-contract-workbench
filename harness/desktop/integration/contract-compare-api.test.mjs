@@ -14,9 +14,18 @@ test('HTTP and tool share session-scoped comparison; hostile origins and stale r
   async function call(route,body,headers={}){return routes.get('/api/qx-compare/'+route).fetch(new Request('http://localhost/api/qx-compare/'+route,{method:'POST',headers:{'content-type':'application/json','x-qx-compare':'1',...headers},body:JSON.stringify(body)}));}
   assert.equal((await call('compare',{sessionId:'s',before:'a.txt',after:'b.txt'},{origin:'https://hostile.invalid'})).status,403);
   const response=await call('compare',{sessionId:'s',before:'a.txt',after:'b.txt'});assert.equal(response.status,200);const result=await response.json();assert.equal(result.equal,false);assert.equal(authorized,2);
+  assert.equal((await (await call('context',{sessionId:'s',path:join(root,'a.txt')})).json()).initialPath,'a.txt');
   assert.equal((await call('locate',{sessionId:'s',reference:result.changes[0].before.reference})).status,200);
   assert.equal((await call('compare',{sessionId:'missing',before:'a.txt',after:'b.txt'})).status,404);
   const tool=registered.get('contract_compare');assert.ok(tool);const output=JSON.parse(await tool.execute({before:'a.txt',after:'b.txt'},{agent:{session:{id:'s'}}}));assert.equal(output.equal,false);
+  assert.ok(result.rows.length);assert.equal('rows' in output,false,'full document text must not bypass tool pagination');
+  assert.ok(routes.has('/api/qx-compare/analysis-draft'),'separate analysis preparation route missing');
+  const analysis={sessionId:'s',before:{path:result.before.path,sha256:result.before.sha256},after:{path:result.after.path,sha256:result.after.sha256},party:'甲方（买方）'};
+  const draft=await call('analysis-draft',analysis);assert.equal(draft.status,200);const prepared=await draft.json();
+  assert.match(prepared.text,/AI法律影响分析/);assert.match(prepared.text,/甲方（买方）/);assert.match(prepared.text,/解除/);assert.match(prepared.text,/文字差异事实与法律判断分开/);
+  const unknown=await call('analysis-draft',{...analysis,party:''});assert.equal(unknown.status,200);assert.match((await unknown.json()).text,/原对话.*立场/);
+  assert.equal((await call('analysis-draft',{...analysis,party:123})).status,400);
+  await writeFile(join(root,'a.txt'),'原文件在分析前已改动');assert.equal((await call('analysis-draft',analysis)).status,409);await writeFile(join(root,'a.txt'),'甲方支付100元');
   cwd=join(root,'other');await mkdir(cwd);await writeFile(join(cwd,'a.txt'),'甲方支付100元');await writeFile(join(cwd,'b.txt'),'甲方支付300元');
   assert.equal((await call('locate',{sessionId:'s',reference:result.changes[0].before.reference})).status,409);
   const moved=await (await call('compare',{sessionId:'s',before:'a.txt',after:'b.txt'})).json();assert.equal(moved.changes[0].after.text,'甲方支付300元');

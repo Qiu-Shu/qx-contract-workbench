@@ -2,6 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {createRequire}=require('node:module'),{pathToFileURL}=require('node:url');
 const WECHAT='.local/dsh-home/qx-wechat/qx-pending.json',CONTENT='.local/content-watch/state.json';
+const FEISHU='.local/feishu/inbox.json';
 const SCHEDULE='.local/dsh-home/storages/schedule.json',WORKSPACE='.local/dsh-home/storages/workspace.json';
 const SESSIONS='.local/dsh-home/sessions',PENDING='.local/restore-pending.json',ORIGINAL='.local/restore-original';
 function fail(code){throw Object.assign(Error(code),{code});}
@@ -34,8 +35,9 @@ function rebind(value,sourceRoot,destination,scope='workspace'){
 function redact(value){return String(value??'').replace(/\b(?:Bearer\s+|sk-)[A-Za-z0-9_.\-]+/gi,'[凭据已隐藏]').replace(/((?:api[_ -]?key|token|password|secret|authorization|cookie)\s*[:=]\s*)[^\s,;]+/gi,'$1[凭据已隐藏]');}
 function taskText(value){
  if(!object(value))return '';
- const chunks=[];
- for(const key of ['title','instruction','prompt','text','content','phase'])if(typeof value[key]==='string')chunks.push(value[key]);
+ const chunks=[],lines=Array.isArray(value.lines)?value.lines.filter(line=>typeof line==='string'&&line):[];
+ for(const key of ['title','instruction','prompt','text','content','phase','error'])if(typeof value[key]==='string'&&(key!=='text'||!lines.length))chunks.push(value[key]);
+ chunks.push(...lines);
  for(const key of ['items','content'])if(Array.isArray(value[key]))for(const item of value[key])chunks.push(taskText(item));
  return redact(chunks.filter(Boolean).join('\n'));
 }
@@ -83,12 +85,13 @@ async function inspectAll({root,payload,sourceRoot}){
  const pending=[],details=new Map(),records=new Map(),sessions=[],externalWorkspaces=new Set(),externalSessions=new Set(),externalLocations=new Set();
  const add=(kind,key,label,status,body)=>{const p=entry(kind,key,label,status,body);if(details.has(p.id))fail('RESTORE_PENDING_DUPLICATE');pending.push(p);details.set(p.id,body);};
  const external=(cwd)=>{const key=cwd??'(no-cwd)';if(externalLocations.has(key))return;externalLocations.add(key);add('external-workspace',key,'外部工作位置需重新选择','quarantined',{text:'原工作位置未自动绑定：'+(cwd??'未记录工作位置')+'。相关会话只保留在恢复审计中，需重新选择工作位置后再处理。'});};
- const wx=record(root,WECHAT);if(wx){
-  if(wx.version!==1||!Array.isArray(wx.pending)||!Array.isArray(wx.failed)||!Array.isArray(wx.history)||!(wx.active===null||object(wx.active)))fail('RESTORE_PENDING_FORMAT');
-  records.set(WECHAT,wx);
-  for(const [status,list] of [['pending',wx.pending],['active',wx.active?[wx.active]:[]],['failed',wx.failed]])for(const [index,item] of list.entries()){
+ for(const [relative,kind,label] of [[WECHAT,'wechat','微信待办'],[FEISHU,'feishu','飞书待办']]){
+  const queue=record(root,relative);if(!queue)continue;
+  if(queue.version!==1||!Array.isArray(queue.pending)||!Array.isArray(queue.failed)||!Array.isArray(queue.history)||!(queue.active===null||object(queue.active)))fail('RESTORE_PENDING_FORMAT');
+  records.set(relative,queue);
+  for(const [status,list] of [['pending',queue.pending],['active',queue.active?[queue.active]:[]],['failed',queue.failed]])for(const [index,item] of list.entries()){
    if(!object(item)||typeof item.id!=='string'||!Array.isArray(item.items))fail('RESTORE_PENDING_FORMAT');
-   add('wechat',status+':'+item.id+':'+index,'微信待办',status,item);
+   add(kind,status+':'+item.id+':'+index,label,status,item);
   }
  }
  const cw=record(root,CONTENT);if(cw){
@@ -155,7 +158,7 @@ async function prepareRestoredState(options){
  if(state.previous)originals.push(preserve(root,PENDING));
  for(const [relative,value] of state.records){
   originals.push(preserve(root,relative));
-  if(relative===WECHAT){value.pending=[];value.active=null;}
+  if(relative===WECHAT||relative===FEISHU){value.pending=[];value.active=null;}
   if(relative===CONTENT){value.enabled=false;value.active=null;value.status='paused';value.message='恢复待办已单独保留，自动整理暂停。';if(value.lastReport?.pending)value.lastReport.pending=false;value.lastReport&&(value.lastReport.path=rebind(value.lastReport.path,sourceRoot,destination,'.local/content-watch/reports'));}
   if(relative===SCHEDULE)for(const task of Object.values(value.tables.tasks))task.status='inactive';
   if(relative===WORKSPACE){

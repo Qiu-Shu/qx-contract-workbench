@@ -150,3 +150,25 @@ test('内容分层读取按UTF-8共享16 KiB预算，自动消息不重置额度
     turn=2;await f.tools.get('knowledge_recall').execute({query:'表达'},exec);assert.ok(!JSON.parse(await f.tools.get('knowledge_read').execute({entryId:denied.id},exec)).error);
   }finally{f.close();}
 });
+
+test('comparison scope resolves existing references without model, upload or new case',async()=>{
+ let models=0;const f=fixture({model:async()=>{models++;throw Error('unexpected model')}});
+ f.source.materials=async()=>[{attachment:{name:'contract.docx'}}];
+ f.source.materialPath=ref=>'/existing/'+ref.name;
+ const project=f.s.project({id:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',title:'Existing case'});
+ f.s.bind('chat',project.id);const before=f.s.bindingInfo('chat');
+ const hook=f.hooks.get('qx/knowledge/compare-scope');assert.equal(typeof hook,'function');
+ const scope=await hook('chat');assert.deepEqual(scope.paths,['/existing/contract.docx']);
+ assert.equal(scope.project,project.id);assert.equal(scope.revision,before.revision);assert.equal(models,0);
+ assert.deepEqual(f.s.bindingInfo('chat'),before);f.close();
+});
+
+test('comparison scope excludes removed attachments, preserves current compaction sources, rejects concurrent edits',async()=>{
+ const f=fixture();const hook=f.hooks.get('qx/knowledge/compare-scope');
+ f.source.metadata=async()=>({version:'v1',records:[{seq:1},{seq:2}]});
+ f.source.describe=async()=>({version:'v1',records:[{seq:2}]});
+ f.source.materials=async(_session,description)=>description.records.map(row=>({attachment:{name:row.seq===1?'removed.docx':'compaction-preserved.docx'}}));
+ f.source.materialPath=ref=>'/original/'+ref.name;
+ const scope=await hook('chat');assert.deepEqual(scope.paths,['/original/compaction-preserved.docx']);
+ f.source.current=async()=>'v2';await assert.rejects(()=>hook('chat'),/变化|更新/);f.close();
+});

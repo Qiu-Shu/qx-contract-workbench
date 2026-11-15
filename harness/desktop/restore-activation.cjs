@@ -78,7 +78,7 @@ async function inspectDetails(options){
   const settings=checked.settings.map(item=>item.id==='harness-profile'?{...item,suggested:modelPreference(root)}:item);
   const repeated=await worker(options.python,{action:'verify',root,pgTools:options.pgTools});
   if(repeated.manifestSha256!==checked.manifestSha256||trustedProfile(profile.payload).sha256!==profile.sha256)fail('BACKUP_REVIEW_STALE');
-  const reauthorization=['model-api-keys','wechat-login','content-provider-login','other-profile-secrets'];
+  const reauthorization=['model-api-keys','wechat-login','feishu-app-login','content-provider-login','other-profile-secrets'];
   const result={reviewToken:sha(JSON.stringify({root,manifest:checked.manifestSha256,payload:profile.payload,profile:profile.sha256,settings,pending:state.pending})),
     counts:{files:checked.fileCount,databases:checked.databaseCount,settings:settings.length,pending:state.pending.length},settings,reauthorization,pending:state.pending,
     postgresIncluded:checked.postgresIncluded};
@@ -94,7 +94,7 @@ function applyPreferences(root,destination,profile,settings,choice){
   const transform=value=>typeof value==='string'?value.replaceAll('@APP@',profile.payload.replaceAll('\\','/')).replaceAll('@DATA@',destination.replaceAll('\\','/'))
     :Array.isArray(value)?value.map(transform):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([k,v])=>[k,transform(v)])):value;
   const config=transform(profile.value);
-  function pause(entries){for(const item of entries){if(item?.id==='qx-personal-wechat')item.config={...item.config,autoConnect:false};if(Array.isArray(item?.insert))pause(item.insert);}}
+  function pause(entries){for(const item of entries){if(['qx-personal-wechat','qx-feishu'].includes(item?.id))item.config={...item.config,autoConnect:false};if(Array.isArray(item?.insert))pause(item.insert);}}
   pause(config);
   for(const setting of settings){
     if(!selected.has(setting.id)||!Object.keys(setting.suggested).length)continue;

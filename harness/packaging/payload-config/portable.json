@@ -195,6 +195,11 @@
         }
       },
       {
+        "id": "qx-feishu",
+        "name": "@APP@/plugins/feishu/index.js",
+        "config": {"workspace":"@DATA@/workspace","stateDir":"@DATA@/.local/feishu","agentPreset":"qunxing","autoConnect":true}
+      },
+      {
         "id": "qx-personal-wechat",
         "name": "@APP@/plugins/wechat/qx-plugin.js",
         "config": {

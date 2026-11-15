@@ -74,7 +74,7 @@ if(typeof document!=='undefined'){
   const folderIds={backupParent:'backup-parent-path',bundle:'bundle-path',restoreParent:'restore-parent-path',reviewRoot:'review-root-path',activationParent:'activation-parent-path'};
   const folderEmpty={backupParent:'尚未选择保存位置',bundle:'尚未选择备份',restoreParent:'尚未选择恢复位置',reviewRoot:'尚未选择恢复副本',activationParent:'尚未选择启用副本位置'};
   const settingsNames={'desktop-locale':'界面语言','harness-profile':'工作台配置','wechat-preferences':'微信显示与交付偏好'};
-  const reauthNames={'model-api-keys':'模型 API Key','wechat-login':'微信账号登录','other-profile-secrets':'其他服务的密钥与登录状态','content-provider-login':'内容来源账号登录'};
+  const reauthNames={'model-api-keys':'模型 API Key','wechat-login':'微信账号登录','feishu-app-login':'飞书应用与本人配对','other-profile-secrets':'其他服务的密钥与登录状态','content-provider-login':'内容来源账号登录'};
   const errors={BACKUP_ENGINE_FAILED:'备份口令不正确，或备份组件未能完成校验。请核对口令和备份文件夹后重试。',
     BACKUP_SOURCE_BUSY:'资料仍被其他程序占用。请关闭正在编辑这些资料的程序后重试。',BACKUP_HOST_BUSY:'后台仍在运行，请等待停止完成后重试。',
     BACKUP_STOP_UNCONFIRMED:'尚未确认后台已停止，请重新进入维护后重试。',BACKUP_FILE_HASH_MISMATCH:'恢复副本的内容已变化。请重新恢复，再进行检查。',

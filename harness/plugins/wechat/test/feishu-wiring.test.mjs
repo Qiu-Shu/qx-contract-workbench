@@ -10,6 +10,7 @@
 import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import assert from "node:assert/strict";
 
 import { apply } from "../index.js";
 import { feishuWebhookSign } from "../feishu.js";
@@ -176,8 +177,11 @@ console.log("\nC) nothing is configured");
     check("...and sending nothing", stub.calls.length === 0, `${stub.calls.length} calls`);
     const empty = await tools.get("feishu_send_text").execute({ text: "   " });
     check("empty text is refused before any call", empty.includes("nothing to send"), empty);
-    const noPath = await tools.get("feishu_send_file").execute({});
+    await assert.rejects(tools.get("feishu_send_file").execute({}), { code: "INVALID_ARGS" });
+    check("a missing required path is rejected by the tool schema without sending", stub.calls.length === 0);
+    const noPath = await tools.get("feishu_send_file").execute({ path: "" });
     check("an empty path is refused", noPath.includes("nothing to send"), noPath);
+    check("an empty path sends nothing", stub.calls.length === 0);
   } finally {
     stub.restore();
   }

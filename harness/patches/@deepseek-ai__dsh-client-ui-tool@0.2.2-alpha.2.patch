@@ -1,8 +1,8 @@
 diff --git a/lib/client.js b/lib/client.js
-index 12c1de14..3b4a7277 100644
+index 12c1de14..cd622e61 100644
 --- a/lib/client.js
 +++ b/lib/client.js
-@@ -76,6 +76,181 @@ window.__ModuleLoader__.load({
+@@ -76,6 +76,183 @@ window.__ModuleLoader__.load({
  		//#endregion
  		//#region lib/types/client/tool/models/tool-call-model.js
  		/** Locale key per generic row variant. */
@@ -25,6 +25,8 @@ index 12c1de14..3b4a7277 100644
 +		  "media_export": "导出新媒体内容包",
 +		  "media_job": "管理新媒体导出任务",
 +		  "wechat_find_desktop_files": "查找桌面文件",
++		  "feishu_read_document": "读取飞书文档",
++		  "feishu_send_file": "发送文件到本人飞书",
 +		  "wechat_send_file": "发送文件到本人微信",
 +		  "mcp__qx_legal__calculate_calendar_date": "计算日期",
 +		  "mcp__qx_legal__get_workflow": "读取办案流程",
@@ -184,7 +186,7 @@ index 12c1de14..3b4a7277 100644
  		const VARIANT_TITLE_KEYS = {
  			search: "tool.title.search",
  			read: "tool.title.read",
-@@ -316,7 +491,7 @@ window.__ModuleLoader__.load({
+@@ -316,7 +493,7 @@ window.__ModuleLoader__.load({
  			const filePath = argumentPath === void 0 ? void 0 : recordedPath ?? (canUseArgumentPath ? argumentPath : void 0);
  			const state = !done ? block.phase === "preparing" ? "preparing" : "running" : block.error?.code === "interrupted" ? "stopped" : block.isError ? "error" : "ok";
  			const base = primary.summary !== "" || argsRaw === null ? primary.summary : argsRaw === "" ? block.callId : abbreviateHomePath(relativizeToCwd(deriveSummary(variant, argsRaw), cwd), home);
@@ -193,7 +195,7 @@ index 12c1de14..3b4a7277 100644
  			const output = done ? resultText(block) || null : null;
  			const errorSummary = state === "error" && output !== null ? firstLine(output) : null;
  			return {
-@@ -1880,7 +2055,7 @@ window.__ModuleLoader__.load({
+@@ -1880,7 +2057,7 @@ window.__ModuleLoader__.load({
  				variant: model.variant,
  				toolName,
  				icon: VARIANT_ICONS[model.variant],

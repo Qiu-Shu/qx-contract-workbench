@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "version": "0.2.19",
+  "date": "2026-11-15",
+  "productBase": "d91377a865e94330692715cbb95494725889eee5",
+  "status": "locally-installed-publication-pending",
+  "tests": {
+    "offlineNode": {
+      "total": 742,
+      "pass": 723,
+      "skip": 19,
+      "fail": 0,
+      "exitCode": 0
+    },
+    "offlinePython": {
+      "pass": 544,
+      "skip": 5,
+      "subtests": 36,
+      "exitCode": 0
+    },
+    "initialCombinedOfflineExitCode": 1,
+    "note": "Initial Node wiring assertion failed; final complete Node rerun passed. Original unchanged Python process independently exited 0. Native restoration rerun covers payload-dependent skips. Counts overlap.",
+    "windows": {
+      "node": 56,
+      "python": 57,
+      "skip": 0,
+      "fail": 0,
+      "exitCode": 0
+    },
+    "businessEvaluation": {
+      "pass": 24,
+      "fail": 0,
+      "error": 0,
+      "modelRequests": 0,
+      "deniedNetworkAttempts": 0,
+      "exitCode": 0
+    },
+    "nativeRestore": {
+      "pass": 24,
+      "skip": 0,
+      "fail": 0,
+      "exitCode": 0,
+      "protectedFiles": 2735,
+      "realConsumersCalled": 0
+    },
+    "packagedUI": {
+      "contractRequests": 16,
+      "contractPageErrors": 0,
+      "feishuPageErrors": 0,
+      "viewports": [
+        1440,
+        768,
+        390
+      ],
+      "cssEquivalentScalingScenarios": 9,
+      "realFeishuAccounts": 0,
+      "realModels": 0,
+      "contractExitCode": 0,
+      "feishuExitCode": 0
+    },
+    "packagedFirstRun": {
+      "passed": true,
+      "exitCode": 0
+    },
+    "packagedMcp": {
+      "passed": true,
+      "calls": 12,
+      "expectedRejections": 2,
+      "exitCode": 0
+    }
+  },
+  "build": {
+    "exitCode": 0,
+    "packagedSourceRecords": 3434,
+    "packagedFiles": 53265,
+    "originalUpdateSignatureVerified": true,
+    "installerSha512Verified": true,
+    "fullArchiveMatchesDeltaInput": true,
+    "assets": [
+      {
+        "name": "Qunxing-Workbench-0.2.19-Setup.exe",
+        "sha256": "02ee7592e5107364197633bcf971b1815472ec5a750d1c0537fc62f56e251b51",
+        "bytes": 591592597
+      },
+      {
+        "name": "Qunxing-Workbench-0.2.19-Setup.exe.blockmap",
+        "sha256": "5690db186118b7001c094a24efbe45a91b8d3d515741281b21f0f2d202f6befb",
+        "bytes": 590165
+      },
+      {
+        "name": "latest.yml",
+        "sha256": "74f5b4d0e392998ae09ce42eb9d857e63d109b8f868f0e4078bfcdb21d59bb4a",
+        "bytes": 1623
+      }
+    ]
+  },
+  "upgrades": [
+    {
+      "from": "0.2.14",
+      "passed": true,
+      "exitCode": 0,
+      "changedFiles": 184,
+      "unchangedFiles": 53081,
+      "unchangedFileIdentitiesMtimesAndSizesVerified": 53081,
+      "baselineChangedFileHashesPreserved": true,
+      "unmanagedFilePreserved": true
+    },
+    {
+      "from": "0.2.15",
+      "passed": true,
+      "exitCode": 0,
+      "changedFiles": 98,
+      "unchangedFiles": 53167,
+      "unchangedFileIdentitiesMtimesAndSizesVerified": 53167,
+      "baselineChangedFileHashesPreserved": true,
+      "unmanagedFilePreserved": true
+    },
+    {
+      "from": "0.2.16",
+      "passed": true,
+      "exitCode": 0,
+      "changedFiles": 98,
+      "unchangedFiles": 53167,
+      "unchangedFileIdentitiesMtimesAndSizesVerified": 53167,
+      "baselineChangedFileHashesPreserved": true,
+      "unmanagedFilePreserved": true
+    },
+    {
+      "from": "0.2.17",
+      "passed": true,
+      "exitCode": 0,
+      "changedFiles": 63,
+      "unchangedFiles": 53202,
+      "unchangedFileIdentitiesMtimesAndSizesVerified": 53202,
+      "baselineChangedFileHashesPreserved": true,
+      "unmanagedFilePreserved": true
+    },
+    {
+      "from": "0.2.18",
+      "passed": true,
+      "exitCode": 0,
+      "changedFiles": 27,
+      "unchangedFiles": 53238,
+      "unchangedFileIdentitiesMtimesAndSizesVerified": 53238,
+      "baselineChangedFileHashesPreserved": true,
+      "unmanagedFilePreserved": true
+    }
+  ],
+  "downloadReconstruction": {
+    "exitCode": 0,
+    "from": "0.2.18",
+    "to": "0.2.19",
+    "downloadBytes": 3452211,
+    "copyBytes": 588140386,
+    "fullBytes": 591592597,
+    "rangeRequests": 12,
+    "savedPercent": 99.42,
+    "signatureAndSha512Verified": true,
+    "scope": "Loopback HTTP Range; final public download pending"
+  },
+  "localInstall": {
+    "passed": true,
+    "checkedAt": "2026-11-15T08:35:13.880Z",
+    "installerExitCode": 0,
+    "from": "0.2.18",
+    "to": "0.2.19",
+    "userRequestedNoBackup": true,
+    "backupCreated": false,
+    "userFiles": 3321,
+    "allUserFileHashesAndMtimesPreserved": true,
+    "dependencyJunctionPreserved": true,
+    "changedProductFilesVerified": 27,
+    "runtimeCachesPreserved": 4,
+    "transactionFinalized": true,
+    "scope": "Actual NSIS upgrade; before first new-version launch"
+  },
+  "localLaunch": {
+    "passed": true,
+    "at": "2026-11-15T08:36:35.3253670Z",
+    "installedVersion": "0.2.19",
+    "registryVersion": "0.2.19",
+    "sessionCount": 24,
+    "runningTasks": 0,
+    "mainWindowVisible": true,
+    "feishuEntryVisible": true,
+    "feishuUnconfiguredDialogVerified": true,
+    "externalMessagesSent": 0,
+    "modelsInvokedByChecks": 0,
+    "method": "Native Windows screenshot and read-only local session/list"
+  },
+  "publication": {
+    "status": "pending"
+  },
+  "boundaries": [
+    "Real Feishu enterprise app permissions and old-doc endpoint require live verification",
+    "Cross-machine credential reauthorization and native Windows DPI not tested",
+    "73-hour endurance was interrupted; fresh full-duration evidence required",
+    "Five full practice Skills withheld; 36 old disabled entries have distinct dispositions",
+    "No real contracts or paid-model requests used for acceptance"
+  ]
+}

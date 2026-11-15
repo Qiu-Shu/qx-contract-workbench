@@ -74,3 +74,38 @@ test('pinned Promptfoo disabled telemetry produces no network attempt after the 
   const summary=require('./network-policy.cjs').summarize(log);assert.equal(summary.telemetryPatched,true);assert.equal(summary.deniedAttempts,0);assert.equal(summary.modelRequests,0);
  }finally{fs.rmSync(tmp,{recursive:true,force:true});}
 });
+
+test('pinned Promptfoo patches telemetry and CLI when dependencies are linked from another directory',async t=>{
+ const modules=path.join(__dirname,'node_modules'),source=path.join(modules,'promptfoo/dist/src');
+ if(!fs.existsSync(path.join(source,'main.js'))){t.skip('Isolated Promptfoo development dependencies are not installed');return;}
+ const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'qx-linked-promptfoo-')),log=path.join(tmp,'network.jsonl');
+ try{
+  for(const file of ['preload.cjs','network-policy.cjs'])fs.copyFileSync(path.join(__dirname,file),path.join(tmp,file));
+  fs.symlinkSync(fs.realpathSync(modules),path.join(tmp,'node_modules'),process.platform==='win32'?'junction':'dir');
+  const linked=path.join(tmp,'node_modules/promptfoo/dist/src'),url=file=>require('node:url').pathToFileURL(path.join(linked,file)).href;
+  const code=`import(${JSON.stringify(url('main.js'))}).then(()=>import(${JSON.stringify(url('telemetry-CIqy4fSC.js'))})).then(m=>{const p=new m.t(false);p.record('eval_ran',{});console.log('done')}).catch(e=>{console.error(e);process.exitCode=1});`;
+  const result=await child(code,{QX_EVAL_NETWORK_LOG:log,QX_EVAL_MODE:'scripted',PROMPTFOO_DISABLE_TELEMETRY:'1',PROMPTFOO_CONFIG_DIR:tmp},process.execPath,['--require',path.join(tmp,'preload.cjs'),'-e']);
+  assert.equal(result.status,0,result.stderr);assert.equal(result.stdout.trim(),'done');
+  const summary=require('./network-policy.cjs').summarize(log);
+  assert.equal(summary.telemetryPatched,true);assert.equal(summary.configProbePatched,true);
+  assert.equal(summary.deniedAttempts,0);assert.equal(summary.modelRequests,0);
+ }finally{fs.rmSync(tmp,{recursive:true,force:true});}
+});
+
+for(const changed of ['telemetry-CIqy4fSC.js','main.js'])test(`pinned Promptfoo rejects changed ${changed} through linked dependencies`,async t=>{
+ const source=path.join(__dirname,'node_modules/promptfoo/dist/src');
+ if(!fs.existsSync(path.join(source,'main.js'))){t.skip('Isolated Promptfoo development dependencies are not installed');return;}
+ const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'qx-linked-promptfoo-hash-')),log=path.join(tmp,'network.jsonl');
+ try{
+  const fixtures=path.join(tmp,'fixtures'),target=path.join(fixtures,'promptfoo/dist/src');fs.mkdirSync(target,{recursive:true});
+  for(const file of ['preload.cjs','network-policy.cjs'])fs.copyFileSync(path.join(__dirname,file),path.join(tmp,file));
+  for(const file of ['telemetry-CIqy4fSC.js','main.js'])fs.copyFileSync(path.join(source,file),path.join(target,file));
+  fs.appendFileSync(path.join(target,changed),'\n// synthetic dependency drift\n');
+  fs.symlinkSync(fixtures,path.join(tmp,'node_modules'),process.platform==='win32'?'junction':'dir');
+  const result=await child("console.log('must not run')",{QX_EVAL_NETWORK_LOG:log,QX_EVAL_MODE:'scripted'},process.execPath,['--require',path.join(tmp,'preload.cjs'),'-e']);
+  assert.equal(result.status,1);assert.equal(result.stdout,'');assert.match(result.stderr,/Promptfoo source changed; review the pinned patch/);
+  const summary=require('./network-policy.cjs').summarize(log);
+  assert.equal(summary.telemetryPatched,false);assert.equal(summary.configProbePatched,false);
+  assert.equal(summary.deniedAttempts,0);assert.equal(summary.modelRequests,0);
+ }finally{fs.rmSync(tmp,{recursive:true,force:true});}
+});

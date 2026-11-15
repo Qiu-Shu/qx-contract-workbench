@@ -203,3 +203,29 @@ test('unknown content files, disguised report directories and credential links s
   assert.equal(report.scopes.find(s=>s.path==='.local/content-watch/connection.json')?.linked,true);
   assert.equal(report.files.length,0);
 });
+
+test('Feishu backups preserve inbox and dedup but exclude credentials and exact atomic temporary names',t=>{
+  const {inspectScope}=require('./backup-preparation.cjs'),data=fixture(t),uuid='11111111-1111-4111-8111-111111111111';
+  const kept=['inbox.json','seen.json'],excluded={'settings.json':'reauthorize'};
+  for(const name of ['settings','inbox','seen'])excluded[`${name}.json.${uuid}.tmp`]='runtime';
+  for(const name of [...kept,...Object.keys(excluded)])write(data,'.local/feishu/'+name,'synthetic-feishu-secret');
+  const report=inspectScope(data);
+  assert.deepEqual(report.files.map(file=>file.path).sort(),kept.map(name=>'.local/feishu/'+name).sort());
+  assert.equal(report.scopeReviewRequired,false);
+  for(const [name,policy] of Object.entries(excluded))assert.equal(report.scopes.find(item=>item.path==='.local/feishu/'+name)?.policy,policy,name);
+  assert.doesNotMatch(JSON.stringify(report),/synthetic-feishu-secret/);
+});
+
+test('Feishu unknown stores, malformed temporary names and credential links remain reviewable',t=>{
+  const {inspectScope}=require('./backup-preparation.cjs'),data=fixture(t),outside=fixture(t);
+  const unknown=['other.json','inbox.json.not-a-uuid.tmp','settings.json.11111111-1111-4111-8111-111111111111.tmp.extra','other.json.11111111-1111-4111-8111-111111111111.tmp'];
+  for(const name of unknown)write(data,'.local/feishu/'+name);
+  fs.mkdirSync(path.join(data,'.local/feishu/seen.json'));
+  write(outside,'workspace/secret.txt','outside-feishu-secret');
+  fs.linkSync(path.join(outside,'workspace/secret.txt'),path.join(data,'.local/feishu/settings.json'));
+  const report=inspectScope(data);
+  assert.equal(report.scopeReviewRequired,true);
+  for(const name of [...unknown,'seen.json'])assert.equal(report.scopes.find(item=>item.path==='.local/feishu/'+name)?.policy,'unclassified',name);
+  assert.equal(report.scopes.find(item=>item.path==='.local/feishu/settings.json')?.linked,true);
+  assert.equal(report.files.length,0);assert.doesNotMatch(JSON.stringify(report),/outside-feishu-secret/);
+});

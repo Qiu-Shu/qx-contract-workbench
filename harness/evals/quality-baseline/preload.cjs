@@ -11,7 +11,8 @@ const patches=[
   after:'if (!await pathExists$1(configPath)) return;\n\t\tawait ensureTypescriptLoader(configPath);'}
 ];
 for(const patch of patches){
- const file=path.join(__dirname,'node_modules/promptfoo/dist/src',patch.file);
+ // Node resolves junctions/symlinks before invoking the load hook.
+ const file=fs.realpathSync(path.join(__dirname,'node_modules/promptfoo/dist/src',patch.file));
  if(createHash('sha256').update(fs.readFileSync(file)).digest('hex')!==patch.sha)throw Error('Promptfoo source changed; review the pinned patch before evaluation: '+patch.file);
  patch.url=pathToFileURL(file).href;
 }

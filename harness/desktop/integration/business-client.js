@@ -1,6 +1,39 @@
 // Loaded by the desktop integration; all actions stay on the resident session/input APIs.
+window.qxCreateDraftRetainer=function(sessions){
+  const held=new Map();let closed=false;
+  const release=id=>{const reference=held.get(id);held.delete(id);reference?.release();};
+  const unsubscribe=sessions.list.subscribe(()=>{const rows=sessions.list.getSnapshot().byId;for(const id of held.keys())if(!rows[id]||rows[id].removed)release(id);});
+  return {update(id,input){
+    if(closed)return;
+    if(!input.attachmentIds?.length){release(id);return;}
+    if(held.has(id))return;
+    // Keep the resident input shell and its original upload receipts; never copy or re-upload files.
+    const reference=sessions.retain(id,{source:'qxDraft'});held.set(id,reference);
+    reference.ready.catch(()=>{if(held.get(id)===reference)release(id);});
+  },dispose(){if(closed)return;closed=true;unsubscribe();for(const id of held.keys())release(id);}};
+};
+// A deliberate AI action uses the resident composer and rechecks it after file verification.
+window.qxCreateComparisonAnalysis=function(read){
+  const pending=new Set();
+  const ready=(id,value)=>{
+    if(!value||value.activeId!==id)throw Error('对话已切换，请回原对话分析。');
+    if(!value.actions||value.input?.phase!=='plain'||value.input.draft.trim()||value.input.attachmentIds?.length||value.running)throw Error('请先保存或发送原对话中的草稿和附件，等待本轮回复完成后再分析。');
+  };
+  return async(id,prepare)=>{
+    if(pending.has(id))throw Error('正在核对版本，请稍候。');
+    const before=read(id);ready(id,before);const epoch=before.epoch,party=before.party||'';
+    pending.add(id);
+    try{
+      const text=await prepare(party),live=read(id);ready(id,live);
+      if(live.epoch!==epoch||(live.party||'')!==party)throw Error('对话或我方立场已变化，请重新点击分析。');
+      if(typeof text!=='string'||!text.trim())throw Error('分析请求未准备好，请重试。');
+      live.actions.setDraft(text);live.actions.persistDraft();return await live.actions.submit();
+    }finally{pending.delete(id);}
+  };
+};
 window.qxInstallBusiness=function(ctx,React){
   const h=React.createElement,controller=new AbortController(),disposers=[];
+  const draftRetainer=window.qxCreateDraftRetainer(ctx.sessions);disposers.push(()=>draftRetainer.dispose());
   const modes=[{id:'reception',title:'客户接待',hint:'粘贴客户原话或截图，准备回复并推进下一步',icon:'M4 4h16v11H9l-5 4V4m4 4h8m-8 3h5'},
     {id:'contract',title:'合同审查',hint:'先发合同，再确认我方立场和审查程度',icon:'M14 3H5v18h14V8l-5-5v5h5M8 12h8m-8 4h5'},
     {id:'case',title:'办案整理',hint:'直接发送材料，逐步理清事实、证据和办案目标',icon:'M3 7h7l2 2h9v11H3V7m0 0V4h7l2 3h7v2M7 13h10m-10 3h6'},
@@ -12,15 +45,17 @@ window.qxInstallBusiness=function(ctx,React){
   const subscribe=fn=>{listeners.add(fn);return()=>listeners.delete(fn);};
   const useBusiness=()=>React.useSyncExternalStore(subscribe,()=>snapshot);
   const useSessions=()=>React.useSyncExternalStore(fn=>ctx.sessions.list.subscribe(fn),()=>ctx.sessions.list.getSnapshot());
+  const workspaceList=ctx.get('workspaces')?.list;
+  const useWorkspaces=()=>React.useSyncExternalStore(fn=>workspaceList?.subscribe(fn)||(()=>{}),()=>workspaceList?.getSnapshot());
   // A workflow has meaningful state even before its first message. Keep it out of plain-chat reuse.
   const priorReuse=ctx.uiWorkspace.canReuseBlank;
   const canReuseBlank=id=>indexReady&&!snapshot.busy&&!snapshot.states[id]&&!snapshot.index.some(flow=>flow.sessionId===id)&&(priorReuse?.call(ctx.uiWorkspace,id)??true);
   ctx.uiWorkspace.canReuseBlank=canReuseBlank;
   disposers.push(()=>{if(ctx.uiWorkspace.canReuseBlank===canReuseBlank)ctx.uiWorkspace.canReuseBlank=priorReuse;});
   const activeId=()=>Object.values(ctx.sessions.list.getSnapshot().byId).find(row=>(row.retainedBy?.mainView||0)>0)?.id;
-  let navigationEpoch=0,lastActive=activeId(),lastWorkspaceId;
+  let navigationEpoch=0,lastActive=activeId(),lastWorkspaceId,initialSelectionReady=Boolean(lastActive);
   const observeNavigation=()=>{
-    const id=activeId();if(id!==lastActive){navigationEpoch++;lastActive=id;}
+    const id=activeId();if(id)initialSelectionReady=true;if(id!==lastActive){navigationEpoch++;lastActive=id;}
     const workspace=ctx.get('workspaces')?.list.getSnapshot().items.find(item=>item.sessionIds.includes(id));
     if(workspace)lastWorkspaceId=workspace.workspaceId;
   };
@@ -69,18 +104,26 @@ window.qxInstallBusiness=function(ctx,React){
     if(!live||live.input.phase!=='plain'||live.input.draft.trim()||live.input.attachmentIds?.length||ctx.sessions.list.getSnapshot().byId[id]?.running)throw Error('请先发送或保存输入框中的内容，等待本轮回复完成后再操作。');
     live.actions.setDraft(text);live.actions.persistDraft();live.actions.submit();
   }
+  const analyzeComparison=window.qxCreateComparisonAnalysis(id=>controller.signal.aborted?null:{...inputs.get(id),activeId:activeId(),epoch:navigationEpoch,party:snapshot.states[id]?.party||'',running:ctx.sessions.list.getSnapshot().byId[id]?.running});
+  window.qxAnalyzeComparison=analyzeComparison;
+  disposers.push(()=>{if(window.qxAnalyzeComparison===analyzeComparison)delete window.qxAnalyzeComparison;});
   const icon=item=>h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.5,strokeLinecap:'round',strokeLinejoin:'round','aria-hidden':true},h('path',{d:item.icon}));
   function Entries({wide=true}){
-    const data=useBusiness(),sessions=useSessions(),[expanded,setExpanded]=React.useState(null);
+    const data=useBusiness(),sessions=useSessions(),workspaces=useWorkspaces(),[expanded,setExpanded]=React.useState(null);
     const current=Object.values(sessions.byId).find(row=>(row.retainedBy?.mainView||0)>0)?.id;
     return h('section',{className:'qx-business-entries','aria-label':'业务入口'},wide&&h('p',{className:'qx-business-eyebrow'},'开始一项工作'),
       modes.map(item=>h('div',{key:item.id},h('div',{className:'qx-business-entry-row'},
-        h('button',{type:'button',className:'qx-business-entry',disabled:data.busy,title:item.title,'aria-label':'新建'+item.title+'对话','aria-current':data.states[current]?.mode===item.id?'true':undefined,onClick:()=>{void create(item.id).catch(()=>{})}},icon(item),wide&&h('span',null,item.title),wide&&h('span',{className:'qx-business-plus','aria-hidden':true},'+')),
+        h('button',{type:'button',className:'qx-business-entry',disabled:data.busy||!initialSelectionReady||sessions.phase!=='ready'||workspaces?.phase!=='ready'||!workspaces.items.length,title:workspaces?.items.length?item.title:'请先选择或添加工作区','aria-label':'新建'+item.title+'对话','aria-current':data.states[current]?.mode===item.id?'true':undefined,onClick:()=>{void create(item.id).catch(()=>{})}},icon(item),wide&&h('span',null,item.title),wide&&h('span',{className:'qx-business-plus','aria-hidden':true},'+')),
         wide&&h('button',{type:'button',className:'qx-business-history-toggle','aria-label':item.title+'历史对话','aria-expanded':expanded===item.id,onClick:()=>setExpanded(expanded===item.id?null:item.id)},expanded===item.id?'▴':'▾')),
         wide&&expanded===item.id&&h('div',{className:'qx-business-history'},
           data.index.filter(flow=>flow.mode===item.id&&sessions.byId[flow.sessionId]).sort((a,b)=>(sessions.byId[b.sessionId].updatedAt||b.updatedAt)-(sessions.byId[a.sessionId].updatedAt||a.updatedAt)).map(flow=>h('button',{type:'button',key:flow.sessionId,onClick:()=>ctx.uiWorkspace.openSession(flow.sessionId),'aria-current':current===flow.sessionId?'page':undefined},sessions.byId[flow.sessionId].displayTitle||'新对话')),
           !data.index.some(flow=>flow.mode===item.id&&sessions.byId[flow.sessionId])&&h('p',null,'暂无对话')))),
       data.error&&h('p',{role:'alert',className:'qx-business-error'},data.error));
+  }
+  function ContractComparison(props){
+    const [ready,setReady]=React.useState(Boolean(window.qxComparisonPanel));
+    React.useEffect(()=>{const update=()=>setReady(Boolean(window.qxComparisonPanel));window.addEventListener('qx-comparison-ready',update);update();return()=>window.removeEventListener('qx-comparison-ready',update)},[]);
+    return ready?h(window.qxComparisonPanel,props):null;
   }
   function FlowDock({session,input,inputActions}){
     const id=session.sessionId||session.id,{state,error,reload}=useFlow(id),data=useBusiness();
@@ -88,6 +131,7 @@ window.qxInstallBusiness=function(ctx,React){
     const [confirmSigned,setConfirmSigned]=React.useState(false),[handoff,setHandoff]=React.useState(false),[summary,setSummary]=React.useState(''),[confirmed,setConfirmed]=React.useState(false),alive=React.useRef(true);
     React.useEffect(()=>{alive.current=true;return()=>{alive.current=false;inputs.delete(id)}},[id]);
     React.useEffect(()=>{inputs.set(id,{input,actions:inputActions});return()=>inputs.delete(id)},[id,input,inputActions]);
+    React.useEffect(()=>{draftRetainer.update(id,input);},[id,input]);
     React.useEffect(()=>{if(state){setReview(state.review||'full');setFocus(state.focus||'');setParty(state.party||'');}},[state?.revision]);
     async function act(operation){setBusy(true);setNotice('');try{await operation()}catch(e){if(alive.current)setNotice(e.message)}finally{if(alive.current)setBusy(false)}}
     if(error)return h('section',{className:'qx-business-dock'},h('p',{role:'alert'},error),h('button',{type:'button',onClick:reload},'重试业务设置'));
@@ -112,7 +156,7 @@ window.qxInstallBusiness=function(ctx,React){
       handoff&&h('div',{className:'qx-business-handoff'},h('label',{className:'qx-business-field'},'办案交接摘要',h('textarea',{'aria-label':'办案交接摘要',placeholder:'填写已核实的当事人、核心事实、目标和材料位置。尚未核实的内容请明确标注。',value:summary,maxLength:12000,onChange:e=>{setSummary(e.target.value);setConfirmed(false)}})),
         h('label',null,h('input',{type:'checkbox',checked:confirmed,onChange:e=>setConfirmed(e.target.checked)}),' 我已核对上述摘要，确认带入办案对话'),button('确认并新建办案对话',()=>create('case',{sourceSessionId:id,summary,confirmHandoff:true}),{disabled:disabled||!confirmed||!summary.trim(),className:'qx-business-primary'})));
     if(state.mode==='case'&&state.summary)controls=h('details',null,h('summary',null,'已确认的接待交接摘要'),h('p',{className:'qx-business-prose'},state.summary));
-    return h('section',{className:'qx-business-dock','aria-label':item.title+'业务引导'},title,controls,notice&&h('p',{role:'status',className:'qx-business-error'},notice));
+    return h('section',{className:'qx-business-dock','aria-label':item.title+'业务引导'},title,controls,state.mode==='contract'&&h(ContractComparison,{session,input,inputActions}),notice&&h('p',{role:'status',className:'qx-business-error'},notice));
   }
   function Reply(props){
     const id=props.useSession(session=>session.sessionId||session.id),data=useBusiness(),[notice,setNotice]=React.useState('');

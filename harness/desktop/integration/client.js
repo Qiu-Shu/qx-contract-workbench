@@ -343,6 +343,59 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
         notice&&h('p',{className:'qx-wx-notice',role:'status'},notice),
         (error||state?.lastError||state?.login?.error)&&h('div',{className:'qx-wx-error',role:'alert'},h('p',null,error||state?.lastError||state?.login?.error),h('button',{type:'button',disabled:busy,onClick:()=>{setError('');void refresh().catch(e=>setError(e.message))}},'刷新状态'))));
   }
+  function FeishuPanel({onClose}){
+    const dialog=React.useRef(null),alive=React.useRef(true),running=React.useRef(false),version=React.useRef(0);
+    const [state,setState]=React.useState(null),[settings,setSettings]=React.useState(null),[selected,setSelected]=React.useState('');
+    const [appId,setAppId]=React.useState(''),[secret,setSecret]=React.useState(''),[busy,setBusy]=React.useState(false),[error,setError]=React.useState(''),[notice,setNotice]=React.useState('');
+    async function api(path,options={}){
+      const response=await fetch('/qx-feishu/'+path,{credentials:'same-origin',...options});
+      if(!response.headers.get('content-type')?.includes('application/json'))throw Error('连接已失效，请重新连接工作台。');
+      const value=await response.json();if(!response.ok)throw Error(value.error||'飞书连接未完成，请重试。');return value;
+    }
+    const refresh=React.useCallback(async(signal)=>{
+      const stamp=++version.current,[next,options]=await Promise.all([api('state',{signal}),api('settings',{signal})]);
+      if(!alive.current||stamp!==version.current)return;
+      setState(next);setSettings(options);setAppId(previous=>previous||next.appId||'');
+      setSelected(previous=>next.configured?next.sessionId:previous||next.sessionId||(options.sessions.some(row=>row.id===document.documentElement.dataset.qxSessionId)?document.documentElement.dataset.qxSessionId:options.sessions[0]?.id)||'');
+    },[]);
+    React.useEffect(()=>{
+      alive.current=true;const element=dialog.current,focus=document.activeElement,controller=new AbortController();let timer;
+      element.showModal();const poll=async()=>{try{if(!running.current)await refresh(controller.signal)}catch(e){if(!controller.signal.aborted)setError(e.message)}finally{if(!controller.signal.aborted)timer=setTimeout(poll,2500)}};void poll();
+      return()=>{alive.current=false;controller.abort();clearTimeout(timer);element.close();if(focus?.isConnected)focus.focus();};
+    },[refresh]);
+    async function run(action,extra={}){
+      if(running.current||!settings)return;running.current=true;version.current++;setBusy(true);setError('');setNotice('');
+      try{
+        const result=await api('action',{method:'POST',headers:{'content-type':'application/json','x-qx-token':settings.csrf},body:JSON.stringify({action,...extra})});
+        if(!alive.current)return;
+        if(action==='connect'||action==='clear')setSecret('');
+        if(result.sessionId)setSelected(result.sessionId);
+        if(action==='clear')setAppId('');
+        await refresh();if(alive.current)setNotice(action==='session'?'已切换会话，之后的飞书消息进入所选会话。':action==='clear'?'已清除连接，可重新配置并配对。':'');
+      }catch(e){if(alive.current)setError(e.message)}finally{running.current=false;if(alive.current)setBusy(false)}
+    }
+    const sessions=settings?.sessions||[],processing=state?.batching?.active||state?.batching?.pendingMessages>0;
+    return h('dialog',{ref:dialog,className:'qx-wx','aria-labelledby':'qx-feishu-title',onCancel:e=>{e.preventDefault();onClose()}},
+      h('header',{className:'qx-wx-head'},h('h2',{id:'qx-feishu-title'},'飞书连接'),h('button',{type:'button',className:'qx-wx-close','aria-label':'关闭飞书连接',onClick:onClose},'×')),
+      h('div',{className:'qx-wx-body'},
+        h('div',{className:'qx-wx-status',role:'status'},h('span',{className:'qx-wx-dot'+(state?.connected?' connected':'')}),h('strong',null,!state?'正在读取连接状态…':state.connected?'飞书已连接':state.configured?'接收已暂停':'尚未连接飞书')),
+        h('p',{className:'qx-wx-muted'},'在飞书发送消息、合同，与程序共用对话。粘贴飞书文档链接也可读取并分析。'),
+        h('section',{className:'qx-wx-section'},h('label',{htmlFor:'qx-feishu-session'},'飞书使用的会话'),
+          h('select',{id:'qx-feishu-session',value:selected,disabled:busy||!settings||processing,onChange:e=>{const id=e.target.value;if(state?.configured)void run('session',{sessionId:id});else setSelected(id)}},
+            !sessions.some(row=>row.id===selected)&&h('option',{value:selected},sessions.length?'请选择会话':'请先开始一个对话'),sessions.map(row=>h('option',{key:row.id,value:row.id},row.title))),
+          processing&&h('p',{className:'qx-wx-muted'},'消息正在处理，完成后即可切换会话。')),
+        h('form',{className:'qx-feishu-fields',onSubmit:e=>{e.preventDefault();void run('connect',{appId:appId.trim(),...(secret?{appSecret:secret}:{}),sessionId:selected})}},
+          h('label',{htmlFor:'qx-feishu-app-id'},'App ID'),h('input',{id:'qx-feishu-app-id',value:appId,disabled:busy||processing,autoComplete:'off',spellCheck:false,onChange:e=>setAppId(e.target.value)}),
+          h('label',{htmlFor:'qx-feishu-secret'},'App Secret'),h('input',{id:'qx-feishu-secret',type:'password',value:secret,disabled:busy||processing,autoComplete:'new-password',placeholder:state?.configured?'已安全保存，留空保持原值':'填写飞书应用密钥',onChange:e=>setSecret(e.target.value)}),
+          h('div',{className:'qx-wx-actions'},h('button',{type:'submit',className:'qx-wx-primary',disabled:busy||!settings||processing||!appId.trim()||!selected||(!state?.configured&&!secret)},busy?'正在处理…':'保存并连接'),
+            state?.configured&&h('button',{type:'button',disabled:busy,onClick:()=>run(state.paused?'resume':'pause')},state.paused?'恢复连接':'暂停接收'))),
+        state?.pairing&&h('p',{className:'qx-wx-notice',role:'status'},'请在飞书私聊机器人发送：',h('strong',null,'连接 '+state.pairing.code),'（5 分钟内有效，仅需一次）。'),
+        state?.owner?h('p',{className:'qx-wx-muted'},'已绑定本人，仅接收本人的私聊。'):state?.configured&&!state?.pairing&&h('button',{type:'button',disabled:busy,onClick:()=>run('pair')},'生成配对码'),
+        h('details',null,h('summary',null,'首次连接说明'),h('p',{className:'qx-wx-muted'},'在飞书开放平台创建企业自建应用，启用机器人，选择长连接并订阅接收消息事件；授予消息、文件与云文档读取权限，发布应用。需要读取的文档须向应用授权。程序需保持运行。')),
+        state?.configured&&h('button',{type:'button',className:'qx-wx-text',disabled:busy||processing,onClick:()=>run('clear')},'清除连接并重新配对'),
+        notice&&h('p',{className:'qx-wx-notice',role:'status'},notice),
+        (error||state?.lastError)&&h('p',{className:'qx-wx-error',role:'alert'},error||state.lastError)));
+  }
   class KnowledgeBoundary extends React.Component{
     constructor(props){super(props);this.state={failed:false,message:''};}
     static getDerivedStateFromError(error){return {failed:true,message:String(error?.message||error)};}
@@ -360,7 +413,25 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
   .qx-brand-logo{display:block;width:100%;height:100%;object-fit:contain}
   [data-slot="sidebar"] :has(> span > .qx-brand-compact){min-height:34px}
   span:has(> span > [data-slot="sidebar.brand.mark"]){min-height:34px}
+    .qx-feishu-fields{display:grid;gap:8px;margin-bottom:16px}.qx-feishu-fields input{width:100%;min-width:0}.qx-feishu-fields .qx-wx-actions{margin-top:8px}.qx-feishu-link{grid-column:1 / -1}
     .qx-sidebar-account{width:100%;min-width:0}
+    /* Harness 0.2.18 SidebarRoot footer host; keep the workspace's flex scroll region intact. */
+    .hHd-Xa_footerActions:has(.qx-sidebar-account){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+    .hHd-Xa_footerActions [data-slot="sidebar.footer.action"]{display:contents}
+    .qx-sidebar-account:not(.qx-sidebar-account-compact){display:contents}
+    .hHd-Xa_footerActions .qx-balance,.hHd-Xa_footerActions .qx-upgrade,.hHd-Xa_footerActions .qx-component-notice{grid-column:1 / -1}
+    .hHd-Xa_footerActions .qx-upgrade{order:-1}
+    .hHd-Xa_footerActions .qx-balance{order:10}
+    .hHd-Xa_footerActions .qx-component-notice{order:9}
+    .hHd-Xa_collapsed .hHd-Xa_footerActions:has(.qx-sidebar-account){display:flex;flex-direction:column;align-items:center}
+    .qx-balance-heading>span,.qx-balance-values>span{white-space:nowrap}
+    /* Short windows keep the business entries and history reachable by scrolling the sidebar. */
+    @media(max-height:620px){
+      .hHd-Xa_root{overflow-y:auto}
+      .hHd-Xa_root:not(.hHd-Xa_collapsed) .hHd-Xa_regionArea{flex:1 0 360px;min-height:360px}
+      .hHd-Xa_root.hHd-Xa_collapsed .hHd-Xa_regionArea{flex:1 0 220px;min-height:220px}
+    }
+
     .qx-upgrade{display:flex;align-items:center;gap:10px;width:calc(100% - 8px);min-height:38px;margin:0 4px 6px;padding:8px 10px;border:1px solid #d4a72c;border-radius:6px;background:#ffdc69;color:#3b2b00;font-family:inherit;font-size:14px;font-weight:600;line-height:20px;cursor:pointer}
     .qx-upgrade:hover{background:#ffd34a}.qx-upgrade:focus-visible,.qx-update-panel button:focus-visible{outline:2px solid #785500;outline-offset:3px}
     .qx-sidebar-account-compact .qx-upgrade{width:36px;margin:0 0 6px;justify-content:center;padding:8px}
@@ -510,7 +581,7 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
   function AccountFooter({wide}){
     const [knowledgeOpen,setKnowledgeOpen]=React.useState(false),[knowledgeScope,setKnowledgeScope]=React.useState('');
     const [memoryOpen,setMemoryOpen]=React.useState(false),[memoryCase,setMemoryCase]=React.useState(null);
-    const [wechatOpen,setWechatOpen]=React.useState(false);
+    const [wechatOpen,setWechatOpen]=React.useState(false),[feishuOpen,setFeishuOpen]=React.useState(false);
     React.useEffect(()=>{
       const open=()=>{window.__qxOpenWechatRequested=false;setWechatOpen(true)};
       window.addEventListener('qx-open-wechat',open);
@@ -525,6 +596,8 @@ window.__ModuleLoader__.load({id:'@qunxing/desktop-session',factory:require=>{
       memoryOpen&&h(MemoryPanel,{initialCase:memoryCase,onClose:()=>{setMemoryOpen(false);setKnowledgeOpen(true);}}),
       h('button',{type:'button',className:'qx-wechat-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'微信连接',title:'微信连接','aria-haspopup':'dialog',onClick:()=>setWechatOpen(true)},h(PhoneIcon),wide&&h('span',null,'微信连接')),
       wechatOpen&&h(WechatPanel,{onClose:()=>setWechatOpen(false)}),
+      h('button',{type:'button',className:'qx-wechat-link qx-feishu-link',style:{width:'calc(100% - 8px)',border:0,background:'transparent',cursor:'pointer'},'aria-label':'飞书连接',title:'飞书连接','aria-haspopup':'dialog',onClick:()=>setFeishuOpen(true)},h('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.6,'aria-hidden':true},h('path',{d:'m3 4 18 8-18 8 4-8-4-8zm4 8h14',strokeLinejoin:'round'})),wide&&h('span',null,'飞书连接')),
+      feishuOpen&&h(FeishuPanel,{onClose:()=>setFeishuOpen(false)}),
       h(Balance,{wide}));
   }
   function Balance({wide}){

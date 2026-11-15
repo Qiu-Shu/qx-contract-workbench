@@ -61,6 +61,8 @@ const policy={
   '.local/dsh-home/.local/layered-knowledge.sqlite-wal':'protect','.local/dsh-home/.local/layered-knowledge.sqlite-shm':'protect',
   '.local/dsh-home/qx-wechat/qx-route.json':'protect','.local/dsh-home/qx-wechat/qx-seen.json':'protect',
   '.local/dsh-home/qx-wechat/qx-pending.json':'protect',
+  '.local/feishu/inbox.json':'protect','.local/feishu/seen.json':'protect',
+  '.local/feishu/settings.json':'reauthorize',
   '.local/content-watch/state.json':'protect','.local/content-watch/session.json':'protect',
   '.local/content-watch/connection.json':'reauthorize',
   '.local/content-watch/auth/cookies.json':'reauthorize','.local/content-watch/auth/service-token':'reauthorize',
@@ -83,10 +85,11 @@ const policy={
   ...Object.fromEntries(['host','desktop'].flatMap(name=>['.log','.log.1','-events.jsonl','-events.jsonl.1'].map(suffix=>[`.local/${name}${suffix}`,'runtime']))),
 };
 const branches=new Set(['','.local','.local/dsh-home','.local/dsh-home/.local','.local/dsh-home/qx-wechat','.local/case-memory-runtime',
-  '.local/content-watch','.local/content-watch/reports','.local/content-watch/auth','.local/content-watch/runtime']);
+  '.local/content-watch','.local/content-watch/reports','.local/content-watch/auth','.local/content-watch/runtime','.local/feishu']);
 const contentUuid='[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}';
 const contentReport=new RegExp('^\\.local/content-watch/reports/'+contentUuid+'(?:\\.json|(?:-draft-[0-5])?\\.md)$');
 const contentTemporary=new RegExp('^\\.local/content-watch/(?:(?:state|session|connection)\\.json\\.'+contentUuid+'|runtime/\\.component-'+contentUuid+')\\.tmp$');
+const feishuTemporary=new RegExp('^\\.local/feishu/(?:settings|inbox|seen)\\.json\\.'+contentUuid+'\\.tmp$');
 const locationRecord=new RegExp('^\\.local/data-location\\.json(?:\\.previous(?:\\.'+contentUuid+')?|\\.'+contentUuid+'\\.tmp)?$');
 function inspectScope(data){
   const scopes=[],files=[];
@@ -113,6 +116,10 @@ function inspectScope(data){
         if(!stat.isFile())disposition='unclassified';
         else if(contentReport.test(next))disposition='protect';
         else if(contentTemporary.test(next))disposition='runtime';
+      }
+      if(relative==='.local/feishu'){
+        if(!stat.isFile())disposition='unclassified';
+        else if(feishuTemporary.test(next))disposition='runtime';
       }
       const linked=stat.isSymbolicLink()||(!stat.isDirectory()&&(!stat.isFile()||stat.nlink!==1));
       scopes.push({path:next,policy:disposition,...(linked?{linked:true}:{})});
