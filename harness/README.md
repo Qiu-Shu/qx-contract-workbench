@@ -1,6 +1,6 @@
 # AI师兄法律助手平台 · 使用说明
 
-当前发布候选 **0.2.19**。[下载 Windows 安装包](https://github.com/Qiu-Shu/qx-contract-workbench/releases/download/v0.2.19/Qunxing-Workbench-0.2.19-Setup.exe) · [发布说明](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.19) · [发布验证](docs/2026-11-15-0.2.19发布.md) · [源码构建](packaging/README.md)
+当前版本 **0.2.19**。[下载 Windows 安装包](https://github.com/Qiu-Shu/qx-contract-workbench/releases/download/v0.2.19/Qunxing-Workbench-0.2.19-Setup.exe) · [发布说明](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.19) · [发布验证](docs/2026-11-15-0.2.19发布.md) · [源码构建](packaging/README.md)
 
 ## 开始使用
 

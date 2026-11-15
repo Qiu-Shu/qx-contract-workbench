@@ -3,7 +3,7 @@
   "version": "0.2.19",
   "date": "2026-11-15",
   "productBase": "d91377a865e94330692715cbb95494725889eee5",
-  "status": "locally-installed-publication-pending",
+  "status": "published-and-locally-installed",
   "tests": {
     "offlineNode": {
       "total": 742,
@@ -156,7 +156,7 @@
     "rangeRequests": 12,
     "savedPercent": 99.42,
     "signatureAndSha512Verified": true,
-    "scope": "Loopback HTTP Range; final public download pending"
+    "scope": "Loopback HTTP Range reconstruction; anonymous full public download separately verified"
   },
   "localInstall": {
     "passed": true,
@@ -189,7 +189,57 @@
     "method": "Native Windows screenshot and read-only local session/list"
   },
   "publication": {
-    "status": "pending"
+    "releaseId": 445916932,
+    "url": "https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.19",
+    "tag": "v0.2.19",
+    "assetCount": 4,
+    "uploadedAssets": {
+      "passed": true,
+      "releaseId": 445916932,
+      "assets": [
+        {
+          "name": "Qunxing-Workbench-0.2.19-Setup.exe",
+          "assetId": 750370301,
+          "size": 591592597,
+          "sha256": "02ee7592e5107364197633bcf971b1815472ec5a750d1c0537fc62f56e251b51",
+          "githubDigestVerified": true
+        },
+        {
+          "name": "Qunxing-Workbench-0.2.19-Setup.exe.blockmap",
+          "assetId": 750375917,
+          "size": 590165,
+          "sha256": "5690db186118b7001c094a24efbe45a91b8d3d515741281b21f0f2d202f6befb",
+          "githubDigestVerified": true
+        },
+        {
+          "name": "latest.yml",
+          "assetId": 750376071,
+          "size": 1623,
+          "sha256": "74f5b4d0e392998ae09ce42eb9d857e63d109b8f868f0e4078bfcdb21d59bb4a",
+          "githubDigestVerified": true
+        },
+        {
+          "name": "SHA256SUMS.txt",
+          "assetId": 750376181,
+          "size": 288,
+          "sha256": "e9e7a5c222cf96c1e16a527c466cd727070fbbd821fc43ed87c3d3067fb22976",
+          "githubDigestVerified": true
+        }
+      ]
+    },
+    "publicDownload": {
+      "passed": true,
+      "checkedAt": "2026-11-15T08:43:10.471Z",
+      "version": "0.2.19",
+      "anonymousPublicDownload": true,
+      "bytes": 591592597,
+      "sha256": "02ee7592e5107364197633bcf971b1815472ec5a750d1c0537fc62f56e251b51",
+      "originalEd25519SignatureVerified": true,
+      "sha512Verified": true,
+      "blockmapVerified": true,
+      "publicManifestMatchesChecksumFile": true,
+      "installerMatchesLocalVerifiedBuild": true
+    }
   },
   "boundaries": [
     "Real Feishu enterprise app permissions and old-doc endpoint require live verification",
@@ -197,5 +247,13 @@
     "73-hour endurance was interrupted; fresh full-duration evidence required",
     "Five full practice Skills withheld; 36 old disabled entries have distinct dispositions",
     "No real contracts or paid-model requests used for acceptance"
-  ]
+  ],
+  "productCommit": "d83016ff1ada7b199076fb1edb8f8d5668a2284c",
+  "sourceVerification": {
+    "passed": true,
+    "commit": "d83016ff1ada7b199076fb1edb8f8d5668a2284c",
+    "packagedSourceRecords": 3434,
+    "uniqueSourceBlobsVerified": 3406,
+    "allSourceBlobsMatchBuiltInputs": true
+  }
 }

@@ -1,6 +1,6 @@
 # 0.2.19 Windows 安装包
 
-0.2.19 发布验证进行中，沿用原更新签名身份。[下载页](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.19) · [发布记录](../docs/2026-11-15-0.2.19发布.md)。
+0.2.19 已发布，完成本机升级与公开下载核验，沿用原更新签名身份。[下载页](https://github.com/Qiu-Shu/qx-contract-workbench/releases/tag/v0.2.19) · [发布记录](../docs/2026-11-15-0.2.19发布.md)。
 
 Windows 10/11 x64，当前 Windows 用户安装；自带 Node、Python、文档与浏览器工具运行环境。首次运行填写自己的模型配置。资料与加密设置位于 `%APPDATA%/QunxingHarness`，程序目录可自选；业务代码从运行配置取得根目录。
 
