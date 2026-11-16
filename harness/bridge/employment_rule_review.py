@@ -40,6 +40,21 @@ def _same_wage_record(source,spans):
     return any(complete(g) for g in full['linked_groups'])
 
 
+def _monthly_wage_record(text,spans):
+    # An amount in yuan carries no pay period. A shared period must directly
+    # qualify the four matched fields, or each field must state its own month.
+    tail=text[max(end for _,end in spans.values()):]
+    if re.match(r'[\s。；;]*(?:上述|这)(?:四项|四个金额)均为(?:税前)?月工资标准[。]?',tail):
+        return True
+    for start,end in spans.values():
+        prefix=re.split('[，,、；;。\n]',text[:start])[-1]
+        suffix=re.split('[，,、；;。\n]',text[end:])[0]
+        if not (re.search(r'月工资',text[start:end]) or re.search(r'每月\s*$',prefix)
+                or re.match(r'\s*/月(?:\s|$)',suffix)):
+            return False
+    return True
+
+
 def prepare_probation_pay(cases,case_id,item,index):
     params=item.get('parameters',{});contexts={};refs=[];values={};spans={};bound_texts={};comparison=None;error=''
     try:
@@ -66,6 +81,8 @@ def prepare_probation_pay(cases,case_id,item,index):
         # a formula from individually matched labels.
         if not _same_wage_record(next(iter(contexts.values())),spans):
             raise ValueError('四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。')
+        if not _monthly_wage_record(next(iter(contexts.values()))['text'],spans):
+            raise ValueError('四项工资周期未全部明确为月度，不能将仅标注“元”的金额改写为月工资。')
         formula=f'试用工资假设：合同工资{values["contract_pay"]}元，同岗最低档工资{values["grade_pay"]}元，适用最低工资{values["minimum_pay"]}元，拟试用工资{values["probation_pay"]}元。'
         comparison=compare_term_scenario('hiring',formula,formula,0,len(formula))
     except (ValueError,TypeError,KeyError) as exc:
@@ -92,7 +109,12 @@ def prepare_probation_pay(cases,case_id,item,index):
               '\n'.join(f'{key[0]}；片段{key[2]}：\n{text}' for key,text in bound_texts.items()) if bound_texts else
               '本项参数未完成来源绑定，不采用模型自填的工资事实或算式。')
         risk='本项待核：'+error
-        action='回读四项带标签的原文金额后核算；其他已经明确的审查事项继续保存。'
+        proposed=list(dict.fromkeys(re.findall(r'\d+(?:\.\d+)?\s*(?:万元|元)',
+            '\n'.join(str(item.get(k,'')) for k in ('topic','risk','action')))))
+        rejected=('未采用模型草案提及的定额（'+'、'.join(proposed)+'）；来源、周期及适用条件未完成核对，不能据此确定工资。' if proposed else '')
+        action=(rejected+'候选修改：试用期工资拟为〔待核金额〕元／〔确认后的工资周期〕，'
+                '具体工资构成、支付日及适用标准经核对后填入；符合适用的试用工资及最低工资规定。'
+                '回读四项带标签、工资周期明确的原文金额后核算；其他已经明确的审查事项继续保存。')
     # Caller prose remains in the tool-call audit; it cannot override this rule's saved opinion.
     prepared=dict(topic='试用工资｜程序规则核验',fact=fact,basis=BASIS,source='本案来源绑定参数；适用关系尚待核实',
                   risk=risk,action=action,pending='工资构成、适用地区和时期、实际履行月数另核；不据拟定标准认定应付款。',

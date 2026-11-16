@@ -70,6 +70,9 @@ class DraftReview:
             return replacement
         if proposal:
             value=ONCE.sub(lambda m:change(m.group(),ONCE_TEXT,'劳动合同法第19条：一次试用限制以同一双方为范围，不仅限本次劳动关系。'),value)
+            value=re.sub(r'(?:甲乙双方|甲方与乙方|双方)?(?:此前|既往)?未(?:曾)?就(?:同一|本次)(?:用工|劳动)关系约定过试用期',
+                lambda m:change(m.group(),ONCE_TEXT+'；签约前核实双方既往试用记录，未提供记录不等于未约定过试用期',
+                    '不能以本次关系代替同一双方的全部既往试用记录，也不能推定不存在既往试用。'),value)
         output=[]
         for sentence in re.findall(r'[^。！？\n]+[。！？\n]?|[。！？\n]',value):
             if CONDITIONAL.search(sentence):output.append(sentence);continue

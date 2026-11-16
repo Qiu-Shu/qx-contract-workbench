@@ -46,6 +46,7 @@ def bind_source_facts(item, review, index):
                 if not match:continue
                 prefix=part[:match.start()]
                 if (CLAIM_QUALIFIER.search(prefix) or CONDITIONAL.search(part)
+                        or re.fullmatch(r'考勤.{0,8}(?:是否|能否).{0,2}(?:显示|证明|记载|反映)',match.group())
                         or re.match(r'\s*(?:请|应|建议|需|待|进一步)?(?:核对|核实|收集|补充|提供)',prefix)):
                     continue
                 unsupported=True

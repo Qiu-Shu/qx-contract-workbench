@@ -48,7 +48,7 @@ def test_same_chunk_different_owner_or_period_does_not_create_wage_proposal(tmp_
     ('劳动者：张三；合同编号：C1\n岗位：工程师\n', ''),
     ('', '试用期尚未约定。')])
 def test_supported_single_record_still_saves_exact_conditional_proposal(tmp_path, prefix, suffix):
-    cases, cid, ref = source_case(tmp_path, prefix + '合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。' + suffix)
+    cases, cid, ref = source_case(tmp_path, prefix + '合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。上述四项均为税前月工资标准。' + suffix)
     result = review(cases, cid, ref)
     assert result['rule_reviews'][0]['comparison']['contract_floor'] == '4800.00'
     assert result['rule_reviews'][0]['comparison']['grade_floor'] == '4000.00'
@@ -77,7 +77,7 @@ def test_context_sentences_keep_wage_unit_owner_and_period_qualifications(tmp_pa
     '劳动者：张三\n劳动者编号：W-1\n合同编号：C-2026-001',
 ])
 def test_recognized_identity_hyphens_are_not_negative_wages(tmp_path, header):
-    cases, cid, ref = source_case(tmp_path, header + '\n合同工资6000元\n同岗最低档工资5000元\n适用最低工资2200元\n试用工资3500元')
+    cases, cid, ref = source_case(tmp_path, header + '\n合同工资6000元/月\n同岗最低档工资5000元/月\n适用最低工资2200元/月\n试用工资3500元/月')
     result = review(cases, cid, ref)
     assert result['rule_reviews'][0]['comparison']['contract_floor'] == '4800.00'
     for line in header.splitlines():
@@ -133,7 +133,8 @@ def test_real_mcp_keeps_blocked_wage_and_other_findings_in_the_same_word(tmp_pat
     ('独立虚构测试，均为同一员工同一工资期间的数据。劳动者：测试甲；合同编号：C-1\n', ''),
 ])
 def test_supported_wages_survive_unrelated_missing_material_and_explicit_monthly_context(tmp_path, prefix, suffix):
-    cases, cid, ref = source_case(tmp_path, prefix + '合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。' + suffix)
+    monthly='' if '四项均为税前月工资标准' in suffix else '上述四项均为税前月工资标准。'
+    cases, cid, ref = source_case(tmp_path, prefix + '合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。' + monthly + suffix)
     result = review(cases, cid, ref)
     assert result['rule_reviews'][0]['comparison']['contract_floor'] == '4800.00'
     assert suffix.strip() in result['user_summary']
@@ -175,3 +176,21 @@ def test_wage_amount_in_action_inherits_its_topic_without_repeating_the_label(tm
     result=save_employment_review(cases,cid,stage,[item])
     assert result['rule_reviews'][0]['comparison'] is None
     assert '建议改为4800元/月' not in result['content']
+
+
+def test_unspecified_period_cannot_become_monthly_even_with_all_four_bound_amounts(tmp_path):
+    cases,cid,ref=source_case(tmp_path,'合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。')
+    result=review(cases,cid,ref)
+    assert result['rule_reviews'][0]['comparison'] is None
+    assert '拟约定为4800.00元' not in result['content']
+    assert '〔确认后的工资周期〕' in result['content']
+
+
+def test_blocked_annual_proposal_still_explains_rejection_and_supplies_a_conditional_clause(tmp_path):
+    cases,cid,ref=source_case(tmp_path,'试用工资42000元/年，适用性待核。')
+    item=dict(topic='试用工资',fact='见原文',source='合成材料',basis='待核',risk='不能把年标准作为月标准',
+              action='本次不采用每月57600元的方案；请使用待填工资周期。',citations=[ref])
+    result=save_employment_review(cases,cid,'dispute',[item])
+    assert '57600元' in result['content'] and '未采用' in result['content']
+    assert '〔确认后的工资周期〕' in result['content']
+    assert result['workflow_status']=='saved_with_pending'

@@ -45,3 +45,20 @@ def test_missing_citation_does_not_promote_a_monthly_wage_claim(tmp_path):
         source='模型概述',basis='待核',risk='待核',action='补充材料')])
     assert '试用期月工资3500元' not in result['content']
     assert result['source_observations'][0]['status']=='unbound'
+
+
+def test_question_about_attendance_content_remains_an_open_question(tmp_path):
+    cases,cid,ref=source_case(tmp_path,'考勤具体条目未展示。')
+    question='考勤是否显示张三连续旷工待核。'
+    result=save_employment_review(cases,cid,'termination',[dict(topic='考勤核对',fact='见原文',
+        source='合成材料',basis='待核',risk=question,action='核对原始记录',citations=[ref])])
+    assert question in result['content']
+
+
+def test_probation_candidate_does_not_narrow_history_to_the_current_relationship(tmp_path):
+    cases,cid,ref=source_case(tmp_path,'既往试用记录未提供。')
+    result=save_employment_review(cases,cid,'hiring',[dict(topic='试用条件',fact='见原文',source='合成材料',
+        basis='劳动合同法第19条',risk='须核既往记录',citations=[ref],
+        action='候选条款：甲乙双方此前未就同一用工关系约定过试用期。')])
+    assert '未就同一用工关系约定过试用期' not in result['content']
+    assert '同一用人单位与同一劳动者只能约定一次试用期' in result['content']
