@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-16",
+  "source_commit": "2321cee2d71a3572ad3d0ef70cd10532b2c5fd30",
+  "scope": "Reproduced engineering defects repaired; complete Skill remains candidate because raw model content quality failed",
+  "synthetic_only": true,
+  "targeted_tests": {"passed": 47, "exit_code": 0},
+  "bridge_full": {"passed": 594, "skipped": 5, "subtests_passed": 36, "seconds": 181.74, "exit_code": 0, "command": "python -m pytest -q bridge"},
+  "remaining_offline_python": {"passed": 55, "seconds": 7.95, "exit_code": 0, "selection": "test-suite.plan('offline').python excluding bridge/"},
+  "node_offline": {"passed": 723, "skipped": 23, "exit_code": 0, "source_commit": "3fcae9da03edc88fc656737ebcbdd2b110b4f229", "later_node_changes": false},
+  "standards_probes": {"passed": 8, "total": 8, "exit_code": 0},
+  "spec_replay": {"cases": ["annual-pay", "wage-supported"], "delivery_assertions": 31, "missing_period_assertions": 4, "exit_code": 0, "evidence": "repair-spec-replay.json", "actual_mcp_word_and_protected_response": true, "new_model_requests": 0},
+  "original_replay": {"calls": 10, "expected_error_rounds_zero_based": [2, 7], "original_supported_passed": true, "bare_yuan_remains_pending": true, "exit_code": 0, "evidence": "repair-final-replay.json"},
+  "live_retest4": {"passed": 2, "failed": 7, "incomplete": 1, "execution_exit_code": 1, "quality_review": "retest4-quality-review.md"},
+  "budget": {"campaign": "employment-live-20261116", "requests": 101, "conservative_cny": 5.854282, "unknown_or_pending": 0, "cap_cny": 10, "actual_account_debit_verified": false},
+  "installed_version": "0.2.19",
+  "packaging_or_install_run": false,
+  "full_skill_opened": false,
+  "lawyer_review_prerequisite_waived": true,
+  "logs": ["D:/CodexChecks/AI-Shixiong-employment-20261116/repair-final-python.log", "D:/CodexChecks/AI-Shixiong-employment-20261116/repair-final-offline.log"]
+}

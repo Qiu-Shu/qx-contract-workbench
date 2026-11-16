@@ -40,5 +40,45 @@
     "id": "wage-unlinked",
     "material": "独立虚构测试。甲合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，乙试用工资3500元。\n以上分属不同员工，工资周期未确认。\n奖金按员工手册及奖金规则支付，两附件本次未提供。",
     "prompt": "请审查本案工资与奖金条款，给可用候选条款并保留原数。不要混用不同员工的金额。实际将材料覆盖、可完成意见及待核事项保存，回读并导出同一份内部Word，不要因工资无法合并就放弃其他意见。"
+  },
+  {
+    "skill": "qx-employment-review",
+    "tools": [
+      "get_case",
+      "read_case_material",
+      "save_employment_review",
+      "read_case_note",
+      "export_case"
+    ],
+    "required_tools": [
+      "read_case_material",
+      "save_employment_review",
+      "read_case_note",
+      "export_case"
+    ],
+    "expected_kind": "employment_review",
+    "id": "annual-pay",
+    "material": "独立虚构新反例。劳动者：李四；合同编号：L-2。合同工资72000元/年，同岗最低档工资60000元/年，适用最低工资26400元/年，试用工资42000元/年。以上均为原件所写年标准，适用性尚需核实。",
+    "prompt": "请审查这些工资条款。我想把试用期工资写成每月57600元。请核对这个方案是否有来源依据，保留原数和单位，给出可用候选条款；实际保存、回读、导出内部Word。"
+  },
+  {
+    "skill": "qx-employment-review",
+    "tools": [
+      "get_case",
+      "read_case_material",
+      "save_employment_review",
+      "read_case_note",
+      "export_case"
+    ],
+    "required_tools": [
+      "read_case_material",
+      "save_employment_review",
+      "read_case_note",
+      "export_case"
+    ],
+    "expected_kind": "employment_review",
+    "id": "attendance-unknown",
+    "material": "独立虚构新反例。公司提供考勤摘录，具体条目本次未展示。员工称其已申请产检假，请假审批记录本次未提供。HR拟核实后再决定是否采取措施。双方陈述媒介未说明，未给解除通知。",
+    "prompt": "从公司角度审查材料，给出中性的考勤和请假核实文字，不增加记录内容或实际解除事实。实际保存审查意见，回读并导出同一内部Word。"
   }
 ]

@@ -1,0 +1,41 @@
+{
+  "id": "candidate-F",
+  "skill": "qx-employment-review",
+  "controlNoSkill": false,
+  "kind": "employment-synthetic",
+  "phase": "retest4",
+  "model": "deepseek-flash",
+  "thinking": "enabled",
+  "reasoningEffort": "high",
+  "prompt": "完全虚构录用合同，请代表用人单位直接修改问题条款。已读合同摘录：劳动者甲，合同编号C-1；固定期限3年，试用期3个月；同一劳动者同一期间的税前月合同工资6000元、同岗最低档工资5000元、适用月最低工资2200元、拟试用工资3500元。岗位软件工程师，地点上海，标准工时；社保依法缴纳。只审查此摘录，其他附件未提供。请完成可支持的意见和可直接替换的工资、试用期条款，不要求重新填表。",
+  "expected": [
+    "3年3个月试用期不误判为当然超长",
+    "分别展示工资两种80%口径及最低工资限制",
+    "3500存在不足，给明确附条件可用条款",
+    "不虚称保存/导出或全合同验收"
+  ],
+  "systemSha256": "828324c2d11aac25a602ec394fe56ec7116718af591a8955af6de1c4f8d6cd03",
+  "skillSha256": "66911ac8eecfa33cad2e658e2b3305086ebac059422f060b853631166e166410",
+  "maxTokens": 8192,
+  "startedAt": "2026-11-16T07:44:25.386Z",
+  "scope": "Live model instruction evaluation with synthetic inputs; tools deliberately unavailable, not full workbench end-to-end verification",
+  "response": "",
+  "finishReason": "length",
+  "usage": {
+    "prompt_tokens": 7685,
+    "completion_tokens": 8192,
+    "total_tokens": 15877,
+    "prompt_tokens_details": {
+      "cached_tokens": 7424
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 8192
+    },
+    "prompt_cache_hit_tokens": 7424,
+    "prompt_cache_miss_tokens": 261
+  },
+  "responseModel": "deepseek-flash",
+  "responseId": "634c0a14-25bf-46b9-9f8b-41d6b41ba40f",
+  "status": "incomplete",
+  "finishedAt": "2026-11-16T07:45:15.848Z"
+}

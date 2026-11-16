@@ -14,7 +14,7 @@
 
 此前的材料解析、律师拓客、备份恢复及知识功能继续保留。[未完成 Skill 与换机接续](harness/docs/2026-11-15-Skill接续清单.md)。
 
-2026-11-16 开发进展：[劳动合同 Skill 实际模型评测与根因诊断](harness/docs/checks/employment-live-20261116/README.md)发现内容及工具流程问题，完整专项暂未开放；本轮律师复核前置已由用户取消。[官方常用法律文书目录](harness/docs/templates/official-20261116/README.md)已采集，劳动用工优先；仓库收录索引和采集方法，原件留本机。
+2026-11-16 开发进展：[劳动合同 Skill 根因修复](harness/docs/checks/employment-live-20261116/repair.md)已完成工资来源/周期、事实绑定、保存与交付流程修复，独立重放确认记录、Word和聊天同稿。完整专项的模型全文质量仍未通过，暂未开放；本轮律师复核前置已由用户取消。[官方常用法律文书目录](harness/docs/templates/official-20261116/README.md)已采集，劳动用工优先；仓库收录索引和采集方法，原件留本机。
 
 ## 安装与升级
 
