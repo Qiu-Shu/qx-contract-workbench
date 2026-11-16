@@ -1,0 +1,44 @@
+[
+  {
+    "skill": "qx-employment-review",
+    "tools": [
+      "get_case",
+      "read_case_material",
+      "assess_employment_terms",
+      "save_employment_review",
+      "read_case_note",
+      "export_case"
+    ],
+    "required_tools": [
+      "read_case_material",
+      "save_employment_review",
+      "read_case_note",
+      "export_case"
+    ],
+    "expected_kind": "employment_review",
+    "id": "wage-supported",
+    "material": "独立虚构测试，均为同一员工同一工资期间的数据。劳动者：测试甲；合同编号：C-1\n合同期限3年，试用期3个月。\n合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。上述四项均为税前月工资标准。\n奖金按员工手册支付，员工手册本次未提供。",
+    "prompt": "请从用人单位角度审查本案已给录用合同材料，提出工资与奖金条款的候选修改，保留材料覆盖和未知事项。实际保存审查意见、回读并导出同一份内部Word。请使用来源绑定工资规则计算，不推算整段欠薪，不另建案件。"
+  },
+  {
+    "skill": "qx-employment-review",
+    "tools": [
+      "get_case",
+      "read_case_material",
+      "assess_employment_terms",
+      "save_employment_review",
+      "read_case_note",
+      "export_case"
+    ],
+    "required_tools": [
+      "read_case_material",
+      "save_employment_review",
+      "read_case_note",
+      "export_case"
+    ],
+    "expected_kind": "employment_review",
+    "id": "wage-unlinked",
+    "material": "独立虚构测试。甲合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，乙试用工资3500元。\n以上分属不同员工，工资周期未确认。\n奖金按员工手册及奖金规则支付，两附件本次未提供。",
+    "prompt": "请审查本案工资与奖金条款，给可用候选条款并保留原数。不要混用不同员工的金额。实际将材料覆盖、可完成意见及待核事项保存，回读并导出同一份内部Word，不要因工资无法合并就放弃其他意见。"
+  }
+]

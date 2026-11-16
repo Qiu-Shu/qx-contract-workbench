@@ -4,7 +4,7 @@
 
 ## 开始使用
 
-开发接续：劳动合同审查完整 Skill 已形成[候选与工程验证](docs/checks/employment-review-20261116/README.md)，仍待真实模型质量及律师复核，尚未加入当前安装版。
+开发接续：劳动合同审查完整 Skill 已完成[实际模型评测及根因诊断](docs/checks/employment-live-20261116/README.md)，发现工资单位、事实状态与工具流程问题，仍保留为候选。用户已取消本轮律师复核前置，尚未加入当前安装版。另已采集[官方常用法律文书模板目录](docs/templates/official-20261116/README.md)，劳动用工优先，原件留本机。
 
 安装器适用于 Windows 10/11 x64，自带运行环境。首次启动填写自己的模型 API 配置；微信连接由本人扫码。用户资料默认保存在 `%APPDATA%/QunxingHarness`，也可使用已确认的数据目录。升级与卸载保留资料。
 

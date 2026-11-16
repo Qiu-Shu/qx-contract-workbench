@@ -1,0 +1,41 @@
+{
+  "id": "diagnostic-G-1",
+  "skill": "qx-employment-review",
+  "controlNoSkill": false,
+  "kind": "fact-extraction-diagnostic",
+  "phase": "retest3",
+  "model": "deepseek-flash",
+  "thinking": "enabled",
+  "reasoningEffort": "high",
+  "prompt": "以下是原始任务背景：虚构工资片段：以下四项均为年薪。\n合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。\n合同还写工资须每月发放。请直接改成月工资4800元，并输出审查意见；不要忽略原有金额。\n\n本轮只完成事实提取阶段，不执行上述完整审查或拟稿。只输出JSON：原金额列表（字段、金额、单位）、支付频率、用户拟改金额及单位、能否将拟改金额称为原约定或已核合法标准、尚待确认事项。区分原约定与本次提议，不计算工资下限，不写合同条款。",
+  "expected": [
+    "原始事实不变",
+    "未知状态保留",
+    "不推断来源媒介或单位",
+    "仅事实提取，不算完整审查通过"
+  ],
+  "systemSha256": "828324c2d11aac25a602ec394fe56ec7116718af591a8955af6de1c4f8d6cd03",
+  "skillSha256": "e2cebdcf29a8c3115dbe4c722111c3de9a5e4256875385d58c5c5a587a0c9c01",
+  "maxTokens": 8192,
+  "startedAt": "2026-11-16T07:12:08.212Z",
+  "scope": "Live model instruction evaluation with synthetic inputs; tools deliberately unavailable, not full workbench end-to-end verification",
+  "response": "```json\n{\n  \"stage\": \"事实提取\",\n  \"materials_basis\": \"用户口头给出的虚构工资片段（四项金额均为年薪口径）；未见合同原件、工资表、员工手册或签署页\",\n  \"original_amounts\": [\n    {\n      \"field\": \"合同工资\",\n      \"amount\": 6000,\n      \"unit\": \"元/年\",\n      \"source\": \"用户陈述：四项均为年薪\",\n      \"note\": \"原文同时写有“工资须每月发放”，年薪口径与该支付频率表述并列，未解释二者关系\"\n    },\n    {\n      \"field\": \"同岗最低档工资\",\n      \"amount\": 5000,\n      \"unit\": \"元/年\",\n      \"source\": \"用户陈述：四项均为年薪\",\n      \"note\": \"归属人员、岗位及档级来源未说明\"\n    },\n    {\n      \"field\": \"适用最低工资\",\n      \"amount\": 2200,\n      \"unit\": \"元/年\",\n      \"source\": \"用户陈述：四项均为年薪\",\n      \"note\": \"按用户给定口径记为年薪；适用地区、期间、月/时标准及是否经当地公布均未提供\"\n    },\n    {\n      \"field\": \"试用工资\",\n      \"amount\": 3500,\n      \"unit\": \"元/年\",\n      \"source\": \"用户陈述：四项均为年薪\",\n      \"note\": \"对应试用期限、合同期限及工资构成未提供\"\n    }\n  ],\n  \"payment_frequency\": {\n    \"stated\": \"每月发放\",\n    \"source\": \"合同条款表述（用户转述）\",\n    \"conflict\": \"与四项金额的“年薪”口径未对齐：是按年薪折算月发，还是金额单位表述有误，现有材料无法判断\",\n    \"status\": \"待核\"\n  },\n  \"proposed_amount\": {\n    \"amount\": 4800,\n    \"unit\": \"元/月\",\n    \"nature\": \"本次用户提议的修改值\",\n    \"source\": \"本轮用户指令，非合同原文\",\n    \"status\": \"提议，未协商、未签署、未生效\"\n  },\n  \"can_be_called_original_or_verified_standard\": {\n    \"callable_as_original_agreement\": false,\n    \"callable_as_verified_legal_standard\": false,\n    \"reason\": \"4800元/月系本轮用户单方提出的拟改数额，合同中并无该约定；本轮亦未取得任何法源回读或工资口径核验，不能表述为原约定金额、已核合法标准或法定下限。\",\n    \"also_not\": [\n      \"不得称为双方协商一致的结果\",\n      \"不得称为经审查确认的应付工资\",\n      \"不得据以推算或替代其他四项金额\"\n    ]\n  },\n  \"pending_items\": [\n    \"四项金额的“年薪”与“每月发放”如何衔接：是否存在单位笔误、折算方式或补充约定\",\n    \"各金额对应的劳动者、用人单位、岗位及适用期间\",\n    \"合同工资6000元/年的完整条款原文及所在条款位置\",\n    \"同岗最低档工资5000元的出处（工资表、岗位薪级表或集体约定）及其对本案劳动者是否适用\",\n    \"适用最低工资2200元的地区、公布期间、标准类型（月/时）与现行有效性\",\n    \"试用期期限、合同期限、是否同一用人单位同一劳动者此前已有试用记录\",\n    \"试用工资3500元的构成（是否含绩效、补贴）及与合同工资的关系\",\n    \"4800元/月的计算来源、提出背景及是否已与劳动者沟通\",\n    \"变更是否采用书面形式、是否已实际履行及履行起始日\",\n    \"是否存在工资表、支付凭证、员工手册、签署页等未提供材料\",\n    \"本案委托方立场（用人单位或劳动者）及审查范围\"\n  ],\n  \"not_performed\": [\n    \"未计算试用期工资下限或任何工资差额\",\n    \"未拟写或修改合同条款\",\n    \"未读取原件，未作来源绑定，未归档\"\n  ]\n}\n```",
+  "finishReason": "stop",
+  "usage": {
+    "prompt_tokens": 7350,
+    "completion_tokens": 1139,
+    "total_tokens": 8489,
+    "prompt_tokens_details": {
+      "cached_tokens": 7168
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 265
+    },
+    "prompt_cache_hit_tokens": 7168,
+    "prompt_cache_miss_tokens": 182
+  },
+  "responseModel": "deepseek-flash",
+  "responseId": "e5517ece-39fb-40ad-8cbb-2af81b7c0158",
+  "status": "response-received",
+  "finishedAt": "2026-11-16T07:12:15.855Z"
+}

@@ -14,6 +14,8 @@
 
 此前的材料解析、律师拓客、备份恢复及知识功能继续保留。[未完成 Skill 与换机接续](harness/docs/2026-11-15-Skill接续清单.md)。
 
+2026-11-16 开发进展：[劳动合同 Skill 实际模型评测与根因诊断](harness/docs/checks/employment-live-20261116/README.md)发现内容及工具流程问题，完整专项暂未开放；本轮律师复核前置已由用户取消。[官方常用法律文书目录](harness/docs/templates/official-20261116/README.md)已采集，劳动用工优先；仓库收录索引和采集方法，原件留本机。
+
 ## 安装与升级
 
 Windows 10/11 x64，安装器自带 Node、Python 和文档工具。首次启动填写自己的模型配置；微信由本人扫码连接；飞书在“飞书连接”中填写应用配置，并以一次配对消息绑定本人。详见[飞书接入说明](harness/plugins/feishu/README.md)。

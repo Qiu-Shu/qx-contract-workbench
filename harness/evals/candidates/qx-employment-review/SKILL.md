@@ -17,6 +17,10 @@ description: Use when reviewing mainland China employment contracts, amendments,
 
 每项分开写：**原文与陈述主体｜法律依据及适用条件｜风险判断｜建议或候选条款｜待核事实**。陈述有冲突就并列来源，引用匹配只证明出处。缺签署页、支付凭证或调查记录表示该状态未知；已给事实仍保留，不全部退回待核。
 
+逐项区分“原文明确没有”“本次未提供”“本次未读”。后两者不能改成未约定、未支付、程序未启动或证据不存在。覆盖表中的未知状态必须一直保留到结论和候选条款；不把摘录缺项写成完整合同缺项。
+
+**先确定金额可否使用，再计算**：每个数列明所属人员、单位/岗位、期间及单位。适用关系或周期未确认的数只能保留在来源栏，不能进入该劳动者的比较表、确定风险结论或备选定额；加上“待核”备注也不能使它可用。不得自行把元、年薪或到手工资改成月薪。部分口径未知时仍可给条件条款和补证建议，不用未确认数字制造完整方案。
+
 按当前事项选分支，涉及金额、竞业、解除或地方规则时读取 [适用条件](references/method.md)：
 
 | 分支 | 先完成的实务结果 | 复用接口 |
@@ -32,6 +36,8 @@ description: Use when reviewing mainland China employment contracts, amendments,
 形成个案意见后调用 `mcp__qx_legal__save_employment_review`，stage 为 hiring/change/termination/dispute。findings 每项含 fact/basis/source/risk/action，可加 topic/pending/citations；把覆盖表作为首项，同次保存。fact 写来源陈述，basis 写规则及条件，action 明示“候选修改”，只改必要部分，未定内容用待填项。条款措辞有条件也可先给，不因一项缺证拒绝整份审查。
 
 试用工资用 `rule="probation_pay"` 及来源绑定四项参数；竞业金额比值用 `rule="noncompete_comparison"`。嵌套字段以工具 schema 为准。程序拒绝关联时，保留各项原数及原因，继续其他意见；不改写原件为“假设”来绕过。明确的独立计算情景可用 calculate_employment_amount，但其结果不代表实际应付金额。涉及解除的已明示完整情景可用解除接口的 scenario_citations 与清单同笔保存。
+
+仅提出当前任务需要的修改；录用工资问题不顺带增加未请求的累计欠薪、解除权或补偿方案。累计金额必须取自实际计算工具结果；工具不可用时保留公式和待核参数，不心算整段欠薪/补偿。具体法条号仅使用已回读法源或下列参考明确列出的条款映射，不能凭记忆补编号。交付前逐一检查金额单位、算式结果、主体、未知状态以及建议是否扩大法定权利。
 
 ## 一份保存记录交付
 

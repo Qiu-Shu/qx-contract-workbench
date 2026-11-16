@@ -1,5 +1,13 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path');
 const {createBudget,upperBound,usageCost}=require('./skill-eval-budget.cjs');
+test('10 CNY run cannot inherit a 20 CNY grant or free unknown requests',t=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'qx-budget-10-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+ const file=path.join(dir,'budget.json'),budget=createBudget(file,10);
+ const pending=budget.reserve('pending',9);budget.settle(pending,null);
+ assert.equal(createBudget(file,10).total(),9);
+ assert.throws(()=>createBudget(file,10).reserve('over',0.6),/protection/);
+ assert.throws(()=>createBudget(file,20),/mismatch/);
+});
 test('reserves in-flight and unknown requests across restarts and stops below cap',t=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'qx-budget-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
  const file=path.join(dir,'budget.json'),budget=createBudget(file);const first=budget.reserve('a',10);budget.reserve('b',9);

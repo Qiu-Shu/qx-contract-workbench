@@ -1,0 +1,24 @@
+{
+  "phase": "retest3",
+  "purpose": "用户要求根因诊断；同一模型/系统/Skill，保留原任务为背景，仅改为事实提取输出。每案预定两次，不作为质量复测通过。",
+  "hypothesis": "若事实提取正确而完整审查漂移，错误发生于后续生成/推导，不能单独证明上下文长度或模型能力是唯一原因。",
+  "frozenAt": "2026-11-16T07:12:08.0899599Z",
+  "inputs": [
+    {
+      "path": "docs/checks/employment-live-20261116/diagnostic-cases.json",
+      "sha256": "5963e318197862bde268e9fae1e21d3c0a99fa7ec6bad5ff932d25de69cc0635"
+    },
+    {
+      "path": "evals/candidates/qx-employment-review/SKILL.md",
+      "sha256": "9f18e0aa10b5063b7a2a80757409f76c4af94d6b30d2d066f867864e623d699c"
+    },
+    {
+      "path": "evals/candidates/qx-employment-review/references/method.md",
+      "sha256": "01e8e3885a1be4956c99bd83de7bb2d03ade10d2c885e96fe5ce8f74366578a2"
+    },
+    {
+      "path": "config/workspace-AGENTS.md",
+      "sha256": "a16243e0d502b73eefcbe27c6f9d9b35af251e204fdae1fbd9da2b61788b5353"
+    }
+  ]
+}

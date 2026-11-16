@@ -1,0 +1,551 @@
+{
+  "scope": "Synthetic offline actual MCP replay and function probes; no model/credential calls",
+  "captured_trace": "F:\\.codex\\worktrees\\employment-review\\律所项目\\harness\\docs\\checks\\employment-live-20261116\\e2e\\employment-live-01-thinking\\wage-supported.json",
+  "captured_status": "round-limit",
+  "captured_functional_checks": {
+    "modelFinished": false,
+    "finalized": true,
+    "sourceUnchanged": true,
+    "completeNoteReadback": true,
+    "requiredToolsUsed": false,
+    "wordProduced": false,
+    "noteSaved": true
+  },
+  "captured_tool_counts": {
+    "assess_employment_terms": 3,
+    "get_case": 1,
+    "read_case_material": 1,
+    "save_employment_review": 5
+  },
+  "captured_save_schema": {
+    "description": "追加劳动用工审查，stage=hiring/change/termination/dispute。\n\n    findings每项fact/basis/source/risk/action文字，另可topic/pending/citations。未知事实保留待核，不从办公室开业等日期猜实际解除日。\n    引用按本案核对；具体法律适用和劳动关系状态由承办人复核。更正仅明确要求时用supersedes。\n    保存成功后以id回读并用export_case(note_ids=[id],audience=\"internal\")导出；最终原样交付user_summary和文件。摘要来自同一保存记录，不另行改写事实/建议，来源或记录改变须回读后处理。\n    hiring中的试用工资项使用{rule:\"probation_pay\",parameters:{contract_pay:金额对象,grade_pay:金额对象,minimum_pay:金额对象,probation_pay:金额对象}}。金额对象为{amount:\"原文金额含元/万元\",citation:{path,quote,sha256,chunk}}，引用须含对应标签且四项同一片段。程序按实施条例15条计算两种80%候选及月差额并生成候选条款，替代本项模型自填的fact/basis/risk/action。缺值/疑点只保留本项待核，其他意见照常保存；查看rule_reviews。标题明确为试用工资而未传参数时，同样不保存模型自拟金额结论。\n    竞业金额比较可用{rule:\"noncompete_comparison\",parameters:{penalty:金额对象,loss:金额对象,monthly_compensation:金额对象,monthly_pay:金额对象}}；参数可缺省，不补零。标签分别为违约金、损失、月补偿、月工资；同源且口径明确才算比值，比值不自动认定过高或失衡。查看rule_reviews的逐项结果。保存前会检查常见的未知变否定、重复试用候选条款、无依据竞业比较；只修关联语句，review_changes及内部核对稿保留原稿和理由，最终交付user_summary与本次note_ids的导出。\n    ",
+    "findings": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Findings",
+      "type": "array"
+    }
+  },
+  "first_save_fields": [
+    {
+      "finding_index": 0,
+      "source_present": true,
+      "source_type": "str",
+      "rule": null,
+      "parameter_shapes": {}
+    },
+    {
+      "finding_index": 1,
+      "source_present": false,
+      "source_type": "NoneType",
+      "rule": "probation_pay",
+      "parameter_shapes": {
+        "contract_pay": [
+          "amount",
+          "citation"
+        ],
+        "grade_pay": [
+          "amount",
+          "citation"
+        ],
+        "minimum_pay": [
+          "amount",
+          "citation"
+        ],
+        "probation_pay": [
+          "amount",
+          "citation"
+        ]
+      }
+    },
+    {
+      "finding_index": 2,
+      "source_present": false,
+      "source_type": "NoneType",
+      "rule": null,
+      "parameter_shapes": {}
+    },
+    {
+      "finding_index": 3,
+      "source_present": false,
+      "source_type": "NoneType",
+      "rule": null,
+      "parameter_shapes": {}
+    },
+    {
+      "finding_index": 4,
+      "source_present": false,
+      "source_type": "NoneType",
+      "rule": null,
+      "parameter_shapes": {}
+    }
+  ],
+  "round7_offsets": [
+    {
+      "quote": "独立虚构测试，均为同一员工同一工资期间的数据。劳动者：测试甲；合同编号：C-1",
+      "provided_start": 0,
+      "provided_end": 39,
+      "actual_start": 0,
+      "actual_end": 39,
+      "provided_slice_matches": true
+    },
+    {
+      "quote": "合同期限3年，试用期3个月。",
+      "provided_start": 41,
+      "provided_end": 55,
+      "actual_start": 41,
+      "actual_end": 55,
+      "provided_slice_matches": true
+    },
+    {
+      "quote": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+      "provided_start": 57,
+      "provided_end": 101,
+      "actual_start": 57,
+      "actual_end": 102,
+      "provided_slice_matches": false
+    }
+  ],
+  "replay": {
+    "source_sha256": "234456b5eadf042cd75008f6fd1da479b129029363b32dd12dd28747b56aa460",
+    "exact_source_bytes_preserved": true,
+    "parameter_changes": "Only case_id and supersedes UUIDs remapped to fresh synthetic case",
+    "calls": [
+      {
+        "round_zero_based": 0,
+        "name": "get_case",
+        "is_error": false,
+        "captured_is_error": false,
+        "id": null,
+        "error": null,
+        "rule_reviews": [],
+        "groups": [],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 1,
+        "name": "read_case_material",
+        "is_error": false,
+        "captured_is_error": false,
+        "id": null,
+        "error": null,
+        "rule_reviews": [],
+        "groups": [],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 2,
+        "name": "save_employment_review",
+        "is_error": true,
+        "captured_is_error": true,
+        "id": null,
+        "error": "Error executing tool save_employment_review: source须提供文字，未知事项请明确写待核及所缺材料。",
+        "rule_reviews": [],
+        "groups": [],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 3,
+        "name": "save_employment_review",
+        "is_error": false,
+        "captured_is_error": false,
+        "id": "c1612a81-af43-4270-80aa-1a60081052b1",
+        "error": null,
+        "rule_reviews": [
+          {
+            "finding_index": 1,
+            "rule": "probation_pay",
+            "comparison": null,
+            "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。"
+          }
+        ],
+        "groups": [],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 4,
+        "name": "save_employment_review",
+        "is_error": false,
+        "captured_is_error": false,
+        "id": "e7db819c-3b5e-40ea-97a3-e92847b01a88",
+        "error": null,
+        "rule_reviews": [
+          {
+            "finding_index": 1,
+            "rule": "probation_pay",
+            "comparison": null,
+            "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。"
+          }
+        ],
+        "groups": [],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 5,
+        "name": "save_employment_review",
+        "is_error": false,
+        "captured_is_error": false,
+        "id": "d3ed2483-e002-43ab-b97a-920694ea5561",
+        "error": null,
+        "rule_reviews": [
+          {
+            "finding_index": 1,
+            "rule": "probation_pay",
+            "comparison": null,
+            "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。"
+          }
+        ],
+        "groups": [],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 6,
+        "name": "assess_employment_terms",
+        "is_error": false,
+        "captured_is_error": false,
+        "id": "6aeba180-ea37-4fba-8026-0cf38a951bc0",
+        "error": null,
+        "rule_reviews": [],
+        "groups": [
+          {
+            "raw": "合同期限3年，试用期3个月。",
+            "warnings": [],
+            "comparisons": [
+              {
+                "kind": "probation_duration",
+                "maximum_months": 6,
+                "excess_months": 0,
+                "text": "自动提取候选条件核算：若本行参数识别及同一主体/合同归属经核实，仅按所列假设：试用期上限6个月，拟约定3个月，超出上限0个月（劳动合同法第19条）。未超过期限上限不等于约定整体合法；重复约定、仅约定试用期及实际用工状态另核，不认定实际赔偿。 本次候选不是已确认事实，也不是用户已确认的计算假设。",
+                "input_mode": "extracted_candidates"
+              }
+            ],
+            "parameters": [
+              "contract_months",
+              "probation_months"
+            ]
+          },
+          {
+            "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。上述四项均为税前月工资标准。",
+            "warnings": [
+              "字段之间或尾部存在未解析的主体、条件或数值，不自动拼接。"
+            ],
+            "comparisons": [],
+            "parameters": [
+              "contract_pay",
+              "grade_pay",
+              "minimum_pay",
+              "probation_pay"
+            ]
+          }
+        ],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 7,
+        "name": "assess_employment_terms",
+        "is_error": true,
+        "captured_is_error": true,
+        "id": null,
+        "error": "Error executing tool assess_employment_terms: 引文不匹配、失效或不是本案当前关联版本，未生成草稿。",
+        "rule_reviews": [],
+        "groups": [],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 8,
+        "name": "assess_employment_terms",
+        "is_error": false,
+        "captured_is_error": false,
+        "id": "c1e6e260-8106-4a78-9e8e-31221d025991",
+        "error": null,
+        "rule_reviews": [],
+        "groups": [
+          {
+            "raw": "合同期限3年，试用期3个月。",
+            "warnings": [],
+            "comparisons": [
+              {
+                "kind": "probation_duration",
+                "maximum_months": 6,
+                "excess_months": 0,
+                "text": "自动提取候选条件核算：若本行参数识别及同一主体/合同归属经核实，仅按所列假设：试用期上限6个月，拟约定3个月，超出上限0个月（劳动合同法第19条）。未超过期限上限不等于约定整体合法；重复约定、仅约定试用期及实际用工状态另核，不认定实际赔偿。 本次候选不是已确认事实，也不是用户已确认的计算假设。",
+                "input_mode": "extracted_candidates"
+              }
+            ],
+            "parameters": [
+              "contract_months",
+              "probation_months"
+            ]
+          },
+          {
+            "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。上述四项均为税前月工资标准。",
+            "warnings": [
+              "字段之间或尾部存在未解析的主体、条件或数值，不自动拼接。"
+            ],
+            "comparisons": [],
+            "parameters": [
+              "contract_pay",
+              "grade_pay",
+              "minimum_pay",
+              "probation_pay"
+            ]
+          }
+        ],
+        "linked_groups": []
+      },
+      {
+        "round_zero_based": 9,
+        "name": "save_employment_review",
+        "is_error": false,
+        "captured_is_error": false,
+        "id": "5a366d3b-cf29-424f-9045-0dd187b41b58",
+        "error": null,
+        "rule_reviews": [
+          {
+            "finding_index": 1,
+            "rule": "probation_pay",
+            "comparison": null,
+            "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。"
+          }
+        ],
+        "groups": [],
+        "linked_groups": []
+      }
+    ],
+    "explicit_offline_export_after_replay": {
+      "read_note_complete": true,
+      "word_exists": true,
+      "word_bytes": 40332,
+      "selected_note_id_matches": true,
+      "saved_pending_reason_in_word": true,
+      "source_bytes_unchanged": true
+    }
+  },
+  "minimal_variants": {
+    "bare_wage_control": {
+      "text": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+      "comparison_present": true,
+      "comparison": {
+        "kind": "probation_pay",
+        "contract_floor": "4800.00",
+        "grade_floor": "4000.00",
+        "contract_gap": "1300.00",
+        "grade_gap": "500.00",
+        "text": "仅按所列工资假设：合同工资80%与最低工资取高为4800.00元，拟工资低于该口径1300.00元；同岗最低档工资80%与最低工资取高为4000.00元，拟工资低于该口径500.00元（实施条例第15条）。阈值不足一分向上取整；两个候选口径分别显示，未选定适用工资口径，不相加，不认定实际欠薪。地区、工资构成、适用时期及实际履行另核。"
+      },
+      "pending_reason": "",
+      "whole_chunk_context_warnings_before_identifier_exemption": [],
+      "local_groups": [
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_pay"
+          ]
+        }
+      ],
+      "recognized_identity_headers": []
+    },
+    "unrelated_missing_bonus": {
+      "text": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。\n奖金按员工手册支付，员工手册本次未提供。",
+      "comparison_present": false,
+      "comparison": null,
+      "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。",
+      "whole_chunk_context_warnings_before_identifier_exemption": [
+        "本行含否定、不确定、替代或不同口径标记，保留候选但暂停核算。"
+      ],
+      "local_groups": [
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_pay"
+          ]
+        }
+      ],
+      "recognized_identity_headers": []
+    },
+    "monthly_positive_suffix": {
+      "text": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。上述四项均为税前月工资标准。",
+      "comparison_present": false,
+      "comparison": null,
+      "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。",
+      "whole_chunk_context_warnings_before_identifier_exemption": [],
+      "local_groups": [
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。上述四项均为税前月工资标准。",
+          "warnings": [
+            "字段之间或尾部存在未解析的主体、条件或数值，不自动拼接。"
+          ],
+          "comparison_kinds": []
+        }
+      ],
+      "recognized_identity_headers": []
+    },
+    "inline_intro_before_identifier": {
+      "text": "独立虚构测试，均为同一员工同一工资期间的数据。劳动者：测试甲；合同编号：C-1\n合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+      "comparison_present": false,
+      "comparison": null,
+      "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。",
+      "whole_chunk_context_warnings_before_identifier_exemption": [
+        "存在带符号数值或日期分隔，不能去掉前缀作为无符号期限核算。"
+      ],
+      "local_groups": [
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_pay"
+          ]
+        }
+      ],
+      "recognized_identity_headers": []
+    },
+    "separate_intro_before_identifier_control": {
+      "text": "独立虚构测试，均为同一员工同一工资期间的数据。\n劳动者：测试甲；合同编号：C-1\n合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+      "comparison_present": true,
+      "comparison": {
+        "kind": "probation_pay",
+        "contract_floor": "4800.00",
+        "grade_floor": "4000.00",
+        "contract_gap": "1300.00",
+        "grade_gap": "500.00",
+        "text": "仅按所列工资假设：合同工资80%与最低工资取高为4800.00元，拟工资低于该口径1300.00元；同岗最低档工资80%与最低工资取高为4000.00元，拟工资低于该口径500.00元（实施条例第15条）。阈值不足一分向上取整；两个候选口径分别显示，未选定适用工资口径，不相加，不认定实际欠薪。地区、工资构成、适用时期及实际履行另核。"
+      },
+      "pending_reason": "",
+      "whole_chunk_context_warnings_before_identifier_exemption": [
+        "存在带符号数值或日期分隔，不能去掉前缀作为无符号期限核算。"
+      ],
+      "local_groups": [
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_pay"
+          ]
+        }
+      ],
+      "recognized_identity_headers": [
+        "劳动者：测试甲；合同编号：C-1"
+      ]
+    },
+    "exact_identifier_header_control": {
+      "text": "劳动者：测试甲；合同编号：C-1\n合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+      "comparison_present": true,
+      "comparison": {
+        "kind": "probation_pay",
+        "contract_floor": "4800.00",
+        "grade_floor": "4000.00",
+        "contract_gap": "1300.00",
+        "grade_gap": "500.00",
+        "text": "仅按所列工资假设：合同工资80%与最低工资取高为4800.00元，拟工资低于该口径1300.00元；同岗最低档工资80%与最低工资取高为4000.00元，拟工资低于该口径500.00元（实施条例第15条）。阈值不足一分向上取整；两个候选口径分别显示，未选定适用工资口径，不相加，不认定实际欠薪。地区、工资构成、适用时期及实际履行另核。"
+      },
+      "pending_reason": "",
+      "whole_chunk_context_warnings_before_identifier_exemption": [
+        "存在带符号数值或日期分隔，不能去掉前缀作为无符号期限核算。"
+      ],
+      "local_groups": [
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_pay"
+          ]
+        }
+      ],
+      "recognized_identity_headers": [
+        "劳动者：测试甲；合同编号：C-1"
+      ]
+    },
+    "original_without_bonus_or_suffix": {
+      "text": "独立虚构测试，均为同一员工同一工资期间的数据。劳动者：测试甲；合同编号：C-1\n合同期限3年，试用期3个月。\n合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+      "comparison_present": false,
+      "comparison": null,
+      "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。",
+      "whole_chunk_context_warnings_before_identifier_exemption": [
+        "存在带符号数值或日期分隔，不能去掉前缀作为无符号期限核算。"
+      ],
+      "local_groups": [
+        {
+          "raw": "合同期限3年，试用期3个月。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_duration"
+          ]
+        },
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_pay"
+          ]
+        }
+      ],
+      "recognized_identity_headers": []
+    },
+    "original_all_three_removed_control": {
+      "text": "劳动者：测试甲；合同编号：C-1\n合同期限3年，试用期3个月。\n合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+      "comparison_present": true,
+      "comparison": {
+        "kind": "probation_pay",
+        "contract_floor": "4800.00",
+        "grade_floor": "4000.00",
+        "contract_gap": "1300.00",
+        "grade_gap": "500.00",
+        "text": "仅按所列工资假设：合同工资80%与最低工资取高为4800.00元，拟工资低于该口径1300.00元；同岗最低档工资80%与最低工资取高为4000.00元，拟工资低于该口径500.00元（实施条例第15条）。阈值不足一分向上取整；两个候选口径分别显示，未选定适用工资口径，不相加，不认定实际欠薪。地区、工资构成、适用时期及实际履行另核。"
+      },
+      "pending_reason": "",
+      "whole_chunk_context_warnings_before_identifier_exemption": [
+        "存在带符号数值或日期分隔，不能去掉前缀作为无符号期限核算。"
+      ],
+      "local_groups": [
+        {
+          "raw": "合同期限3年，试用期3个月。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_duration"
+          ]
+        },
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_pay"
+          ]
+        }
+      ],
+      "recognized_identity_headers": [
+        "劳动者：测试甲；合同编号：C-1"
+      ]
+    },
+    "original_exact": {
+      "text": "独立虚构测试，均为同一员工同一工资期间的数据。劳动者：测试甲；合同编号：C-1\n合同期限3年，试用期3个月。\n合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。上述四项均为税前月工资标准。\n奖金按员工手册支付，员工手册本次未提供。",
+      "comparison_present": false,
+      "comparison": null,
+      "pending_reason": "四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。",
+      "whole_chunk_context_warnings_before_identifier_exemption": [
+        "本行含否定、不确定、替代或不同口径标记，保留候选但暂停核算。",
+        "存在带符号数值或日期分隔，不能去掉前缀作为无符号期限核算。"
+      ],
+      "local_groups": [
+        {
+          "raw": "合同期限3年，试用期3个月。",
+          "warnings": [],
+          "comparison_kinds": [
+            "probation_duration"
+          ]
+        },
+        {
+          "raw": "合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。上述四项均为税前月工资标准。",
+          "warnings": [
+            "字段之间或尾部存在未解析的主体、条件或数值，不自动拼接。"
+          ],
+          "comparison_kinds": []
+        }
+      ],
+      "recognized_identity_headers": []
+    }
+  }
+}

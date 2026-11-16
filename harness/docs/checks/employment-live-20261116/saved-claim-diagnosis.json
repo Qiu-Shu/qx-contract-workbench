@@ -1,0 +1,52 @@
+{
+  "scope": "Offline actual save/readback, synthetic data only; not legal certification",
+  "source": "独立虚构材料。公司提供考勤摘录，员工称已申请产检假。具体考勤条目本次未展示，请假审批记录未提供。陈述媒介未说明。协商记录本次未提供。",
+  "results": [
+    {
+      "id": "attendance-content",
+      "inputClaim": "公司考勤记录显示上述期间存在未出勤记录。",
+      "claimPersists": true,
+      "citationStatus": [
+        "matched"
+      ],
+      "reviewStatus": "unverified",
+      "changes": [],
+      "storedFact": "事实/陈述：公司考勤记录显示上述期间存在未出勤记录。"
+    },
+    {
+      "id": "source-medium",
+      "inputClaim": "本轮为员工口头陈述。",
+      "claimPersists": true,
+      "citationStatus": [
+        "matched"
+      ],
+      "reviewStatus": "unverified",
+      "changes": [],
+      "storedFact": "事实/陈述：本轮为员工口头陈述。"
+    },
+    {
+      "id": "existing-negative-guard",
+      "inputClaim": "公司没有协商记录。",
+      "claimPersists": false,
+      "citationStatus": [
+        "matched"
+      ],
+      "reviewStatus": "unverified",
+      "changes": [
+        {
+          "label": "第1项fact",
+          "original": "公司没有协商记录。",
+          "replacement": "关于协商记录：所引原文：“独立虚构材料。公司提供考勤摘录，员工称已申请产检假。具体考勤条目本次未展示，请假审批记录未提供。陈述媒介未说明。协商记录本次未提供。”；实际状态待核，不能把材料未提供推定为事实不存在。",
+          "reason": "原文未支持该否定事实；仅修正本句，原稿保留供核对。",
+          "citations": [
+            {
+              "path": "source.txt",
+              "quote": "独立虚构材料。公司提供考勤摘录，员工称已申请产检假。具体考勤条目本次未展示，请假审批记录未提供。陈述媒介未说明。协商记录本次未提供。"
+            }
+          ]
+        }
+      ],
+      "storedFact": "事实/陈述：关于协商记录：所引原文：“独立虚构材料。公司提供考勤摘录，员工称已申请产检假。具体考勤条目本次未展示，请假审批记录未提供。陈述媒介未说明。协商记录本次未提供。”；实际状态待核，不能把材料未提供推定为事实不存在。"
+    }
+  ]
+}

@@ -1,7 +1,9 @@
 # TODO — 群兴法律工作台协作清单
 
 - [x] EMP-SKILL-20261116：劳动合同审查候选、工资同片段跨人/期间混用修复和离线验证；[接续证据](harness/docs/checks/employment-review-20261116/README.md)。
-- [ ] EMP-SKILL-QUALITY：明确模型及预算后完成实际产品质量评测与律师复核，再决定开放 qx-employment-review；当前 withheld，安装版未更新。
+- [x] EMP-SKILL-LIVE：实际 Flash 两轮完整指令评测、两例真实模型 MCP 链路及六次事实提取诊断已执行；[原答与根因](harness/docs/checks/employment-live-20261116/README.md)。用户取消律师复核前置。
+- [ ] EMP-SKILL-QUALITY：修复已确认的工资提取作用域、阶段切换遗漏规则及自由文本事实约束后复测；当前内容质量未通过，qx-employment-review 仍 withheld，安装版未更新。
+- [x] OFFICIAL-TEMPLATES：官方常用法律文书实际下载103个对象（含模板、实例及指南），劳动用工优先；[出处和本机资料位置](harness/docs/templates/official-20261116/README.md)。
 
 2026-11-13 复杂文档与中文脱敏补强完成：修复文字短竖笔造成幽灵列/续表失配，以及混合PDF同行重复原生文字；有界签收/转交姓名、OCR空白、旧代号与下一字段/编号段落边界通过。最终目标116通过，位置断言补强2通过；完整离线Node651通过/15跳过、Python528通过/5跳过及36子测试，exit0。两轴独审未关闭0，原件保持。没有新增依赖、构建安装包或更新日常安装。[交付和已知误差](harness/docs/2026-11-13-document-privacy-delivery.md)。
 

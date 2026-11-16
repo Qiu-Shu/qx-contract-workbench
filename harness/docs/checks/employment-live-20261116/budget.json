@@ -1,0 +1,930 @@
+{
+  "cap": 10,
+  "rateSource": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+  "rates": {
+    "input": 2,
+    "output": 8
+  },
+  "requests": [
+    {
+      "id": "retest1:candidate-A",
+      "reserved": 0.133542,
+      "startedAt": "2026-11-16T06:57:14.516Z",
+      "cost": 0.04068,
+      "usage": {
+        "prompt_tokens": 6748,
+        "completion_tokens": 3398,
+        "total_tokens": 10146,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1884
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 6748
+      },
+      "finishedAt": "2026-11-16T06:57:37.853Z"
+    },
+    {
+      "id": "retest1:control-A",
+      "reserved": 0.11508,
+      "startedAt": "2026-11-16T06:57:14.541Z",
+      "cost": 0.031056,
+      "usage": {
+        "prompt_tokens": 4596,
+        "completion_tokens": 2733,
+        "total_tokens": 7329,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1346
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 4596
+      },
+      "finishedAt": "2026-11-16T06:57:32.990Z"
+    },
+    {
+      "id": "retest1:candidate-B",
+      "reserved": 0.133524,
+      "startedAt": "2026-11-16T06:57:14.542Z",
+      "cost": 0.06127,
+      "usage": {
+        "prompt_tokens": 6747,
+        "completion_tokens": 5972,
+        "total_tokens": 12719,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4087
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 6747
+      },
+      "finishedAt": "2026-11-16T06:57:56.087Z"
+    },
+    {
+      "id": "retest1:control-B",
+      "reserved": 0.115062,
+      "startedAt": "2026-11-16T06:57:32.991Z",
+      "cost": 0.040558,
+      "usage": {
+        "prompt_tokens": 4595,
+        "completion_tokens": 3921,
+        "total_tokens": 8516,
+        "prompt_tokens_details": {
+          "cached_tokens": 4352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2720
+        },
+        "prompt_cache_hit_tokens": 4352,
+        "prompt_cache_miss_tokens": 243
+      },
+      "finishedAt": "2026-11-16T06:58:03.091Z"
+    },
+    {
+      "id": "retest1:candidate-C",
+      "reserved": 0.133428,
+      "startedAt": "2026-11-16T06:57:37.855Z",
+      "cost": 0.050704,
+      "usage": {
+        "prompt_tokens": 6732,
+        "completion_tokens": 4655,
+        "total_tokens": 11387,
+        "prompt_tokens_details": {
+          "cached_tokens": 6528
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1867
+        },
+        "prompt_cache_hit_tokens": 6528,
+        "prompt_cache_miss_tokens": 204
+      },
+      "finishedAt": "2026-11-16T06:58:09.699Z"
+    },
+    {
+      "id": "retest1:control-C",
+      "reserved": 0.114966,
+      "startedAt": "2026-11-16T06:57:56.088Z",
+      "cost": 0.025304,
+      "usage": {
+        "prompt_tokens": 4580,
+        "completion_tokens": 2018,
+        "total_tokens": 6598,
+        "prompt_tokens_details": {
+          "cached_tokens": 4352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1004
+        },
+        "prompt_cache_hit_tokens": 4352,
+        "prompt_cache_miss_tokens": 228
+      },
+      "finishedAt": "2026-11-16T06:58:10.919Z"
+    },
+    {
+      "id": "retest1:candidate-D",
+      "reserved": 0.133344,
+      "startedAt": "2026-11-16T06:58:03.092Z",
+      "cost": 0.03442,
+      "usage": {
+        "prompt_tokens": 6722,
+        "completion_tokens": 2622,
+        "total_tokens": 9344,
+        "prompt_tokens_details": {
+          "cached_tokens": 6528
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1331
+        },
+        "prompt_cache_hit_tokens": 6528,
+        "prompt_cache_miss_tokens": 194
+      },
+      "finishedAt": "2026-11-16T06:58:21.079Z"
+    },
+    {
+      "id": "retest1:control-D",
+      "reserved": 0.114882,
+      "startedAt": "2026-11-16T06:58:09.699Z",
+      "cost": 0.037652,
+      "usage": {
+        "prompt_tokens": 4570,
+        "completion_tokens": 3564,
+        "total_tokens": 8134,
+        "prompt_tokens_details": {
+          "cached_tokens": 4352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2025
+        },
+        "prompt_cache_hit_tokens": 4352,
+        "prompt_cache_miss_tokens": 218
+      },
+      "finishedAt": "2026-11-16T06:58:32.645Z"
+    },
+    {
+      "id": "retest1:candidate-E",
+      "reserved": 0.133406,
+      "startedAt": "2026-11-16T06:58:10.922Z",
+      "cost": 0.043048,
+      "usage": {
+        "prompt_tokens": 6728,
+        "completion_tokens": 3699,
+        "total_tokens": 10427,
+        "prompt_tokens_details": {
+          "cached_tokens": 6528
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1987
+        },
+        "prompt_cache_hit_tokens": 6528,
+        "prompt_cache_miss_tokens": 200
+      },
+      "finishedAt": "2026-11-16T06:58:36.562Z"
+    },
+    {
+      "id": "retest1:control-E",
+      "reserved": 0.114944,
+      "startedAt": "2026-11-16T06:58:21.081Z",
+      "cost": 0.039232,
+      "usage": {
+        "prompt_tokens": 4576,
+        "completion_tokens": 3760,
+        "total_tokens": 8336,
+        "prompt_tokens_details": {
+          "cached_tokens": 4352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2067
+        },
+        "prompt_cache_hit_tokens": 4352,
+        "prompt_cache_miss_tokens": 224
+      },
+      "finishedAt": "2026-11-16T06:58:49.134Z"
+    },
+    {
+      "id": "retest1:candidate-F",
+      "reserved": 0.13398,
+      "startedAt": "2026-11-16T06:58:32.646Z",
+      "cost": 0.044582,
+      "usage": {
+        "prompt_tokens": 6795,
+        "completion_tokens": 3874,
+        "total_tokens": 10669,
+        "prompt_tokens_details": {
+          "cached_tokens": 6656
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2209
+        },
+        "prompt_cache_hit_tokens": 6656,
+        "prompt_cache_miss_tokens": 139
+      },
+      "finishedAt": "2026-11-16T06:58:58.318Z"
+    },
+    {
+      "id": "retest1:candidate-G",
+      "reserved": 0.133464,
+      "startedAt": "2026-11-16T06:58:36.564Z",
+      "cost": 0.045486,
+      "usage": {
+        "prompt_tokens": 6739,
+        "completion_tokens": 4001,
+        "total_tokens": 10740,
+        "prompt_tokens_details": {
+          "cached_tokens": 6528
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2446
+        },
+        "prompt_cache_hit_tokens": 6528,
+        "prompt_cache_miss_tokens": 211
+      },
+      "finishedAt": "2026-11-16T06:59:01.016Z"
+    },
+    {
+      "id": "retest1:candidate-H",
+      "reserved": 0.133692,
+      "startedAt": "2026-11-16T06:58:49.135Z",
+      "cost": 0.05158,
+      "usage": {
+        "prompt_tokens": 6754,
+        "completion_tokens": 4759,
+        "total_tokens": 11513,
+        "prompt_tokens_details": {
+          "cached_tokens": 6528
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2550
+        },
+        "prompt_cache_hit_tokens": 6528,
+        "prompt_cache_miss_tokens": 226
+      },
+      "finishedAt": "2026-11-16T06:59:25.086Z"
+    },
+    {
+      "id": "retest2:candidate-A",
+      "reserved": 0.138538,
+      "startedAt": "2026-11-16T07:04:12.449Z",
+      "cost": 0.058796,
+      "usage": {
+        "prompt_tokens": 7278,
+        "completion_tokens": 5530,
+        "total_tokens": 12808,
+        "prompt_tokens_details": {
+          "cached_tokens": 4608
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3844
+        },
+        "prompt_cache_hit_tokens": 4608,
+        "prompt_cache_miss_tokens": 2670
+      },
+      "finishedAt": "2026-11-16T07:04:47.420Z"
+    },
+    {
+      "id": "retest2:candidate-B",
+      "reserved": 0.13852,
+      "startedAt": "2026-11-16T07:04:12.467Z",
+      "cost": 0.06829,
+      "usage": {
+        "prompt_tokens": 7277,
+        "completion_tokens": 6717,
+        "total_tokens": 13994,
+        "prompt_tokens_details": {
+          "cached_tokens": 4608
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4054
+        },
+        "prompt_cache_hit_tokens": 4608,
+        "prompt_cache_miss_tokens": 2669
+      },
+      "finishedAt": "2026-11-16T07:05:00.210Z"
+    },
+    {
+      "id": "retest2:candidate-C",
+      "reserved": 0.138424,
+      "startedAt": "2026-11-16T07:04:12.469Z",
+      "cost": 0.04006,
+      "usage": {
+        "prompt_tokens": 7262,
+        "completion_tokens": 3192,
+        "total_tokens": 10454,
+        "prompt_tokens_details": {
+          "cached_tokens": 4608
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1179
+        },
+        "prompt_cache_hit_tokens": 4608,
+        "prompt_cache_miss_tokens": 2654
+      },
+      "finishedAt": "2026-11-16T07:04:34.539Z"
+    },
+    {
+      "id": "retest2:candidate-D",
+      "reserved": 0.13834,
+      "startedAt": "2026-11-16T07:04:34.541Z",
+      "cost": 0.05536,
+      "usage": {
+        "prompt_tokens": 7252,
+        "completion_tokens": 5107,
+        "total_tokens": 12359,
+        "prompt_tokens_details": {
+          "cached_tokens": 7040
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3441
+        },
+        "prompt_cache_hit_tokens": 7040,
+        "prompt_cache_miss_tokens": 212
+      },
+      "finishedAt": "2026-11-16T07:05:07.933Z"
+    },
+    {
+      "id": "retest2:candidate-E",
+      "reserved": 0.138402,
+      "startedAt": "2026-11-16T07:04:47.424Z",
+      "cost": 0.038412,
+      "usage": {
+        "prompt_tokens": 7258,
+        "completion_tokens": 2987,
+        "total_tokens": 10245,
+        "prompt_tokens_details": {
+          "cached_tokens": 7040
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 783
+        },
+        "prompt_cache_hit_tokens": 7040,
+        "prompt_cache_miss_tokens": 218
+      },
+      "finishedAt": "2026-11-16T07:05:10.026Z"
+    },
+    {
+      "id": "retest2:candidate-F",
+      "reserved": 0.138976,
+      "startedAt": "2026-11-16T07:05:00.211Z",
+      "cost": 0.054058,
+      "usage": {
+        "prompt_tokens": 7325,
+        "completion_tokens": 4926,
+        "total_tokens": 12251,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2929
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 157
+      },
+      "finishedAt": "2026-11-16T07:05:31.473Z"
+    },
+    {
+      "id": "retest2:candidate-G",
+      "reserved": 0.13846,
+      "startedAt": "2026-11-16T07:05:07.936Z",
+      "cost": 0.07273,
+      "usage": {
+        "prompt_tokens": 7269,
+        "completion_tokens": 7274,
+        "total_tokens": 14543,
+        "prompt_tokens_details": {
+          "cached_tokens": 7040
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 5293
+        },
+        "prompt_cache_hit_tokens": 7040,
+        "prompt_cache_miss_tokens": 229
+      },
+      "finishedAt": "2026-11-16T07:05:52.117Z"
+    },
+    {
+      "id": "retest2:candidate-H",
+      "reserved": 0.138688,
+      "startedAt": "2026-11-16T07:05:10.028Z",
+      "cost": 0.041472,
+      "usage": {
+        "prompt_tokens": 7284,
+        "completion_tokens": 3363,
+        "total_tokens": 10647,
+        "prompt_tokens_details": {
+          "cached_tokens": 7040
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1384
+        },
+        "prompt_cache_hit_tokens": 7040,
+        "prompt_cache_miss_tokens": 244
+      },
+      "finishedAt": "2026-11-16T07:05:35.675Z"
+    },
+    {
+      "id": "retest2:candidate-I",
+      "reserved": 0.138568,
+      "startedAt": "2026-11-16T07:05:31.477Z",
+      "cost": 0.047236,
+      "usage": {
+        "prompt_tokens": 7274,
+        "completion_tokens": 4086,
+        "total_tokens": 11360,
+        "prompt_tokens_details": {
+          "cached_tokens": 7040
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2754
+        },
+        "prompt_cache_hit_tokens": 7040,
+        "prompt_cache_miss_tokens": 234
+      },
+      "finishedAt": "2026-11-16T07:06:00.792Z"
+    },
+    {
+      "id": "retest2:candidate-J",
+      "reserved": 0.138776,
+      "startedAt": "2026-11-16T07:05:35.676Z",
+      "cost": 0.053236,
+      "usage": {
+        "prompt_tokens": 7302,
+        "completion_tokens": 4829,
+        "total_tokens": 12131,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3443
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 134
+      },
+      "finishedAt": "2026-11-16T07:06:09.521Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:0",
+      "reserved": 0.158444,
+      "startedAt": "2026-11-16T07:07:42.560Z",
+      "cost": 0.02051,
+      "usage": {
+        "prompt_tokens": 9987,
+        "completion_tokens": 67,
+        "total_tokens": 10054,
+        "prompt_tokens_details": {
+          "cached_tokens": 4224
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 4224,
+        "prompt_cache_miss_tokens": 5763
+      },
+      "finishedAt": "2026-11-16T07:07:43.637Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:1",
+      "reserved": 0.160738,
+      "startedAt": "2026-11-16T07:07:43.648Z",
+      "cost": 0.021372,
+      "usage": {
+        "prompt_tokens": 10362,
+        "completion_tokens": 81,
+        "total_tokens": 10443,
+        "prompt_tokens_details": {
+          "cached_tokens": 9984
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 9984,
+        "prompt_cache_miss_tokens": 378
+      },
+      "finishedAt": "2026-11-16T07:07:44.505Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:2",
+      "reserved": 0.163206,
+      "startedAt": "2026-11-16T07:07:44.515Z",
+      "cost": 0.061252,
+      "usage": {
+        "prompt_tokens": 10706,
+        "completion_tokens": 4980,
+        "total_tokens": 15686,
+        "prompt_tokens_details": {
+          "cached_tokens": 10368
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2391
+        },
+        "prompt_cache_hit_tokens": 10368,
+        "prompt_cache_miss_tokens": 338
+      },
+      "finishedAt": "2026-11-16T07:08:12.269Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:3",
+      "reserved": 0.204666,
+      "startedAt": "2026-11-16T07:08:12.403Z",
+      "cost": 0.053718,
+      "usage": {
+        "prompt_tokens": 15739,
+        "completion_tokens": 2780,
+        "total_tokens": 18519,
+        "prompt_tokens_details": {
+          "cached_tokens": 14848
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 76
+        },
+        "prompt_cache_hit_tokens": 14848,
+        "prompt_cache_miss_tokens": 891
+      },
+      "finishedAt": "2026-11-16T07:08:22.942Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:4",
+      "reserved": 0.292012,
+      "startedAt": "2026-11-16T07:08:23.176Z",
+      "cost": 0.080452,
+      "usage": {
+        "prompt_tokens": 26642,
+        "completion_tokens": 3396,
+        "total_tokens": 30038,
+        "prompt_tokens_details": {
+          "cached_tokens": 18432
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 779
+        },
+        "prompt_cache_hit_tokens": 18432,
+        "prompt_cache_miss_tokens": 8210
+      },
+      "finishedAt": "2026-11-16T07:08:37.256Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:5",
+      "reserved": 0.389348,
+      "startedAt": "2026-11-16T07:08:37.478Z",
+      "cost": 0.12615,
+      "usage": {
+        "prompt_tokens": 38947,
+        "completion_tokens": 6032,
+        "total_tokens": 44979,
+        "prompt_tokens_details": {
+          "cached_tokens": 27264
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3169
+        },
+        "prompt_cache_hit_tokens": 27264,
+        "prompt_cache_miss_tokens": 11683
+      },
+      "finishedAt": "2026-11-16T07:09:05.116Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:6",
+      "reserved": 0.507596,
+      "startedAt": "2026-11-16T07:09:05.357Z",
+      "cost": 0.120482,
+      "usage": {
+        "prompt_tokens": 53941,
+        "completion_tokens": 1575,
+        "total_tokens": 55516,
+        "prompt_tokens_details": {
+          "cached_tokens": 44928
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1144
+        },
+        "prompt_cache_hit_tokens": 44928,
+        "prompt_cache_miss_tokens": 9013
+      },
+      "finishedAt": "2026-11-16T07:09:14.428Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:7",
+      "reserved": 0.55538,
+      "startedAt": "2026-11-16T07:09:14.631Z",
+      "cost": 0.129968,
+      "usage": {
+        "prompt_tokens": 60184,
+        "completion_tokens": 1200,
+        "total_tokens": 61384,
+        "prompt_tokens_details": {
+          "cached_tokens": 54912
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 741
+        },
+        "prompt_cache_hit_tokens": 54912,
+        "prompt_cache_miss_tokens": 5272
+      },
+      "finishedAt": "2026-11-16T07:09:20.747Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:8",
+      "reserved": 0.565032,
+      "startedAt": "2026-11-16T07:09:20.769Z",
+      "cost": 0.127702,
+      "usage": {
+        "prompt_tokens": 61439,
+        "completion_tokens": 603,
+        "total_tokens": 62042,
+        "prompt_tokens_details": {
+          "cached_tokens": 61184
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 179
+        },
+        "prompt_cache_hit_tokens": 61184,
+        "prompt_cache_miss_tokens": 255
+      },
+      "finishedAt": "2026-11-16T07:09:23.479Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-supported:9",
+      "reserved": 0.603112,
+      "startedAt": "2026-11-16T07:09:23.662Z",
+      "cost": 0.159586,
+      "usage": {
+        "prompt_tokens": 66733,
+        "completion_tokens": 3265,
+        "total_tokens": 69998,
+        "prompt_tokens_details": {
+          "cached_tokens": 61952
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 566
+        },
+        "prompt_cache_hit_tokens": 61952,
+        "prompt_cache_miss_tokens": 4781
+      },
+      "finishedAt": "2026-11-16T07:09:35.817Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-unlinked:0",
+      "reserved": 0.15839,
+      "startedAt": "2026-11-16T07:09:41.158Z",
+      "cost": 0.020534,
+      "usage": {
+        "prompt_tokens": 9983,
+        "completion_tokens": 71,
+        "total_tokens": 10054,
+        "prompt_tokens_details": {
+          "cached_tokens": 9728
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 9728,
+        "prompt_cache_miss_tokens": 255
+      },
+      "finishedAt": "2026-11-16T07:09:41.800Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-unlinked:1",
+      "reserved": 0.160706,
+      "startedAt": "2026-11-16T07:09:41.808Z",
+      "cost": 0.021422,
+      "usage": {
+        "prompt_tokens": 10379,
+        "completion_tokens": 83,
+        "total_tokens": 10462,
+        "prompt_tokens_details": {
+          "cached_tokens": 9984
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 9984,
+        "prompt_cache_miss_tokens": 395
+      },
+      "finishedAt": "2026-11-16T07:09:42.592Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-unlinked:2",
+      "reserved": 0.162958,
+      "startedAt": "2026-11-16T07:09:42.602Z",
+      "cost": 0.070878,
+      "usage": {
+        "prompt_tokens": 10711,
+        "completion_tokens": 6182,
+        "total_tokens": 16893,
+        "prompt_tokens_details": {
+          "cached_tokens": 10368
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3078
+        },
+        "prompt_cache_hit_tokens": 10368,
+        "prompt_cache_miss_tokens": 343
+      },
+      "finishedAt": "2026-11-16T07:10:16.170Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-unlinked:3",
+      "reserved": 0.213796,
+      "startedAt": "2026-11-16T07:10:16.273Z",
+      "cost": 0.061406,
+      "usage": {
+        "prompt_tokens": 16947,
+        "completion_tokens": 3439,
+        "total_tokens": 20386,
+        "prompt_tokens_details": {
+          "cached_tokens": 12288
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 136
+        },
+        "prompt_cache_hit_tokens": 12288,
+        "prompt_cache_miss_tokens": 4659
+      },
+      "finishedAt": "2026-11-16T07:10:29.243Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-unlinked:4",
+      "reserved": 0.320046,
+      "startedAt": "2026-11-16T07:10:29.459Z",
+      "cost": 0.063608,
+      "usage": {
+        "prompt_tokens": 30972,
+        "completion_tokens": 208,
+        "total_tokens": 31180,
+        "prompt_tokens_details": {
+          "cached_tokens": 16896
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 72
+        },
+        "prompt_cache_hit_tokens": 16896,
+        "prompt_cache_miss_tokens": 14076
+      },
+      "finishedAt": "2026-11-16T07:10:30.976Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-unlinked:5",
+      "reserved": 0.335772,
+      "startedAt": "2026-11-16T07:10:30.982Z",
+      "cost": 0.068386,
+      "usage": {
+        "prompt_tokens": 33373,
+        "completion_tokens": 205,
+        "total_tokens": 33578,
+        "prompt_tokens_details": {
+          "cached_tokens": 31104
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 35
+        },
+        "prompt_cache_hit_tokens": 31104,
+        "prompt_cache_miss_tokens": 2269
+      },
+      "finishedAt": "2026-11-16T07:10:32.559Z"
+    },
+    {
+      "id": "e2e-employment-live-01-thinking:wage-unlinked:6",
+      "reserved": 0.33879,
+      "startedAt": "2026-11-16T07:10:32.605Z",
+      "cost": 0.091934,
+      "usage": {
+        "prompt_tokens": 33867,
+        "completion_tokens": 3025,
+        "total_tokens": 36892,
+        "prompt_tokens_details": {
+          "cached_tokens": 33280
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 174
+        },
+        "prompt_cache_hit_tokens": 33280,
+        "prompt_cache_miss_tokens": 587
+      },
+      "finishedAt": "2026-11-16T07:10:44.228Z"
+    },
+    {
+      "id": "retest3:diagnostic-G-1",
+      "reserved": 0.139214,
+      "startedAt": "2026-11-16T07:12:08.211Z",
+      "cost": 0.023812,
+      "usage": {
+        "prompt_tokens": 7350,
+        "completion_tokens": 1139,
+        "total_tokens": 8489,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 265
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 182
+      },
+      "finishedAt": "2026-11-16T07:12:15.853Z"
+    },
+    {
+      "id": "retest3:diagnostic-G-2",
+      "reserved": 0.139214,
+      "startedAt": "2026-11-16T07:12:08.229Z",
+      "cost": 0.022292,
+      "usage": {
+        "prompt_tokens": 7350,
+        "completion_tokens": 949,
+        "total_tokens": 8299,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 190
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 182
+      },
+      "finishedAt": "2026-11-16T07:12:14.370Z"
+    },
+    {
+      "id": "retest3:diagnostic-H-1",
+      "reserved": 0.139364,
+      "startedAt": "2026-11-16T07:12:08.230Z",
+      "cost": 0.026276,
+      "usage": {
+        "prompt_tokens": 7354,
+        "completion_tokens": 1446,
+        "total_tokens": 8800,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 576
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 186
+      },
+      "finishedAt": "2026-11-16T07:12:18.011Z"
+    },
+    {
+      "id": "retest3:diagnostic-H-2",
+      "reserved": 0.139364,
+      "startedAt": "2026-11-16T07:12:14.372Z",
+      "cost": 0.030692,
+      "usage": {
+        "prompt_tokens": 7354,
+        "completion_tokens": 1998,
+        "total_tokens": 9352,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1060
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 186
+      },
+      "finishedAt": "2026-11-16T07:12:27.737Z"
+    },
+    {
+      "id": "retest3:diagnostic-C-1",
+      "reserved": 0.13901,
+      "startedAt": "2026-11-16T07:12:15.858Z",
+      "cost": 0.022436,
+      "usage": {
+        "prompt_tokens": 7322,
+        "completion_tokens": 974,
+        "total_tokens": 8296,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 200
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 154
+      },
+      "finishedAt": "2026-11-16T07:12:22.136Z"
+    },
+    {
+      "id": "retest3:diagnostic-C-2",
+      "reserved": 0.13901,
+      "startedAt": "2026-11-16T07:12:18.012Z",
+      "cost": 0.027428,
+      "usage": {
+        "prompt_tokens": 7322,
+        "completion_tokens": 1598,
+        "total_tokens": 8920,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 986
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 154
+      },
+      "finishedAt": "2026-11-16T07:12:26.576Z"
+    }
+  ]
+}

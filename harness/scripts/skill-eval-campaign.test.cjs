@@ -1,5 +1,16 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),path=require('node:path');
 const {evaluationPaths}=require('./skill-eval-campaign.cjs');
+test('employment live evaluation has a separate fixed 10 CNY ledger and current inputs',()=>{
+ const root=path.resolve(__dirname,'..');
+ const current=evaluationPaths(root,{QX_SKILL_EVAL_CAMPAIGN:'employment-live-20261116'});
+ const old=evaluationPaths(root,{QX_SKILL_EVAL_CAMPAIGN:'skill-resume-20261105'});
+ assert.equal(current.cap,10);assert.equal(current.referenceDate,'2026-11-16');
+ assert.equal(current.model,'deepseek-flash');assert.equal(current.thinking,'enabled');
+ assert.equal(current.candidateRoot,path.join(root,'evals/candidates'));
+ assert.notEqual(current.budgetFile,old.budgetFile);assert.equal(current.lockFile,old.lockFile);
+ assert.deepEqual(current.allowedSkills,['qx-employment-review']);
+ assert.throws(()=>evaluationPaths(root,{QX_SKILL_EVAL_CAMPAIGN:'employment-live-20261116',QX_SKILL_EVAL_SNAPSHOT:'v2'}),/snapshot/);
+});
 test('new authorized campaign isolates budget and withheld candidates without changing production discovery',()=>{
  const root=path.resolve(__dirname,'..'),legacy=evaluationPaths(root,{}),next=evaluationPaths(root,{QX_SKILL_EVAL_CAMPAIGN:'skill-resume-20261105'});
  assert.equal(legacy.budgetFile,path.join(root,'docs/checks/skills-quality/model/budget.json'));

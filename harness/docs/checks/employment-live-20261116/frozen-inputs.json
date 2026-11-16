@@ -1,0 +1,45 @@
+{
+  "createdAt": "2026-11-16T06:57:13.342Z",
+  "baselineCommit": "0a88d1f4891c19d39ecba7c0cc6736b6d050c932",
+  "authorization": {
+    "date": "2026-11-16",
+    "capCNY": 10,
+    "lawyerReview": "waived-by-user",
+    "syntheticOnly": true
+  },
+  "model": "deepseek-flash",
+  "thinking": "enabled",
+  "referenceDate": "2026-11-16",
+  "rates": {
+    "inputCNYPerMillion": 2,
+    "outputCNYPerMillion": 8,
+    "conservative": true,
+    "source": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+    "verified": "2026-11-16"
+  },
+  "cases": 13,
+  "candidateCases": 8,
+  "controlCases": 5,
+  "inputs": [
+    {
+      "path": "evals/candidates/qx-employment-review/SKILL.md",
+      "sha256": "1a263a1c0faa6015a672333d441f0275a24b22bc1b46a646341072a5f7fc7913"
+    },
+    {
+      "path": "evals/candidates/qx-employment-review/references/method.md",
+      "sha256": "61b34d479ce4999ca9c91bca8e472e23e03e742b791de5f74246de02ff16bbab"
+    },
+    {
+      "path": "evals/candidates/qx-employment-review/live-scenarios.json",
+      "sha256": "24876fbbb3daff63cc668ddf9ea3289011e49d8470c63edf2f877cedfcd1e9ca"
+    },
+    {
+      "path": "evals/candidates/qx-employment-review/rubric.md",
+      "sha256": "d0139b146979501f0a1c3e11eaeb33bdda32bc2a98d062e10f1ed3ceca0c67de"
+    },
+    {
+      "path": "config/workspace-AGENTS.md",
+      "sha256": "a16243e0d502b73eefcbe27c6f9d9b35af251e204fdae1fbd9da2b61788b5353"
+    }
+  ]
+}

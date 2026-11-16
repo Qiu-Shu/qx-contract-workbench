@@ -6,24 +6,28 @@ import shutil
 import subprocess
 import sys
 from uuid import uuid4
+import pytest
 
 
-def test_real_relay_isolates_case_and_reads_full_saved_artifacts(tmp_path):
+@pytest.mark.parametrize('campaign', ['', 'employment-live-20261116'])
+def test_real_relay_isolates_case_and_reads_full_saved_artifacts(tmp_path, campaign):
     source_bridge = Path(__file__).parent
     shutil.copytree(source_bridge, tmp_path/'bridge', ignore=shutil.ignore_patterns('__pycache__', 'test_*'))
-    cases = tmp_path/'docs/checks/practice-gaps/e2e-cases.json'
+    cases = tmp_path/'docs/checks'/(campaign or 'practice-gaps')/'e2e-cases.json'
     cases.parent.mkdir(parents=True)
     cases.write_text(json.dumps([{'id':'corporate','material':'合成董事会记录：保留反对意见。',
         'tools':['read_case_material','record_case_note','write_word_draft']}]), encoding='utf-8')
     script = tmp_path/'bridge/practice_eval_session.py'
     env = {**os.environ, 'QX_LEGACY_ROOT': str(source_bridge.parent/'legacy'),
-           'QX_SKILL_EVAL_CAMPAIGN': '', 'QX_SKILL_EVAL_SNAPSHOT': '', 'PYTHONDONTWRITEBYTECODE': '1'}
+           'QX_SKILL_EVAL_CAMPAIGN': campaign, 'QX_SKILL_EVAL_SNAPSHOT': '', 'PYTHONDONTWRITEBYTECODE': '1'}
     child = subprocess.Popen([sys.executable, '-X', 'utf8', str(script), 'offline-review-'+uuid4().hex, 'corporate'],
                              stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
                              text=True, encoding='utf-8', env=env)
     try:
         ready = json.loads(child.stdout.readline())
         assert ready['ready']
+        expected_root = tmp_path/'.local'/campaign/'e2e' if campaign else cases.parent/'e2e'
+        assert Path(ready['workspace']).is_relative_to(expected_root)
         cid = ready['case_id']
         long_body = '合成讨论保留反对意见。' * 900
         requests = [

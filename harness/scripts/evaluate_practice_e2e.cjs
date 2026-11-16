@@ -1,21 +1,24 @@
 // Explicit live-model test. Only synthetic workspaces and a fixed MCP allowlist.
 const fs=require('node:fs'),path=require('node:path'),{spawn}=require('node:child_process'),readline=require('node:readline'),{createHash}=require('node:crypto');
+if(process.env.QX_REAL_MODEL_TEST!=='1')throw Error('Live evaluation requires explicit QX_REAL_MODEL_TEST=1 authorization');
 const {app,safeStorage}=require('electron');
 const {createModelCredentialStore}=require('../desktop/model-credentials.cjs');
 const {createBudget,upperBound}=require('./skill-eval-budget.cjs');
 const {assessFunctional}=require('./practice-e2e-checks.cjs');
 const root=path.resolve(__dirname,'..'),run=process.argv[2],selected=process.argv.slice(3);
 const campaign=require('./skill-eval-campaign.cjs').evaluationPaths(root);
-const thinking=run?.endsWith('-thinking')?'enabled':'disabled';
+const thinking=campaign.thinking||(run?.endsWith('-thinking')?'enabled':'disabled');
 const verifiedDelivery=process.env.QX_VERIFY_DELIVERY==='1';
 if(!/^[a-z0-9-]+$/.test(run||'')||!selected.length||selected.some(s=>!/^[a-z0-9-]+$/.test(s)))throw Error('Explicit run/scenario IDs required');
 const data=path.join(process.env.APPDATA,'QunxingHarness/.local/desktop-data');app.setPath('userData',data);
-const out=path.join(root,'docs/checks/practice-gaps/e2e',run),modelDir=path.join(root,'docs/checks/skills-quality/model');
+const out=campaign.referenceDate?path.join(campaign.reportRoot,'e2e',run):path.join(root,'docs/checks/practice-gaps/e2e',run);
 const progress=require('./skill-eval-log.cjs').createProgressLog(path.join(out,'progress.jsonl'));
 const hash=s=>createHash('sha256').update(s).digest('hex');
 let budget;
 function relay(id){
- const child=spawn('D:/qx-contract-workbench-20261102/.venv/Scripts/python.exe',['-X','utf8',path.join(root,'bridge/practice_eval_session.py'),run,id],{cwd:root,windowsHide:true,env:{...process.env,PYTHONIOENCODING:'utf-8'},stdio:['pipe','pipe','pipe']});
+ const python=process.env.QX_TEST_PYTHON;
+ if(!python||!fs.existsSync(python))throw Error('Set QX_TEST_PYTHON to the existing test runtime');
+ const child=spawn(python,['-X','utf8',path.join(root,'bridge/practice_eval_session.py'),run,id],{cwd:root,windowsHide:true,env:{...process.env,PYTHONIOENCODING:'utf-8'},stdio:['pipe','pipe','pipe']});
  const pending=[],buffer=[];let stderr='',ended=false;
  child.stderr.on('data',b=>{stderr=(stderr+b.toString()).slice(-5000);});
  const lines=readline.createInterface({input:child.stdout});
@@ -31,13 +34,14 @@ async function evaluate(id,secret){
  const transport=relay(id),record={id,run,model:'deepseek-flash',thinking,reasoningEffort:thinking==='enabled'?'high':'off',startedAt:new Date().toISOString(),scope:'Actual model tool calls through real MCP, synthetic workspace only',rounds:[]};
  try{
   const ready=await transport.next();if(!ready.ready)throw Error('Relay did not initialize');
+  if(campaign.allowedSkills&&!campaign.allowedSkills.includes(ready.scenario.skill))throw Error('Skill outside authorized campaign');
   const candidate=campaign.candidateRoot&&path.join(campaign.candidateRoot,ready.scenario.skill);
   const directory=candidate&&fs.existsSync(path.join(candidate,'SKILL.md'))?candidate:path.join(root,'config/skills',ready.scenario.skill);
   const method=path.join(directory,'references/method.md');
   const skill=fs.readFileSync(path.join(directory,'SKILL.md'),'utf8')+(fs.existsSync(method)?'\n'+fs.readFileSync(method,'utf8'):'');
-  const system=fs.readFileSync(path.join(root,'config/workspace-AGENTS.md'),'utf8')+'\n本次是合成案件实测，日期2026-11-05。仅使用已提供工具与当前案件，不联网、不提交、不对外发送。工具未执行不能称已执行。不输出思考过程。\n已加载专项方法：\n'+skill;
+  const system=fs.readFileSync(path.join(root,'config/workspace-AGENTS.md'),'utf8')+'\n本次是合成案件实测，日期'+(campaign.referenceDate||'2026-11-05')+'。仅使用已提供工具与当前案件，不联网、不提交、不对外发送。工具未执行不能称已执行。不输出思考过程。\n已加载专项方法：\n'+skill;
   record.systemSha256=hash(system);record.scenario=ready.scenario;record.case_id=ready.case_id;record.tools=ready.tools;
-  const snapshots=path.join(root,'docs/checks/practice-gaps/inputs');fs.mkdirSync(snapshots,{recursive:true});
+  const snapshots=campaign.referenceDate?path.join(campaign.reportRoot,'e2e/inputs'):path.join(root,'docs/checks/practice-gaps/inputs');fs.mkdirSync(snapshots,{recursive:true});
   const inputFile=path.join(snapshots,record.systemSha256+'.txt');if(!fs.existsSync(inputFile))fs.writeFileSync(inputFile,system);
   const messages=[{role:'system',content:system},{role:'user',content:ready.scenario.prompt+`\n已建立本次合成案件case_id=${ready.case_id}，已关联材料=${ready.material_path}。请实际读取后完成任务，并使用工具保存或生成文件。无需另建案或询问确认。`}];
   let completed=false;
@@ -51,7 +55,7 @@ async function evaluate(id,secret){
    }catch(error){budget.settle(reservation,null);throw error;}
    const message=result.choices?.[0]?.message;if(!message)throw Error('No model message');
    const {reasoning_content,...visibleMessage}=message;
-   record.rounds.push({round,message:visibleMessage,usage:result.usage,finishReason:result.choices[0].finish_reason});
+   record.rounds.push({round,message:visibleMessage,usage:result.usage,finishReason:result.choices[0].finish_reason,responseModel:result.model,responseId:result.id});
    let deliveredText=message.content||'';
    if(verifiedDelivery){
     const {deliverProviderResponse}=await import('./verified-delivery-harness.mjs');
@@ -70,7 +74,8 @@ async function evaluate(id,secret){
   record.actual=await transport.send({op:'finalize'});
   record.status=completed?'completed':'round-limit';
   Object.assign(record,assessFunctional({scenario:ready.scenario,completed,actual:record.actual,rounds:record.rounds}));
- }catch(error){record.status='failed';record.error=String(error.message).replaceAll(secret,'[REDACTED]');}
+  if(!record.functionalPassed)app.exitCode=1;
+ }catch(error){record.status='failed';record.error=String(error.message).replaceAll(secret,'[REDACTED]');app.exitCode=1;}
  finally{transport.close();record.finishedAt=new Date().toISOString();fs.mkdirSync(out,{recursive:true});fs.writeFileSync(file,JSON.stringify(record,null,2)+'\n');}
  progress({id,status:record.status,rounds:record.rounds.length,conservativeCNY:budget.total()});
 }
@@ -78,10 +83,16 @@ app.whenReady().then(async()=>{
  const lock=campaign.lockFile;let handle;
  try{
   if(verifiedDelivery)await import('./verified-delivery-harness.mjs');
-  handle=fs.openSync(lock,'wx');fs.writeFileSync(handle,String(process.pid));budget=createBudget(campaign.budgetFile);
-  const credentials=createModelCredentialStore({dataParent:data,safeStorage});let used=false;
-  await credentials.withSecret(async secret=>{used=true;for(const id of selected)await evaluate(id,secret);});
-  if(!used)throw Error('Saved credential unavailable');
+  fs.mkdirSync(path.dirname(lock),{recursive:true});
+  handle=fs.openSync(lock,'wx');fs.writeFileSync(handle,String(process.pid));budget=createBudget(campaign.budgetFile,campaign.cap||20);
+  const credentials=createModelCredentialStore({dataParent:data,safeStorage});let used=false,evaluationError;
+  const credentialResult=await credentials.withSecret(async secret=>{
+   used=true;
+   try{for(const id of selected)await evaluate(id,secret);}
+   catch(error){evaluationError=Error(String(error.message).replaceAll(secret,'[REDACTED]'));}
+  });
+  if(evaluationError)throw evaluationError;
+  if(!used||credentialResult.status!=='saved')throw Error('Saved credential unavailable');
  }catch(error){progress({status:'run-failed',error:error.message});app.exitCode=1;}
  finally{if(handle!==undefined){fs.closeSync(handle);fs.unlinkSync(lock);}app.exit(app.exitCode||0);}
 });

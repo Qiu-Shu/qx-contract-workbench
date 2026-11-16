@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ALLOWED = {'read_case_material','ground_case_extractions','save_evidence_analysis',
            'save_employment_review','calculate_employment_amount','generate_litigation_document',
            'record_case_note','read_case_note','get_case','export_case','write_word_draft',
-           'build_source_bound_litigation','assess_employment_termination','save_source_bound_register'}
+           'build_source_bound_litigation','assess_employment_termination','assess_employment_terms','save_source_bound_register'}
 
 
 def emit(value):
@@ -30,10 +30,14 @@ async def run():
     if (os.environ.get('QX_SKILL_EVAL_CAMPAIGN') == 'skill-resume-20261105'
             and os.environ.get('QX_SKILL_EVAL_SNAPSHOT') in ('v4','v5','v6')):
         case_file = 'docs/checks/skill-resume-20261105/e2e-'+os.environ['QX_SKILL_EVAL_SNAPSHOT']+'-cases.json'
+    employment = os.environ.get('QX_SKILL_EVAL_CAMPAIGN') == 'employment-live-20261116'
+    if employment:
+        case_file = 'docs/checks/employment-live-20261116/e2e-cases.json'
     rows=json.loads((ROOT/case_file).read_text(encoding='utf-8'))
     scenario=next(row for row in rows if row['id']==scenario_id)
-    workspace=ROOT/'docs/checks/practice-gaps/e2e'/run_id/scenario_id/'workspace'
-    if not workspace.resolve().is_relative_to(ROOT.resolve()/'docs/checks/practice-gaps/e2e'):
+    workspace_root=ROOT/('.local/employment-live-20261116/e2e' if employment else 'docs/checks/practice-gaps/e2e')
+    workspace=workspace_root/run_id/scenario_id/'workspace'
+    if not workspace.resolve().is_relative_to(workspace_root.resolve()):
         raise ValueError('Synthetic workspace resolves outside evaluation directory')
     workspace.mkdir(parents=True,exist_ok=False)
     source=workspace/'合成材料.txt'
