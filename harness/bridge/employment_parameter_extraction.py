@@ -51,6 +51,19 @@ def _number(text):
     raise ValueError('中文数字超出当前确定性识别范围')
 
 
+def parameter_context_warnings(text):
+    """Shared qualifiers also apply to context without a numeric parameter."""
+    warnings=[]
+    guarded=text.replace('无固定期限','').replace('以完成一定工作任务为期限','')
+    if re.search(r'不|未|非|否认|未知|待定|待核|或|至|分别|另一|例如|举例|假设|税后|到手|争议|约为|大约|左右|以上|以下',guarded):
+        warnings.append('本行含否定、不确定、替代或不同口径标记，保留候选但暂停核算。')
+    if re.search(r'/年|/日|/天|/周|/小时|每年|每天|每日|每小时|年薪|日薪|周薪|时薪',text):
+        warnings.append('存在非月度或不同工资期间，本程序不自动换算或比较。')
+    if re.search(r'(?:[+\-−－]|负|正)\s*[0-9零〇一二两三四五六七八九十百]',text):
+        warnings.append('存在带符号数值或日期分隔，不能去掉前缀作为无符号期限核算。')
+    return warnings
+
+
 def _extract_lines(stage,contexts):
     if stage not in ('hiring','noncompete'):raise ValueError('自动参数提取目前只支持录用和离职后竞业候选。')
     groups=[];count=0
@@ -89,13 +102,7 @@ def _extract_lines(stage,contexts):
             if params or warnings:
                 for field,values in params.items():
                     if len(distinct_parameter_values(values))>1:warnings.append(f'{DISPLAY[field]}出现不同值候选，未自动选值。')
-                guarded=text.replace('无固定期限','').replace('以完成一定工作任务为期限','')
-                if re.search(r'不|未|非|否认|未知|待定|待核|或|至|分别|另一|例如|举例|假设|税后|到手|争议|约为|大约|左右|以上|以下',guarded):
-                    warnings.append('本行含否定、不确定、替代或不同口径标记，保留候选但暂停核算。')
-                if re.search(r'/年|/日|/天|/周|/小时|每年|每天|每日|每小时|年薪|日薪|周薪|时薪',text):
-                    warnings.append('存在非月度或不同工资期间，本程序不自动换算或比较。')
-                if re.search(r'(?:[+\-−－]|负|正)\s*[0-9零〇一二两三四五六七八九十百]',text):
-                    warnings.append('存在带符号数值或日期分隔，不能去掉前缀作为无符号期限核算。')
+                warnings.extend(parameter_context_warnings(text))
                 spans=sorted((v['start']-offset,v['end']-offset) for values in params.values() for v in values)
                 if spans:
                     prefix=text[:spans[0][0]]

@@ -12,8 +12,42 @@ BASIS=('劳动合同法第20条、劳动合同法实施条例第15条：分别�
        ' https://www.mohrss.gov.cn/xxgk2020/fdzdgknr/zcfg/fg/202011/t20201103_394939_wap.html')
 
 
+def _same_wage_record(source,spans):
+    from employment_parameter_extraction import _extract_lines, extract_term_parameters, parameter_context_warnings
+    # Only a standalone, explicitly unknown *duration* can be set aside for
+    # wage arithmetic. Preserve all unclassified context, including preceding
+    # and following statements about these amounts, their owners or pay period.
+    def duration_only(match):
+        clause=match.group()
+        if re.fullmatch(r'\s*试用期(?:限)?\s*(?:尚未约定|未约定|尚未确定|未确定|待核|未知)\s*',clause):
+            return ' '*len(clause)
+        return clause
+    view={**source,'text':re.sub(r'[^。\r\n]+',duration_only,source['text'])}
+    full,_=extract_term_parameters('hiring',[view])
+    qualified=list(view['text'])
+    # The existing identity parser permits hyphens in worker/contract IDs.
+    # Exempt only values in its recognized header spans from the signed-number
+    # context check; amounts and unrecognized headers remain untouched.
+    for group in full['linked_groups']:
+        ids={'劳动者编号':group['worker_id'],'合同编号':group['contract_id']}
+        header_rows=len(group['header']['raw'].splitlines())
+        for row in group['source_spans'][:header_rows]:
+            for match in re.finditer(r'(劳动者编号|合同编号)\s*[:：\t]\s*([A-Za-z0-9][A-Za-z0-9_-]{0,63})',row['raw']):
+                if match[2]==ids[match[1]]:
+                    a,b=row['start']+match.start(2),row['start']+match.end(2)
+                    qualified[a:b]=' '*(b-a)
+    if parameter_context_warnings(''.join(qualified)):return False
+    local,_=_extract_lines('hiring',[view])
+    def complete(group):
+        return (not group['warnings'] and any(c['kind']=='probation_pay' for c in group['comparisons']) and
+                all(any((p['start'],p['end'])==spans[key] for p in group['parameters'].get(key,[])) for key in FIELDS))
+    if any(complete(g) for g in local['groups']):return True
+    # Separate parameter rows still require the existing explicit identity block.
+    return any(complete(g) for g in full['linked_groups'])
+
+
 def prepare_probation_pay(cases,case_id,item,index):
-    params=item.get('parameters',{});contexts={};refs=[];values={};comparison=None;error=''
+    params=item.get('parameters',{});contexts={};refs=[];values={};spans={};bound_texts={};comparison=None;error=''
     try:
         if not isinstance(params,dict) or set(params)!=set(FIELDS):
             raise ValueError('需分别绑定合同工资、同岗最低档工资、适用最低工资和试用工资四项原文金额；缺值不补零。')
@@ -30,11 +64,18 @@ def prepare_probation_pay(cases,case_id,item,index):
             if re.search('不|未|非|否认|未知|待核|或',prefix+suffix) or source_warnings(source):
                 raise ValueError('对应工资字段有否定、未定或来源识别疑点，仅本项待核。')
             values[key]=format(value,'f');refs.append(params[key]['citation'])
+            spans[key]=(match.start(),match.end())
+            bound_texts[(ref['path'],ref['sha256'],ref['chunk'])]=source['text']
         if len(contexts)!=1:raise ValueError('四个工资口径须来自同一完整来源片段；本分支不跨人或文件拼接。')
+        # Chunk membership does not establish operand ownership or period. Reuse
+        # the same record/identity checks as automatic extraction before composing
+        # a formula from individually matched labels.
+        if not _same_wage_record(next(iter(contexts.values())),spans):
+            raise ValueError('四项金额未能关联到同一可核算记录，主体、期间或字段间条件待核；不因同片段而拼接。')
         formula=f'试用工资假设：合同工资{values["contract_pay"]}元，同岗最低档工资{values["grade_pay"]}元，适用最低工资{values["minimum_pay"]}元，拟试用工资{values["probation_pay"]}元。'
         comparison=compare_term_scenario('hiring',formula,formula,0,len(formula))
     except (ValueError,TypeError,KeyError) as exc:
-        error=str(exc);refs=[]
+        error=str(exc)
     if comparison:
         candidate=max(Decimal(comparison['contract_floor']),Decimal(comparison['grade_floor']))
         risk=comparison['text']
@@ -43,7 +84,9 @@ def prepare_probation_pay(cases,case_id,item,index):
                 '实际履行月数及合法试用期限未核，不计算整段欠薪。')
         fact='来源原文（主体、工资口径及适用关系待核）：\n'+next(iter(contexts.values()))['text']
     else:
-        fact='本项参数未完成来源绑定，不采用模型自填的工资事实或算式。'
+        fact=('已逐项匹配的来源原文（各自归属与适用关系待核，不拼接金额）：\n'+
+              '\n'.join(f'{key[0]}；片段{key[2]}：\n{text}' for key,text in bound_texts.items()) if bound_texts else
+              '本项参数未完成来源绑定，不采用模型自填的工资事实或算式。')
         risk='本项待核：'+error
         action='回读四项带标签的原文金额后核算；其他已经明确的审查事项继续保存。'
     # Caller prose remains in the tool-call audit; it cannot override this rule's saved opinion.
