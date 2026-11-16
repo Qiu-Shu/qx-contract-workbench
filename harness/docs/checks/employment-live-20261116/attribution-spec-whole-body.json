@@ -1,0 +1,33 @@
+{
+  "checks": [
+    {
+      "case": "probation-history",
+      "whole_body_exactly_matches_expected": true,
+      "whole_body_same_as_before_live_fix": true,
+      "new_attribution_changes": []
+    },
+    {
+      "case": "attendance-draft",
+      "whole_body_exactly_matches_expected": true,
+      "whole_body_same_as_before_live_fix": true,
+      "new_attribution_changes": []
+    },
+    {
+      "case": "noncompete-draft",
+      "whole_body_exactly_matches_expected": true,
+      "whole_body_same_as_before_live_fix": true,
+      "new_attribution_changes": [
+        "第2项risk"
+      ]
+    }
+  ],
+  "new_code_sha256": {
+    "bridge/employment_drafts.py": "46594b3b84c9f78c6adcd6e937ba331a3832faf192d4e63cee726a9338cd11c4",
+    "bridge/employment_review.py": "1401b4751f261e3af1699cdf19275eaa1ff8b24df69e8f3dd66755609b567c39",
+    "bridge/employment_source_claims.py": "510e0b235a7424d1799653fe60f52857ff03196cd1c316e3d6af28ee24819f4f",
+    "bridge/source_bound_inputs.py": "d27c9194637c915d439b0da4a3a1c6483fa0933aaff110bf0e9197caa5a5b8fd",
+    "bridge/business_server.py": "b348f9a8594791e6bc65afee3140ccec1ff9587e016884a33ae52482adb782fc",
+    "bridge/noncompete_conditions.py": "0d32dc434aaf627f5027046a9bce537c515e35ccd8eadc7a57092a4c61f6355a"
+  },
+  "before_live_fix_evidence_sha256": "46f6382982e04951e654691d8bd9f77f4e645b84c5ba6b43f02ca41c0ff2c4fe"
+}

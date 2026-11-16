@@ -1,0 +1,136 @@
+FFFF.FFF                                                                 [100%]
+================================== FAILURES ===================================
+____ test_medium_restatement_does_not_remove_independent_evidence_analysis ____
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-83/test_medium_restatement_does_n0')
+
+    def test_medium_restatement_does_not_remove_independent_evidence_analysis(tmp_path):
+        source='员工邮件称公司电话通知解除竞业。通话记录未提供。'
+        analysis='单方转述难以证明通知已作出或未作出。'
+        text='举证的现实困难在于口头通话内容缺少记录，'+analysis
+        saved=save_opinion(tmp_path,source,text,'basis')
+>       assert analysis in saved['content']
+E       assert '单方转述难以证明通知已作出或未作出。' in '劳动用工审查｜阶段：dispute｜内部工作稿，事实及法律适用均待核\n\n1. 人员与材料核对\nAI分析：以下依据及风险为模型意见；来源匹配不认证这些意见。候选文字另列，适用性仍须核对。\n事实/陈述：本项来源陈述（保持原文，引用...t", "quote": "员工邮件称公司电话通知解除竞业。通话记录未提供。", "sha256": "d2363dc9873e2418acaf813d49a3ea25969a5b6066a8c04e0d1aa70cc2bfb81f"}'
+
+bridge\test_employment_analysis_preservation.py:12: AssertionError
+________ test_removing_a_medium_does_not_promote_its_remaining_payload ________
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-83/test_removing_a_medium_does_no0')
+
+    def test_removing_a_medium_does_not_promote_its_remaining_payload(tmp_path):
+        saved=save_opinion(tmp_path,'陈述媒介与解除状态未说明。',
+            '员工口头说明，已经同意解除，且款项已经结清；不能据此认定合法解除。')
+        risk=next(s for s in saved['content'].splitlines() if s.startswith('风险：'))
+        assert '已经同意解除' not in risk and '款项已经结清' not in risk
+>       assert '不能据此认定合法解除' in risk
+E       AssertionError: assert '不能据此认定合法解除' in '风险：本项陈述媒介、考勤具体内容及违纪判断尚需原文和适用条件支持，当前不作确定认定。'
+
+bridge\test_employment_analysis_preservation.py:24: AssertionError
+_ test_a_pending_list_stays_whole_instead_of_becoming_a_sentence_fragment[\u51e1\u6d89\u53ca\u671f\u9650\u8d77\u6b62\u3001\u901a\u77e5\u5230\u8fbe\u3001\u8865\u507f\u5230\u8d26\u7684\u7ed3\u8bba\u5747\u5f85\u6838\u3002] _
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-83/test_a_pending_list_stays_whol0')
+text = '凡涉及期限起止、通知到达、补偿到账的结论均待核。'
+
+    @pytest.mark.parametrize('text',[
+        '凡涉及期限起止、通知到达、补偿到账的结论均待核。',
+        '期限起止、补偿支付状态尚待确认。',
+    ])
+    def test_a_pending_list_stays_whole_instead_of_becoming_a_sentence_fragment(tmp_path,text):
+        saved=save_opinion(tmp_path,'竞业协议与到账记录未提供。',text)
+>       assert text in saved['content']
+E       assert '凡涉及期限起止、通知到达、补偿到账的结论均待核。' in '劳动用工审查｜阶段：dispute｜内部工作稿，事实及法律适用均待核\n\n1. 人员与材料核对\nAI分析：以下依据及风险为模型意见；来源匹配不认证这些意见。候选文字另列，适用性仍须核对。\n事实/陈述：本项来源陈述（保持原文，引用... "source.txt", "quote": "竞业协议与到账记录未提供。", "sha256": "62fa2b704a2990d05381ba48ae62a26b298662c17577f7bad3605058e665187a"}'
+
+bridge\test_employment_analysis_preservation.py:33: AssertionError
+_ test_a_pending_list_stays_whole_instead_of_becoming_a_sentence_fragment[\u671f\u9650\u8d77\u6b62\u3001\u8865\u507f\u652f\u4ed8\u72b6\u6001\u5c1a\u5f85\u786e\u8ba4\u3002] _
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-83/test_a_pending_list_stays_whol1')
+text = '期限起止、补偿支付状态尚待确认。'
+
+    @pytest.mark.parametrize('text',[
+        '凡涉及期限起止、通知到达、补偿到账的结论均待核。',
+        '期限起止、补偿支付状态尚待确认。',
+    ])
+    def test_a_pending_list_stays_whole_instead_of_becoming_a_sentence_fragment(tmp_path,text):
+        saved=save_opinion(tmp_path,'竞业协议与到账记录未提供。',text)
+>       assert text in saved['content']
+E       assert '期限起止、补偿支付状态尚待确认。' in '劳动用工审查｜阶段：dispute｜内部工作稿，事实及法律适用均待核\n\n1. 人员与材料核对\nAI分析：以下依据及风险为模型意见；来源匹配不认证这些意见。候选文字另列，适用性仍须核对。\n事实/陈述：本项来源陈述（保持原文，引用... "source.txt", "quote": "竞业协议与到账记录未提供。", "sha256": "62fa2b704a2990d05381ba48ae62a26b298662c17577f7bad3605058e665187a"}'
+
+bridge\test_employment_analysis_preservation.py:33: AssertionError
+_ test_arrival_alone_does_not_supply_the_effective_release_time[\u81ea\u5230\u8fbe\u65f6] _
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-83/test_arrival_alone_does_not_su0')
+timing = '自到达时'
+
+    @pytest.mark.parametrize('timing',['自到达时','送达后立即','自通知送达之日'])
+    def test_arrival_alone_does_not_supply_the_effective_release_time(tmp_path,timing):
+        claim='竞业义务'+timing+'终止'
+        saved=save_opinion(tmp_path,'公司是否发出竞业解除通知及其内容未说明。',
+            '情形一（解除已作出并到达）：'+claim+'。请核对通知原文。','basis')
+>       assert claim not in saved['content']
+E       assert '竞业义务自到达时终止' not in '劳动用工审查｜阶段：d...d64f6316a3"}'
+E         
+E         '竞业义务自到达时终止' is contained here:
+E           解除已作出并到达）：竞业义务自到达时终止。请核对通知原文。
+E         ?           ++++++++++
+E           来源：本案已匹配原始材料引文；路径、版本及片段见本项引用；陈述媒介仅以原文为准。
+E           风险：条件待核
+E           行动：核对协议与岗位材料
+E           待核事项：补充岗位及协议原件
+E           原始引用输入（非事实认定）：{"chunk": 0, "path": "source.txt", "quote": "公司是否发出竞业解除通知及其内容未说明。", "sha256": "e380cc4e690a66f8243bb2e43425f0fdfce6ee535c846ad6b64e0fd64f6316a3"}
+
+bridge\test_employment_analysis_preservation.py:48: AssertionError
+_ test_arrival_alone_does_not_supply_the_effective_release_time[\u9001\u8fbe\u540e\u7acb\u5373] _
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-83/test_arrival_alone_does_not_su1')
+timing = '送达后立即'
+
+    @pytest.mark.parametrize('timing',['自到达时','送达后立即','自通知送达之日'])
+    def test_arrival_alone_does_not_supply_the_effective_release_time(tmp_path,timing):
+        claim='竞业义务'+timing+'终止'
+        saved=save_opinion(tmp_path,'公司是否发出竞业解除通知及其内容未说明。',
+            '情形一（解除已作出并到达）：'+claim+'。请核对通知原文。','basis')
+>       assert claim not in saved['content']
+E       assert '竞业义务送达后立即终止' not in '劳动用工审查｜阶段：d...d64f6316a3"}'
+E         
+E         '竞业义务送达后立即终止' is contained here:
+E           解除已作出并到达）：竞业义务送达后立即终止。请核对通知原文。
+E         ?           +++++++++++
+E           来源：本案已匹配原始材料引文；路径、版本及片段见本项引用；陈述媒介仅以原文为准。
+E           风险：条件待核
+E           行动：核对协议与岗位材料
+E           待核事项：补充岗位及协议原件
+E           原始引用输入（非事实认定）：{"chunk": 0, "path": "source.txt", "quote": "公司是否发出竞业解除通知及其内容未说明。", "sha256": "e380cc4e690a66f8243bb2e43425f0fdfce6ee535c846ad6b64e0fd64f6316a3"}
+
+bridge\test_employment_analysis_preservation.py:48: AssertionError
+_ test_arrival_alone_does_not_supply_the_effective_release_time[\u81ea\u901a\u77e5\u9001\u8fbe\u4e4b\u65e5] _
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-83/test_arrival_alone_does_not_su2')
+timing = '自通知送达之日'
+
+    @pytest.mark.parametrize('timing',['自到达时','送达后立即','自通知送达之日'])
+    def test_arrival_alone_does_not_supply_the_effective_release_time(tmp_path,timing):
+        claim='竞业义务'+timing+'终止'
+        saved=save_opinion(tmp_path,'公司是否发出竞业解除通知及其内容未说明。',
+            '情形一（解除已作出并到达）：'+claim+'。请核对通知原文。','basis')
+>       assert claim not in saved['content']
+E       assert '竞业义务自通知送达之日终止' not in '劳动用工审查｜阶段：d...d64f6316a3"}'
+E         
+E         '竞业义务自通知送达之日终止' is contained here:
+E           解除已作出并到达）：竞业义务自通知送达之日终止。请核对通知原文。
+E         ?           +++++++++++++
+E           来源：本案已匹配原始材料引文；路径、版本及片段见本项引用；陈述媒介仅以原文为准。
+E           风险：条件待核
+E           行动：核对协议与岗位材料
+E           待核事项：补充岗位及协议原件
+E           原始引用输入（非事实认定）：{"chunk": 0, "path": "source.txt", "quote": "公司是否发出竞业解除通知及其内容未说明。", "sha256": "e380cc4e690a66f8243bb2e43425f0fdfce6ee535c846ad6b64e0fd64f6316a3"}
+
+bridge\test_employment_analysis_preservation.py:48: AssertionError
+=========================== short test summary info ===========================
+FAILED bridge\test_employment_analysis_preservation.py::test_medium_restatement_does_not_remove_independent_evidence_analysis
+FAILED bridge\test_employment_analysis_preservation.py::test_removing_a_medium_does_not_promote_its_remaining_payload
+FAILED bridge\test_employment_analysis_preservation.py::test_a_pending_list_stays_whole_instead_of_becoming_a_sentence_fragment[\u51e1\u6d89\u53ca\u671f\u9650\u8d77\u6b62\u3001\u901a\u77e5\u5230\u8fbe\u3001\u8865\u507f\u5230\u8d26\u7684\u7ed3\u8bba\u5747\u5f85\u6838\u3002]
+FAILED bridge\test_employment_analysis_preservation.py::test_a_pending_list_stays_whole_instead_of_becoming_a_sentence_fragment[\u671f\u9650\u8d77\u6b62\u3001\u8865\u507f\u652f\u4ed8\u72b6\u6001\u5c1a\u5f85\u786e\u8ba4\u3002]
+FAILED bridge\test_employment_analysis_preservation.py::test_arrival_alone_does_not_supply_the_effective_release_time[\u81ea\u5230\u8fbe\u65f6]
+FAILED bridge\test_employment_analysis_preservation.py::test_arrival_alone_does_not_supply_the_effective_release_time[\u9001\u8fbe\u540e\u7acb\u5373]
+FAILED bridge\test_employment_analysis_preservation.py::test_arrival_alone_does_not_supply_the_effective_release_time[\u81ea\u901a\u77e5\u9001\u8fbe\u4e4b\u65e5]
+7 failed, 1 passed in 1.74s

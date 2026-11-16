@@ -9,7 +9,7 @@ from draft_review import CONDITIONAL
 SOURCE='https://www.court.gov.cn/zixun/xiangqing/282121.html'
 COMPENSATION=re.compile(r'补偿|对价')
 RELEASE=re.compile(r'(?:解除|终止|放弃|豁免|免除)(?:该|此|本|双方的|离职后)?竞业'
-    r'|竞业(?:限制)?(?:协议|约定|义务|条款)?(?:的)?(?:提前|协商|单方|自动|可以|可)*(?:解除|终止|放弃)'
+    r'|竞业(?:限制)?(?:协议|约定|义务|条款)?(?:的)?(?:(?:自|在)?(?:通知)?(?:到达|送达)(?:之日|之时|时|后))?(?:提前|协商|单方|自动|立即|即|可以|可)*(?:解除|终止|放弃)'
     r'|(?:公司|单位|企业|劳动者|员工)[^，,。；;\n]{0,12}(?:可|请求|有权|可以)(?:单方|书面|直接|立即)*(?:解除|放弃)(?!劳动合同|劳动关系|该劳动|其劳动)'
     r'|不(?:再)?(?:受|履行)[^，,。；;\n]{0,8}竞业(?:限制)?(?:义务|约定|约束)?'
     r'|(?:本|该|此)(?:竞业)?(?:协议|约定)(?:自动|即行|即|可以|可)?解除'
@@ -28,6 +28,11 @@ COMPENSATION_RISK=(
     '原文明确的0元、其他金额、已付款及不同主体的争议陈述均保留，匹配不等于事实认证。'
     '是否足额须有适用标准、期间和已付记录；是否需要调整违约金须另核有效义务、违约事实、损失及适用规则，'
     '不以未知补偿推断对价失衡或应当大幅调减。可先明确支付安排、整理凭证、提出有条件的修改方案。')
+# A complete list of questions has no payment assertion to replace. Match the
+# whole noun-list grammar so an earlier positive assertion cannot borrow its tail.
+PENDING_SUBJECT=r'(?:期限(?:起止)?|通知(?:发出|到达|送达|生效)|补偿(?:到账|支付)(?:情况|状态)?)'
+PENDING_LIST=re.compile(r'\s*(?:凡涉及|关于)?'+PENDING_SUBJECT+r'(?:、'+PENDING_SUBJECT+
+    r')*(?:的结论)?(?:均|皆|仍|尚)?(?:待核|待确认|需核对)[。！？\n；;]?')
 
 
 def _parts(text):
@@ -107,15 +112,19 @@ def finalize_noncompete_conditions(item,review,index,*,release_issue=False):
                 if field=='topic':output.append('竞业解除条件核对')
                 continue
             if finance and field=='risk' and COMPENSATION.search(part):
-                if CONDITIONAL.search(part):
+                if CONDITIONAL.search(part) or PENDING_LIST.fullmatch(part):
                     output.append(part)
                     continue
                 compensation=True
                 # Preserve independently stated nonfinancial issues, not a bare
                 # conclusion whose omitted subject was the compensation assertion.
-                for clause in re.findall(r'[^，,、]+[，,、]?',part):
-                    if not COMPENSATION.search(clause) and re.search(r'证据|举证|秘密|保密|地域|期限|岗位|人员|义务内容',clause):
+                for clause in re.findall(r'[^，,]+[，,]?',part):
+                    if PENDING_LIST.fullmatch(clause.rstrip('，,')):
                         output.append(clause)
+                        continue
+                    for fragment in re.findall(r'[^、]+、?',clause):
+                        if not COMPENSATION.search(fragment) and re.search(r'证据|举证|秘密|保密|地域|期限|岗位|人员|义务内容',fragment):
+                            output.append(fragment)
                 continue
             output.append(part)
         if compensation:output.append(COMPENSATION_RISK)

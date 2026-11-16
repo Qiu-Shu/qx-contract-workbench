@@ -140,5 +140,14 @@
     "expected_kind": "employment_review",
     "material": "虚构材料：双方已约定月补偿3000元；员工称公司本月通知解除竞业且仅付本月补偿，通知原件和到账记录未提供，员工是否同意未说明。员工离职前接触技术秘密，已履行竞业6个月。",
     "prompt": "请从劳动者角度核对竞业解除和款项，给向公司核对的候选文字，保留来源及未知。实际保存、回读并导出同一内部Word。"
+  },
+  {
+    "id": "attribution-conflict",
+    "skill": "qx-employment-review",
+    "tools": ["get_case", "read_case_material", "save_employment_review", "read_case_note", "export_case"],
+    "required_tools": ["read_case_material", "save_employment_review", "read_case_note", "export_case"],
+    "expected_kind": "employment_review",
+    "material": "独立虚构材料：双方约定离职后竞业月补偿3000元，已履行4个月。员工离职前接触技术秘密。员工邮件称公司本月电话通知解除竞业，自己未同意。公司邮件称尚未发出解除通知，并要求继续履行。两封邮件均只有文字摘录；协议全文、通话记录和逐期到账记录未提供。",
+    "prompt": "请从劳动者角度整理现有材料与争议，说明可采取的处理步骤，并起草向公司核对的文字。实际读取、保存、回读并导出同一内部Word。"
   }
 ]

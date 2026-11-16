@@ -96,6 +96,8 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
             from noncompete_conditions import finalize_noncompete_conditions
             item=finalize_noncompete_conditions(item,review,i,release_issue=release_issue)
         if not program_owned:
+            from employment_source_claims import bind_source_attribution
+            item=bind_source_attribution(item,observation['contexts'],review,i)
             free_text_findings.append(i-1)
         if candidate_text is not None:
             # A caller can select a kind, but cannot supply historical premises

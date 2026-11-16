@@ -1,0 +1,207 @@
+{
+  "review_date": "2026-11-16",
+  "scope": "Independent read-only content review of two new real-model traces; no model call; no original trace mutation",
+  "baseline": "2d9ad8c5",
+  "independent_review_not_functionalPassed": true,
+  "cases": [
+    {
+      "id": "noncompete-draft",
+      "trace": "harness\\docs\\checks\\employment-live-20261116\\e2e\\attribution-final\\noncompete-draft.json",
+      "trace_sha256": "70bcf72b74a22a8b25b4042ab71289412b49d12d242bbfda9149ac396caad3a9",
+      "input_material": "虚构材料：双方已约定月补偿3000元；员工称公司本月通知解除竞业且仅付本月补偿，通知原件和到账记录未提供，员工是否同意未说明。员工离职前接触技术秘密，已履行竞业6个月。",
+      "input_sha256": "120a8e1937a5d2b002d18a3d797bfc3231724d8b2393dcfbbff8d97beab6e9e3",
+      "note_id": "ca8eb25c-0d34-4b8b-8f79-2c0fd89559b5",
+      "note_sha256": "841c1039961030bc4535718211a0904214ea8116e8503fc839a455d5b4032a2a",
+      "note_chars": 5245,
+      "original_findings": 5,
+      "save_attempts": 2,
+      "successful_saves": 1,
+      "attribution_changes": 0,
+      "checks": {
+        "source_bytes_unchanged": true,
+        "complete_note_readback": true,
+        "same_complete_note_in_actual_word": true,
+        "same_complete_note_in_chat": true,
+        "verified_delivery": true,
+        "actual_files_match_trace": true,
+        "no_new_attribution_normalization": true,
+        "no_employee_self_report_added_to_secret_contact": true,
+        "all_original_non_candidate_actions_exactly_retained": true,
+        "speaker_explicitly_unknown": true,
+        "agreement_unknown_preserved": true,
+        "eligibility_independent_analysis_exactly_retained": true,
+        "candidate_does_not_adopt_facts": true
+      },
+      "content_passed_within_review_scope": true,
+      "source_attribution_passed": true,
+      "finding_ids": [],
+      "docx": [
+        {
+          "path": "F:\\.codex\\worktrees\\employment-review\\律所项目\\harness\\.local\\employment-live-20261116\\e2e\\attribution-final\\noncompete-draft\\workspace\\drafts\\劳动审查-内部核对-99266a47b545.docx",
+          "sha256": "4454f3c47d524f3deebe8bfc1fdd1be1a1da3c6211428380bc9109e75e44c1b5",
+          "sha256_matches_trace": true,
+          "text_matches_trace": true,
+          "role": "internal_audit",
+          "contains_complete_saved_note": false
+        },
+        {
+          "path": "F:\\.codex\\worktrees\\employment-review\\律所项目\\harness\\.local\\employment-live-20261116\\e2e\\attribution-final\\noncompete-draft\\workspace\\drafts\\竞业解除及款项核对-内部工作稿.docx",
+          "sha256": "75a604fe1593e34b465cd9ab1a3e0a6e92e13ad94533347eeb18a83883417018",
+          "sha256_matches_trace": true,
+          "text_matches_trace": true,
+          "role": "adopted",
+          "contains_complete_saved_note": true
+        }
+      ]
+    },
+    {
+      "id": "attribution-conflict",
+      "trace": "harness\\docs\\checks\\employment-live-20261116\\e2e\\attribution-final\\attribution-conflict.json",
+      "trace_sha256": "6ec74b094037bef40d4746b17b65b7dd269d8383d485682df74bfea75cb1271f",
+      "input_material": "独立虚构材料：双方约定离职后竞业月补偿3000元，已履行4个月。员工离职前接触技术秘密。员工邮件称公司本月电话通知解除竞业，自己未同意。公司邮件称尚未发出解除通知，并要求继续履行。两封邮件均只有文字摘录；协议全文、通话记录和逐期到账记录未提供。",
+      "input_sha256": "1a84a949fe1fcff746180daadcbf6e4909e7d0e6864c1c112e0276f58cd571bf",
+      "note_id": "99d31c29-c882-45ff-907c-38841a5f7742",
+      "note_sha256": "97254682df1fe8d937130d692a242a20fa72401f1db134940a7cb06ef988df64",
+      "note_chars": 6352,
+      "original_findings": 6,
+      "save_attempts": 2,
+      "successful_saves": 1,
+      "attribution_changes": 0,
+      "checks": {
+        "source_bytes_unchanged": true,
+        "complete_note_readback": true,
+        "same_complete_note_in_actual_word": true,
+        "same_complete_note_in_chat": true,
+        "verified_delivery": true,
+        "actual_files_match_trace": true,
+        "no_new_attribution_normalization": true,
+        "no_employee_self_report_added_to_secret_contact": true,
+        "all_original_non_candidate_actions_exactly_retained": true,
+        "both_conflicting_claims_kept": true,
+        "conflict_not_resolved_as_fact": true,
+        "four_steps_exactly_retained": true,
+        "eligibility_independent_analysis_exactly_retained": true,
+        "evidence_reasoning_retained": false,
+        "coverage_risk_sentence_intact": false,
+        "timing_condition_sufficiently_qualified": false
+      },
+      "content_passed_within_review_scope": false,
+      "source_attribution_passed": true,
+      "finding_ids": [
+        "LIVE-1",
+        "LIVE-2",
+        "LIVE-3"
+      ],
+      "docx": [
+        {
+          "path": "F:\\.codex\\worktrees\\employment-review\\律所项目\\harness\\.local\\employment-live-20261116\\e2e\\attribution-final\\attribution-conflict\\workspace\\drafts\\劳动审查-内部核对-1f4c101b737d.docx",
+          "sha256": "2376306373bb2764dd2ef645f8e45b475b5202a3374c40d014fd44412bffb432",
+          "sha256_matches_trace": true,
+          "text_matches_trace": true,
+          "role": "internal_audit",
+          "contains_complete_saved_note": false
+        },
+        {
+          "path": "F:\\.codex\\worktrees\\employment-review\\律所项目\\harness\\.local\\employment-live-20261116\\e2e\\attribution-final\\attribution-conflict\\workspace\\drafts\\竞业限制审查-劳动者角度-内部工作稿.docx",
+          "sha256": "f7a1cfbb7ce2724c40c68876fbabd47d59474dcfd2c09363a66d28c58d3d795e",
+          "sha256_matches_trace": true,
+          "text_matches_trace": true,
+          "role": "adopted",
+          "contains_complete_saved_note": true
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "LIVE-1",
+      "priority": "P2",
+      "case": "attribution-conflict",
+      "field": "第6项basis",
+      "origin": "legacy bind_source_facts; bare 口头 matcher replaces evidence-analysis sentence",
+      "new_attribution_rule": false,
+      "original": "劳动争议可经书面核对与协商、调解、仲裁路径处理；仲裁时效自当事人知道或应当知道权利被侵害之日起算，具体期间、起算点与管辖另核，本稿不代为确定。举证的现实困难在于口头通话内容缺少记录，单方转述难以证明通知已作出或未作出。",
+      "adopted": "劳动争议可经书面核对与协商、调解、仲裁路径处理；仲裁时效自当事人知道或应当知道权利被侵害之日起算，具体期间、起算点与管辖另核，本稿不代为确定。本项陈述媒介、考勤具体内容及违纪判断尚需原文和适用条件支持，当前不作确定认定。",
+      "audit_reason": "所引完整原句不支持该媒介、考勤内容或违纪认定；保留来源陈述供核对。",
+      "present_in_note_word_chat": true,
+      "status": "open_in_original_live_output"
+    },
+    {
+      "id": "LIVE-2",
+      "priority": "P2",
+      "case": "attribution-conflict",
+      "field": "第1项risk",
+      "origin": "legacy finalize_noncompete_conditions; comma/list fragment retained without shared predicate",
+      "new_attribution_rule": false,
+      "original": "“未提供”“未读”均不等于“不存在”“未约定”“未支付”或“未发出”。本稿不得把缺项写成对公司或劳动者有利的确定事实；凡涉及期限起止、通知到达、补偿到账的结论均待核。",
+      "adopted": "“未提供”“未读”均不等于“不存在”“未约定”“未支付”或“未发出”。本稿不得把缺项写成对公司或劳动者有利的确定事实；凡涉及期限起止、补偿状态按本项匹配原文分别核对：材料未提供不能认定实际为零、偏低、未约定或未支付；原文明确的0元、其他金额、已付款及不同主体的争议陈述均保留，匹配不等于事实认证。是否足额须有适用标准、期间和已付记录；是否需要调整违约金须另核有效义务、违约事实、损失及适用规则，不以未知补偿推断对价失衡或应当大幅调减。可先明确支付安排、整理凭证、提出有条件的修改方案。",
+      "audit_reason": "局部采用来源状态或完整解除条件；独立建议和原稿继续保留。",
+      "present_in_note_word_chat": true,
+      "status": "open_in_original_live_output"
+    },
+    {
+      "id": "LIVE-3",
+      "priority": "P3",
+      "case": "attribution-conflict",
+      "field": "第5项basis",
+      "origin": "model free legal reasoning retained by existing normalization",
+      "new_attribution_rule": false,
+      "text": "情形一（解除已作出并到达）：竞业义务自到达时终止",
+      "issue": "Condition omits valid release and effective-time arrangement; conditional reasoning, not assertion dispute resolved",
+      "present_in_original_save": true,
+      "present_in_note_word_chat": true,
+      "source_urls": [
+        "https://www.court.gov.cn/zixun/xiangqing/233181.html",
+        "https://fjca.miit.gov.cn/zwgk/zcwj/wjfb/art/2020/art_9f0ef44677164c5eb3a5585bf82a07cb.html"
+      ],
+      "status": "open_in_original_live_output"
+    }
+  ],
+  "limits": [
+    "No broad legal/semantic certification",
+    "Both new model samples produced no attribution normalization event; actual interception is evidenced separately by old original-parameter replay",
+    "Original paid traces remain unchanged even if later offline replay repairs content",
+    "Reviewed Word text and file identity, not rendered visual layout"
+  ],
+  "post_fix_replay": {
+    "model_calls": 0,
+    "evidence": "attribution-live-replay.json",
+    "script": "attribution-live-replay.py",
+    "passed": true,
+    "checks": 44,
+    "exit_code": 0,
+    "code_unchanged": true,
+    "code_sha256": {
+      "bridge/employment_drafts.py": "46594b3b84c9f78c6adcd6e937ba331a3832faf192d4e63cee726a9338cd11c4",
+      "bridge/employment_review.py": "1401b4751f261e3af1699cdf19275eaa1ff8b24df69e8f3dd66755609b567c39",
+      "bridge/employment_source_claims.py": "510e0b235a7424d1799653fe60f52857ff03196cd1c316e3d6af28ee24819f4f",
+      "bridge/source_bound_inputs.py": "d27c9194637c915d439b0da4a3a1c6483fa0933aaff110bf0e9197caa5a5b8fd",
+      "bridge/business_server.py": "b348f9a8594791e6bc65afee3140ccec1ff9587e016884a33ae52482adb782fc",
+      "bridge/noncompete_conditions.py": "0d32dc434aaf627f5027046a9bce537c515e35ccd8eadc7a57092a4c61f6355a"
+    },
+    "closed_in_replayed_outputs": [
+      "LIVE-1",
+      "LIVE-2",
+      "LIVE-3"
+    ],
+    "paid_original_outputs_and_verdicts_unchanged": true,
+    "whole_body_expected_changes_only": true,
+    "prior_three_cases": {
+      "checks": 54,
+      "passed": true,
+      "exit_code": 0,
+      "all_whole_bodies_unchanged_from_before_live_fix": true,
+      "same_single_original_attribution_change": true
+    },
+    "initial_verification_assertion_correction": "Initial assertion wrongly demanded an unchanged adopted risk appear in unadopted audit; preserved initial result and replaced with explicit adopted-original/no-false-audit checks.",
+    "final_adjacent_syntax_rerun": {
+      "model_calls": 0,
+      "new_trace_replay_checks": 44,
+      "old_trace_replay_checks": 54,
+      "both_exit_codes": 0,
+      "all_passed": true,
+      "both_code_unchanged": true,
+      "all_whole_bodies_match_existing_expectations": true
+    }
+  }
+}

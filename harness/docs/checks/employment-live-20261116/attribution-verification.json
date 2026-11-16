@@ -1,0 +1,71 @@
+{
+  "date": "2026-11-16",
+  "baseline": "2d9ad8c5e56560e266b55d242892127d2c5d6fe4",
+  "scope": "Bounded attribution and independent analysis preservation; not full Skill quality acceptance",
+  "code_sha256": {
+    "harness/bridge/business_server.py": "b348f9a8594791e6bc65afee3140ccec1ff9587e016884a33ae52482adb782fc",
+    "harness/bridge/employment_review.py": "1401b4751f261e3af1699cdf19275eaa1ff8b24df69e8f3dd66755609b567c39",
+    "harness/bridge/employment_source_claims.py": "510e0b235a7424d1799653fe60f52857ff03196cd1c316e3d6af28ee24819f4f",
+    "harness/bridge/noncompete_conditions.py": "0d32dc434aaf627f5027046a9bce537c515e35ccd8eadc7a57092a4c61f6355a",
+    "harness/bridge/test_employment_attribution.py": "3f061997c33ce4ffa45aa938d27c2f5b1faf2519973c9b1303dfd8010572a352",
+    "harness/bridge/test_employment_analysis_preservation.py": "96fd930e631d772592234c1a81ac872ef2015e3e194ee2372c672679721e3be1",
+    "harness/evals/candidates/qx-employment-review/SKILL.md": "ac818701fcb77204abb6e1d74537578b16272e3ee04aaf032a20268b6d302111"
+  },
+  "offline_python": {
+    "passed": 667,
+    "log": "attribution-evidence/attribution-python-release-candidate.log",
+    "skipped": 5,
+    "seconds": 126.99,
+    "exit_code": 0,
+    "subtests_passed": 36,
+    "command": "node -e \"const s=require('./scripts/test-suite.cjs'); const e=s.testEnvironment(); process.exit(s.run(e.QX_TEST_PYTHON,['-m','pytest','-q',...s.plan('offline').python],e));\""
+  },
+  "targeted": {
+    "seconds": 19.01,
+    "exit_code": 0,
+    "command": "python -m pytest bridge/test_employment_analysis_preservation.py bridge/test_employment_attribution.py bridge/test_employment_source_claims.py bridge/test_employment_drafts.py -q",
+    "passed": 86,
+    "log": "attribution-evidence/attribution-target-final.log"
+  },
+  "offline_node": {
+    "reason": "No Node source changed since previously verified snapshot",
+    "historical_passed": 724,
+    "historical_skipped": 23,
+    "source": "first-principles.md",
+    "rerun_this_change": false
+  },
+  "independent_standards": {
+    "preservation_probes": 8,
+    "open_reported_findings": 0,
+    "attribution_probes": 9,
+    "scope": "only reported bounded defects",
+    "evidence": [
+      "attribution-evidence/attribution-standards-final-recheck.json",
+      "attribution-evidence/attribution-live-standards-final-recheck.json"
+    ]
+  },
+  "independent_spec": {
+    "source": [
+      "attribution-spec-replay.json",
+      "attribution-live-replay.json",
+      "attribution-spec-whole-body.json"
+    ],
+    "old_three_cases": 54,
+    "exit_code": 0,
+    "new_two_cases": 44,
+    "model_calls": 0
+  },
+  "live": {
+    "post_fix": "Three reported failures closed by original-argument offline MCP replay, not new paid output",
+    "conservative_cny": 8.754314,
+    "requests_added": 13,
+    "unknown_or_in_flight": 0,
+    "budget_cap": 10,
+    "requests_total": 141,
+    "original_results": "1 content pass, 1 content fail; original traces retained",
+    "new_request_cny": 0.805672
+  },
+  "installed_version": "0.2.19",
+  "release_performed": false,
+  "full_skill_quality_accepted": false
+}

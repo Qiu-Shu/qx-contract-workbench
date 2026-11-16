@@ -1,0 +1,31 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_______ test_an_independent_pending_request_after_a_report_is_preserved _______
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-87/test_an_independent_pending_re0')
+
+    def test_an_independent_pending_request_after_a_report_is_preserved(tmp_path):
+        saved=save_opinion(tmp_path,'陈述媒介与解除状态未说明。',
+            '员工口头说明，已经同意解除，且全部款项结清；尚需核实通知内容。')
+>       assert '尚需核实通知内容' in saved['content']
+E       assert '尚需核实通知内容' in '劳动用工审查｜阶段：dispute｜内部工作稿，事实及法律适用均待核\n\n1. 人员与材料核对\nAI分析：以下依据及风险为模型意见；来源匹配不认证这些意见。候选文字另列，适用性仍须核对。\n事实/陈述：本项来源陈述（保持原文，引用... "source.txt", "quote": "陈述媒介与解除状态未说明。", "sha256": "1656545bf8e47cd92f1bda8e391600a3d788bef09c71f48ee7d8a0f8995a02f3"}'
+
+bridge\test_employment_analysis_preservation.py:46: AssertionError
+____ test_a_payment_assertion_does_not_destroy_the_following_pending_list _____
+
+tmp_path = WindowsPath('D:/CodexChecks/AI-Shixiong-employment-20261116/temp/pytest-of-Administrator/pytest-87/test_a_payment_assertion_does_0')
+
+    def test_a_payment_assertion_does_not_destroy_the_following_pending_list(tmp_path):
+        pending='期限起止、通知到达、补偿到账的结论均待核。'
+        saved=save_opinion(tmp_path,'竞业协议与到账记录未提供。',
+            '补偿已经全部到账，'+pending)
+        risk=next(s for s in saved['content'].splitlines() if s.startswith('风险：'))
+        assert '补偿已经全部到账' not in risk
+>       assert pending in risk
+E       AssertionError: assert '期限起止、通知到达、补偿到账的结论均待核。' in '风险：期限起止、补偿状态按本项匹配原文分别核对：材料未提供不能认定实际为零、偏低、未约定或未支付；原文明确的0元、其他金额、已付款及不同主体的争议陈述均保留，匹配不等于事实认证。是否足额须有适用标准、期间和已付记录；是否需要调整违约金须另核有效义务、违约事实、损失及适用规则，不以未知补偿推断对价失衡或应当大幅调减。可先明确支付安排、整理凭证、提出有条件的修改方案。'
+
+bridge\test_employment_analysis_preservation.py:56: AssertionError
+=========================== short test summary info ===========================
+FAILED bridge\test_employment_analysis_preservation.py::test_an_independent_pending_request_after_a_report_is_preserved
+FAILED bridge\test_employment_analysis_preservation.py::test_a_payment_assertion_does_not_destroy_the_following_pending_list
+2 failed, 8 deselected in 0.61s

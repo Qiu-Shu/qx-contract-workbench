@@ -1,0 +1,79 @@
+{
+  "checks": [
+    {
+      "case": "legal_weight",
+      "original": "员工自述不足以单独证明通知已经送达，应核对送达凭证。",
+      "risk": "风险：员工自述不足以单独证明通知已经送达，应核对送达凭证。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    },
+    {
+      "case": "legal_request",
+      "original": "员工自述的内容仍需核实，应收集通知原件。",
+      "risk": "风险：员工自述的内容仍需核实，应收集通知原件。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    },
+    {
+      "case": "prefix_borrow",
+      "original": "不能据员工自述认定通知送达但公司确认员工已经同意解除。",
+      "risk": "风险：不能据员工自述认定通知送达但本项来源陈述以所引原文为准。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    },
+    {
+      "case": "payload_scope",
+      "original": "据员工陈述，员工已收到通知，且同意解除并结清工资。请核对材料。",
+      "risk": "风险：本项来源陈述以所引原文为准。请核对材料。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    },
+    {
+      "case": "payload_negative",
+      "original": "据员工陈述，员工未收到通知，亦未同意解除。请核对材料。",
+      "risk": "风险：本项来源陈述以所引原文为准。请核对材料。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    },
+    {
+      "case": "noun_factual_payload",
+      "original": "员工自述的内容是已经同意解除。请核对材料。",
+      "risk": "风险：本项来源陈述以所引原文为准。请核对材料。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    },
+    {
+      "case": "noun_company_payload",
+      "original": "公司说明的情况是员工已经同意解除。请核对材料。",
+      "risk": "风险：本项来源陈述以所引原文为准。请核对材料。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    },
+    {
+      "case": "reason_after_pointer",
+      "original": "员工称已收到通知，这不足以单独证明合法送达，应核对送达凭证。",
+      "risk": "风险：本项来源陈述以所引原文为准，这不足以单独证明合法送达，应核对送达凭证。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    },
+    {
+      "case": "reason_after_pointer_2",
+      "original": "员工称已收到通知，单凭该说法不足以确定送达生效。请补充原件。",
+      "risk": "风险：本项来源陈述以所引原文为准，单凭该说法不足以确定送达生效。请补充原件。",
+      "passed": true,
+      "raw_preserved": true,
+      "source_preserved": true
+    }
+  ],
+  "passed": 9,
+  "total": 9,
+  "model_calls": 0
+}
