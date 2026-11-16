@@ -13,4 +13,11 @@ function evaluationPaths(root,env=process.env){
   budgetFile:campaign?path.join(reportRoot,'budget.json'):path.join(modelRoot,'budget.json'),
   candidateRoot:campaign?path.join(root,'.local',campaign,snapshot?'candidate-'+snapshot:'candidate-skills'):null};
 }
-module.exports={evaluationPaths};
+function evaluationMaxTokens(campaign,phase,thinking,kind){
+ // Explicit diagnostic phases may reserve a larger output; ordinary runs keep
+ // their campaign cap. The same ledger still reserves the entire upper bound.
+ if(campaign.campaign&&phase.endsWith('-extended-thinking'))return 24576;
+ if(phase.endsWith('-long-thinking'))return 16384;
+ return campaign.maxTokens||(thinking==='enabled'?8192:phase.startsWith('repair-')?2600:phase==='final-smoke'?1800:kind==='smoke'?850:phase.startsWith('retest')?3200:1600);
+}
+module.exports={evaluationPaths,evaluationMaxTokens};

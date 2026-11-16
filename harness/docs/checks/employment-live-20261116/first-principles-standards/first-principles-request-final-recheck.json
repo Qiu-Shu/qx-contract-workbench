@@ -1,0 +1,87 @@
+{
+  "checks": [
+    {
+      "kind": "completed",
+      "field": "action",
+      "text": "已向主管核实口头同意一事。",
+      "preserved": false,
+      "expected_preserved": false,
+      "passed": true
+    },
+    {
+      "kind": "completed",
+      "field": "action",
+      "text": "同时向主管核实了口头同意一事。",
+      "preserved": false,
+      "expected_preserved": false,
+      "passed": true
+    },
+    {
+      "kind": "completed",
+      "field": "action",
+      "text": "向主管已核实口头同意一事。",
+      "preserved": false,
+      "expected_preserved": false,
+      "passed": true
+    },
+    {
+      "kind": "completed",
+      "field": "action",
+      "text": "向主管核实后确认口头同意一事。",
+      "preserved": false,
+      "expected_preserved": false,
+      "passed": true
+    },
+    {
+      "kind": "completed",
+      "field": "action",
+      "text": "询问了员工的口头陈述。",
+      "preserved": false,
+      "expected_preserved": false,
+      "passed": true
+    },
+    {
+      "kind": "completed",
+      "field": "action",
+      "text": "向主管核实口头同意一事的工作已经完成。",
+      "preserved": false,
+      "expected_preserved": false,
+      "passed": true
+    },
+    {
+      "kind": "request",
+      "field": "action",
+      "text": "建议分五步：一、暂不解除；二、向员工核实请假，同时向直接主管核实口头同意一事；三、补齐证据；四、评估保护状态；五、不擅改工资。",
+      "preserved": true,
+      "expected_preserved": true,
+      "passed": true
+    },
+    {
+      "kind": "evidential_analysis",
+      "field": "basis",
+      "text": "考勤记录的证明力取决于记录的完整性、形成过程和其他材料。",
+      "preserved": true,
+      "expected_preserved": true,
+      "passed": true
+    },
+    {
+      "kind": "request",
+      "field": "action",
+      "text": "请向主管核实口头同意的具体内容，并保留不同意见。",
+      "preserved": true,
+      "expected_preserved": true,
+      "passed": true
+    },
+    {
+      "kind": "question",
+      "field": "basis",
+      "text": "口头同意是否成立、是否覆盖所涉三天，须结合请假审批及主管证言核实。",
+      "preserved": true,
+      "expected_preserved": true,
+      "passed": true
+    }
+  ],
+  "passed": 10,
+  "total": 10,
+  "model_calls": 0
+}

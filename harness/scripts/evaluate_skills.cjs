@@ -63,7 +63,7 @@ const unique=new Set();for(const c of cases){
 }
 async function evaluate(c,secret){
  const file=path.join(runDir,c.id+'.json');if(fs.existsSync(file))return;
- const maxTokens=campaign.maxTokens||(campaign.campaign&&phase.endsWith('-extended-thinking')?24576:phase.endsWith('-long-thinking')?16384:thinking==='enabled'?8192:phase.startsWith('repair-')?2600:phase==='final-smoke'?1800:c.kind==='smoke'?850:phase.startsWith('retest')?3200:1600);
+ const maxTokens=require('./skill-eval-campaign.cjs').evaluationMaxTokens(campaign,phase,thinking,c.kind);
  const compact=phase==='final-smoke'?'\n本次只交付不超过450个汉字的关键结果或文稿节选，无需展开完整报告；保留最重要事实、条件和不确定性。':'';
  const messages=[{role:'system',content:system},{role:'user',content:'本轮已加载的技能说明如下：\n<skill>\n'+c._skillText+'\n</skill>\n\n本轮用户任务：\n'+c.prompt+compact}];
  const reservation=budget.reserve(phase+':'+c.id,upperBound(messages,maxTokens));

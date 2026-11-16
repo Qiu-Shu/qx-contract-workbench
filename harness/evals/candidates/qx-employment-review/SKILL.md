@@ -35,6 +35,8 @@ description: Use when reviewing mainland China employment contracts, amendments,
 
 形成个案意见后调用 `mcp__qx_legal__save_employment_review`，stage 为 hiring/change/termination/dispute。findings 每项含 fact/basis/source/risk/action，可加 topic/pending/citations；把覆盖表作为首项，同次保存。fact 写来源陈述，basis 写规则及条件，action 明示“候选修改”，只改必要部分，未定内容用待填项。条款措辞有条件也可先给，不因一项缺证拒绝整份审查。
 
+候选正文与AI分析分开。需要试用条件条款、考勤及请假核实通知、竞业解除及款项核对函时，在对应项传 `drafts=["probation_clause"]`、`["attendance_inquiry"]`、`["noncompete_inquiry"]`，可组合。工具以条件或核对问题生成候选，原action仅存内部核对稿；其他建议独立成项保留，工资规则结果可同时保留。以返回的 `candidate_drafts` 和同次保存正文交付，勿另写一份“双方确认此前从未…”的候选。来源陈述、模型分析、程序候选各有身份；`content_assurance.semantic_verified=false` 表示没有通用语义认证，不能将引用通过写成全文审查通过。当前三个模板不覆盖其他任意自由条款。
+
 试用工资用 `rule="probation_pay"` 及来源绑定四项参数；竞业金额比值用 `rule="noncompete_comparison"`。嵌套字段以工具 schema 为准。程序拒绝关联时，保留各项原数及原因，继续其他意见；不改写原件为“假设”来绕过。明确的独立计算情景可用 calculate_employment_amount，但其结果不代表实际应付金额。涉及解除的已明示完整情景可用解除接口的 scenario_citations 与清单同笔保存。
 
 仅提出当前任务需要的修改；录用工资问题不顺带增加未请求的累计欠薪、解除权或补偿方案。累计金额必须取自实际计算工具结果；工具不可用时保留公式和待核参数，不心算整段欠薪/补偿。具体法条号仅使用已回读法源或下列参考明确列出的条款映射，不能凭记忆补编号。交付前逐一检查金额单位、算式结果、主体、未知状态以及建议是否扩大法定权利。

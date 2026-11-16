@@ -63,6 +63,9 @@ class EmploymentFinding(Input):
     citations: list[EmploymentCitation] | None = Field(default=None,max_length=20)
     rule: Literal['probation_pay','noncompete_comparison'] | None = None
     parameters: EmploymentParameters | None = None
+    drafts: list[Literal['probation_clause','attendance_inquiry','noncompete_inquiry']] | None = Field(
+        default=None,min_length=1,max_length=3,
+        description='程序候选类型，可同时选多个；替代自由action，原稿保留内部核对。法律分析仍未作语义核验。')
 
 
 class Calculation(Input):

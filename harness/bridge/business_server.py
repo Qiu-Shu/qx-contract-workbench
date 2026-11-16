@@ -279,6 +279,7 @@ def save_employment_review(case_id: str, stage: str, findings: list[EmploymentFi
     保存成功后以id回读并用export_case(note_ids=[id],audience="internal")导出；最终原样交付user_summary和文件。摘要来自同一保存记录，不另行改写事实/建议，来源或记录改变须回读后处理。
     各阶段的试用工资项使用{rule:"probation_pay",parameters:{contract_pay:金额对象,grade_pay:金额对象,minimum_pay:金额对象,probation_pay:金额对象}}。金额对象为{amount:"原文金额含元/万元",citation:{path,quote,sha256,chunk}}，引用须含对应标签且四项同一片段。程序按实施条例15条计算两种80%候选及月差额并生成候选条款，替代本项模型自填的fact/basis/risk/action。缺值/疑点只保留本项待核，其他意见照常保存；查看rule_reviews。标题、风险或行动中的试用工资定额同样接受来源检查；覆盖说明及非定额条件条款仍保留。
     已匹配引文的事实栏由程序保留完整原句，source_observations区分source_statement与unbound；引用匹配不证明真实。saved_with_pending表示已保存待核稿，应回读导出，不反复用相同参数重存以试图消除待核。
+    候选试用条款、考勤核实通知、竞业解除核对函使用drafts列表：probation_clause、attendance_inquiry、noncompete_inquiry；可同时选择。程序用条件式条款/核对问题替代本项自由action，原action保留内部稿，工资规则结果仍保留。不要另写已经查明、既往从未、员工同意或不同意等历史确认。其他意见独立成项。candidate_drafts只说明候选构造受约束，content_assurance.semantic_verified始终为false；自由basis/risk仍是AI分析，引用匹配不证明结论正确。
     竞业金额比较可用{rule:"noncompete_comparison",parameters:{penalty:金额对象,loss:金额对象,monthly_compensation:金额对象,monthly_pay:金额对象}}；参数可缺省，不补零。标签分别为违约金、损失、月补偿、月工资；同源且口径明确才算比值，比值不自动认定过高或失衡。查看rule_reviews的逐项结果。保存前会检查常见的未知变否定、重复试用候选条款、无依据竞业比较；只修关联语句，review_changes及内部核对稿保留原稿和理由，最终交付user_summary与本次note_ids的导出。
     """
     from employment_review import save_employment_review as save

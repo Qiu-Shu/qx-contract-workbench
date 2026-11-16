@@ -2,8 +2,14 @@
 import re
 from draft_review import CONDITIONAL
 
-CLAIM=re.compile(r'口头|口述|考勤.{0,12}(?:显示|证明|记载|反映)|(?:存在|构成|属于)严重违纪')
+CLAIM=re.compile(r'口头|口述|考勤.{0,12}(?:显示|证明(?!力)|记载|反映)|(?:存在|构成|属于)严重违纪')
 CLAIM_QUALIFIER=re.compile(r'不要|不能|不得|不应|不作|不认定|不据|不等于|不代表|不足以|避免|是否|与否|未能确认|无法确认|尚无材料证明')
+REQUEST=re.compile(r'^\s*(?:[一二三四五六七八九十\d]+[、.．]\s*)?'
+    r'(?:请|应|建议|需|待|进一步|同时|并|再|拟)?(?:向[^，,；;。\n已曾了过]{1,30})?'
+    r'(?:核对|核实|收集|补充|提供|查证|询问)(?!了|过|后|完|清楚|并确认|并发现|并查明)')
+MEDIUM_QUESTION=re.compile(r'^\s*(?:口头(?:同意|通知|陈述)|口述(?:内容|陈述))(?:是否|能否|与否)')
+EXPLICIT_REQUEST=re.compile(r'^\s*(?:请|应|建议|需|待|拟)')
+DIRECT_REQUEST=re.compile(r'^\s*(?:请|应|建议|需|待|进一步)?(?:核对|核实|收集|补充|提供)')
 
 
 def bind_source_facts(item, review, index):
@@ -47,7 +53,12 @@ def bind_source_facts(item, review, index):
                 prefix=part[:match.start()]
                 if (CLAIM_QUALIFIER.search(prefix) or CONDITIONAL.search(part)
                         or re.fullmatch(r'考勤.{0,8}(?:是否|能否).{0,2}(?:显示|证明|记载|反映)',match.group())
-                        or re.match(r'\s*(?:请|应|建议|需|待|进一步)?(?:核对|核实|收集|补充|提供)',prefix)):
+                        or MEDIUM_QUESTION.match(part)
+                        or DIRECT_REQUEST.match(prefix)
+                        # Newly supported directed questions require an explicit
+                        # request/plan, not a bare description of an investigation.
+                        or ((EXPLICIT_REQUEST.match(prefix) or EXPLICIT_REQUEST.match(sentence))
+                            and REQUEST.match(prefix))):
                     continue
                 unsupported=True
             if unsupported:

@@ -32,12 +32,20 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
     citations = []
     rule_reviews=[]
     source_observations=[]
+    candidate_drafts=[]
+    free_text_findings=[]
     from draft_review import DraftReview,save_review_audit
     review=DraftReview(cases,case_id)
     labels = {'fact':'事实/陈述', 'basis':'依据及适用边界', 'source':'来源', 'risk':'风险', 'action':'行动'}
     for i, item in enumerate(findings, 1):
-        if not isinstance(item, dict) or set(item) - (set(labels) | {'topic', 'pending', 'citations','rule','parameters'}):
+        if not isinstance(item, dict) or set(item) - (set(labels) | {'topic', 'pending', 'citations','rule','parameters','drafts'}):
             raise ValueError('审查项含不支持字段，请使用fact/basis/source/risk/action/topic/pending/citations。')
+        intents=item.get('drafts')
+        candidate_text=None
+        if 'drafts' in item:
+            from employment_drafts import compile_drafts
+            candidate_text=compile_drafts(intents)
+        original_action=item.get('action')
         rule=item.get('rule')
         if rule is not None and rule not in ('probation_pay','noncompete_comparison'):raise ValueError('不支持的程序审查规则。')
         # A source/coverage mention is not a monetary conclusion. Facts are
@@ -87,9 +95,24 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
         if nc and not program_owned:
             from noncompete_conditions import finalize_noncompete_conditions
             item=finalize_noncompete_conditions(item,review,i,release_issue=release_issue)
+        if not program_owned:
+            free_text_findings.append(i-1)
+        if candidate_text is not None:
+            # A caller can select a kind, but cannot supply historical premises
+            # for its candidate. Keep independent program-computed wage advice.
+            action=(item['action']+'\n\n' if program_owned else '')+candidate_text
+            if isinstance(original_action,str) and original_action!=action:
+                review.changes.append(dict(label=f'第{i}项候选原稿',original=original_action,
+                    replacement=action,reason='所选候选由程序生成条件或核对文字，不从自由原稿引入历史事实。其他AI分析仍未作语义核验。',
+                    citations=item.get('citations',[])))
+            item['action']=action
+            candidate_drafts.append(dict(finding_index=i-1,intents=intents,text=candidate_text,
+                kind='compiled_conditional_text',applicability_verified=False))
         if rule_reviews and rule_reviews[-1]['finding_index']==i-1:
             rule_reviews[-1]['prepared_finding']=dict(item)
         lines.append(f'\n{i}. '+_text(item.get('topic', '审查事项'), 'topic'))
+        if not program_owned:
+            lines.append('AI分析：以下依据及风险为模型意见；来源匹配不认证这些意见。候选文字另列，适用性仍须核对。')
         lines.extend(f'{label}：{_text(item.get(key), key)}' for key, label in labels.items())
         lines.append('待核事项：'+_text(item.get('pending', '事实、来源及法律适用尚需核验'), 'pending'))
         refs = item.get('citations', [])
@@ -128,6 +151,9 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
               '\n记录超过聊天展示上限，请回读本次笔记或导出Word查看完整内容；未截断保存。')
     return {**result,'user_summary':summary,'rule_reviews':rule_reviews,'review_changes':review.changes,
             'source_observations':source_observations,
+            'candidate_drafts':candidate_drafts,
+            'content_assurance':{'semantic_verified':False,'free_text_findings':free_text_findings,
+                'scope':'仅核出处、支持的程序规则及所选候选构造；自由分析和模板适用性未作通用语义核验。'},
             'workflow_status':'saved_with_pending' if any(r.get('pending_reason') or r.get('pending_fields') for r in rule_reviews) else 'saved',
             'next_step':'回读本次id全部分页；需要Word时导出该id。待核项已经保存，不重复提交相同参数，不改写原文消除待核。',
             **save_review_audit(cases,case_id,review.changes)}

@@ -1,0 +1,40 @@
+{
+  "checks": [
+    {
+      "name": "wage_and_candidate_coexist",
+      "passed": true
+    },
+    {
+      "name": "independent_finding_retained",
+      "passed": true
+    },
+    {
+      "name": "raw_action_kept_in_audit",
+      "passed": true
+    },
+    {
+      "name": "same_summary_content",
+      "passed": true
+    },
+    {
+      "name": "same_retry_one_note",
+      "passed": true
+    },
+    {
+      "name": "original_unchanged",
+      "passed": true
+    },
+    {
+      "name": "cross_case_candidate_citation_rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid_has_no_note",
+      "passed": true
+    }
+  ],
+  "passed": 8,
+  "total": 8,
+  "model_calls": 0,
+  "probe_note": "首轮把既有工资规则引用失败转待核误期望为抛错；改用本轮新增候选的普通来源引用验证跨案拒绝。首轮7/8，修正探针后8/8。"
+}

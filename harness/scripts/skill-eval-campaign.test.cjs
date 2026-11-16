@@ -1,5 +1,12 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),path=require('node:path');
 const {evaluationPaths}=require('./skill-eval-campaign.cjs');
+test('an explicit completion-budget experiment changes output cap, not the campaign ledger or model',()=>{
+ const {evaluationMaxTokens}=require('./skill-eval-campaign.cjs');
+ const campaign=evaluationPaths(__dirname,{QX_SKILL_EVAL_CAMPAIGN:'employment-live-20261116'});
+ assert.equal(evaluationMaxTokens(campaign,'retest4','enabled','employment-synthetic'),8192);
+ assert.equal(evaluationMaxTokens(campaign,'repair-completion-long-thinking','enabled','employment-synthetic'),16384);
+ assert.equal(campaign.cap,10);assert.equal(campaign.model,'deepseek-flash');
+});
 test('employment live evaluation has a separate fixed 10 CNY ledger and current inputs',()=>{
  const root=path.resolve(__dirname,'..');
  const current=evaluationPaths(root,{QX_SKILL_EVAL_CAMPAIGN:'employment-live-20261116'});

@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-16",
+  "baseline": "8fd8ce4ff55582cbe218950bced231b243ce17ff",
+  "scope": "有限候选构造与关联保存行为，不代表全文法律质量通过",
+  "source_sha256": {
+    "bridge/business_server.py": "831168792210d7b50c0de9f33c54645b675516d8f65cc9199dc5b7e3ff2e84d0",
+    "bridge/employment_drafts.py": "46594b3b84c9f78c6adcd6e937ba331a3832faf192d4e63cee726a9338cd11c4",
+    "bridge/employment_review.py": "32bb2b53b83a7c996ee85f56fb66a8663058828f75b1063fc14b85a56854543c",
+    "bridge/employment_source_claims.py": "7e024c488eb36383cd48680dc48d9b5b125cb00a2dbcd7120c45ada6d749b00b",
+    "bridge/source_bound_inputs.py": "d27c9194637c915d439b0da4a3a1c6483fa0933aaff110bf0e9197caa5a5b8fd",
+    "bridge/test_employment_drafts.py": "b43a7fda61f2d11385663e5c17d47702a3c4ba875012d440d3aaae357d441deb",
+    "bridge/test_employment_source_claims.py": "5d9386a4bfdf0438b51fe19f5cc15f85b9539ca1adc4478fd16b913acd4662d2",
+    "evals/candidates/qx-employment-review/SKILL.md": "8475bc3e4b5f78bb5d7528eebc4084446e09b10e561e3c8192abae1a3476cc15",
+    "scripts/evaluate_skills.cjs": "526917dac90fa7a0afd4489edf906e78dae4b1a059a6bb8fc45f992e2b38cede",
+    "scripts/skill-eval-campaign.cjs": "9206f49ba7162e830d00e7d9e64cb9f0a05b45a22a7e44bfc815aa1157501b35",
+    "scripts/skill-eval-campaign.test.cjs": "95c3ba487771ae796e7eb73feac02f0412e65eb5f171644b089a9dc61ac18587"
+  },
+  "node_offline": {
+    "scope_note": "此后未改变Node源码；同次Python属于中间版本",
+    "skipped": 23,
+    "command": "node scripts/test-suite.cjs offline (Node portion)",
+    "exit_code": 0,
+    "log": "D:/CodexChecks/AI-Shixiong-employment-20261116/first-principles-offline.log",
+    "passed": 724
+  },
+  "python_offline_final": {
+    "skipped": 5,
+    "command": "node -e: test-suite.testEnvironment(); run(QX_TEST_PYTHON, [\"-m\", \"pytest\", \"-q\", ...plan(\"offline\").python])",
+    "log": "D:/CodexChecks/AI-Shixiong-employment-20261116/first-principles-python-final.log",
+    "subtests_passed": 36,
+    "seconds": 124.29,
+    "exit_code": 0,
+    "passed": 616
+  },
+  "target": {
+    "seconds": 12.28,
+    "command": "python -m pytest -q bridge/test_employment_source_claims.py bridge/test_employment_drafts.py --tb=short",
+    "passed": 35,
+    "exit_code": 0
+  },
+  "independent_spec": {
+    "evidence": "first-principles-spec-replay.json",
+    "checks_passed": 41,
+    "command": "python docs/checks/employment-live-20261116/first-principles-spec-replay.py",
+    "exit_code": 0
+  },
+  "budget": {
+    "requests": 128,
+    "estimated_cny": 7.948642,
+    "cap_cny": 10,
+    "unknown": 0
+  },
+  "unresolved": [
+    "自由risk中的员工自述来源归属；完整Skill全文质量未通过；候选适用性和旧自由入口不具通用语义保证"
+  ]
+}

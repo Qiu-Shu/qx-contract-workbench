@@ -62,3 +62,32 @@ def test_probation_candidate_does_not_narrow_history_to_the_current_relationship
         action='候选条款：甲乙双方此前未就同一用工关系约定过试用期。')])
     assert '未就同一用工关系约定过试用期' not in result['content']
     assert '同一用人单位与同一劳动者只能约定一次试用期' in result['content']
+
+
+@pytest.mark.parametrize('field,text', [
+    ('action','建议分五步：一、暂不解除；二、向员工核实请假，同时向直接主管核实口头同意一事；三、补齐证据；四、评估保护状态；五、不擅改工资。'),
+    ('basis','考勤记录的证明力取决于记录的完整性、形成过程和其他材料。'),
+    ('action','请向主管核实口头同意的具体内容，并保留不同意见。'),
+    ('basis','口头同意是否成立、是否覆盖所涉三天，须结合请假审批及主管证言核实。'),
+])
+def test_requests_and_evidence_analysis_are_not_new_attendance_facts(tmp_path,field,text):
+    cases,cid,ref=source_case(tmp_path,'员工称主管口头同意；考勤条目未展示。')
+    item=dict(fact='见原文',source='合成',basis='条件待核',risk='待核',action='待核',citations=[ref])
+    item[field]=text
+    saved=save_employment_review(cases,cid,'termination',[item])
+    assert text in saved['content']
+
+
+@pytest.mark.parametrize('text', [
+    '已向主管核实口头同意一事。',
+    '同时向主管核实了口头同意一事。',
+    '向主管已核实口头同意一事。',
+    '向主管核实后确认口头同意一事。',
+    '询问了员工的口头陈述。',
+    '向主管核实口头同意一事的工作已经完成。',
+])
+def test_a_completed_investigation_is_not_treated_as_a_request(tmp_path,text):
+    cases,cid,ref=source_case(tmp_path,'是否曾口头同意未知。')
+    saved=save_employment_review(cases,cid,'termination',[dict(fact='见原文',source='合成',basis='待核',
+        risk='待核',action=text,citations=[ref])])
+    assert text not in saved['content']
