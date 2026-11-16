@@ -13,6 +13,7 @@ from workflows import workflow
 import server as material_server
 from server import friendly_errors
 from source_bound_inputs import MaterialCitation, Citation, Excerpt, Calculation, LitigationBrief, LitigationIssue, LitigationClaim, LegalReview, RegisterEntry, ComplianceTracking, SourceGroup
+from source_bound_inputs import EmploymentFinding
 from pydantic import StrictBool
 from verified_delivery import attach_delivery, text_sha256
 
@@ -270,17 +271,19 @@ def generate_litigation_document(case_id: str, document_type: str, filename: str
 
 @mcp.tool()
 @friendly_errors
-def save_employment_review(case_id: str, stage: str, findings: list[dict], request_id: str = '', supersedes: str = '') -> dict:
+def save_employment_review(case_id: str, stage: str, findings: list[EmploymentFinding], request_id: str = '', supersedes: str = '') -> dict:
     """追加劳动用工审查，stage=hiring/change/termination/dispute。
 
     findings每项fact/basis/source/risk/action文字，另可topic/pending/citations。未知事实保留待核，不从办公室开业等日期猜实际解除日。
     引用按本案核对；具体法律适用和劳动关系状态由承办人复核。更正仅明确要求时用supersedes。
     保存成功后以id回读并用export_case(note_ids=[id],audience="internal")导出；最终原样交付user_summary和文件。摘要来自同一保存记录，不另行改写事实/建议，来源或记录改变须回读后处理。
-    hiring中的试用工资项使用{rule:"probation_pay",parameters:{contract_pay:金额对象,grade_pay:金额对象,minimum_pay:金额对象,probation_pay:金额对象}}。金额对象为{amount:"原文金额含元/万元",citation:{path,quote,sha256,chunk}}，引用须含对应标签且四项同一片段。程序按实施条例15条计算两种80%候选及月差额并生成候选条款，替代本项模型自填的fact/basis/risk/action。缺值/疑点只保留本项待核，其他意见照常保存；查看rule_reviews。标题明确为试用工资而未传参数时，同样不保存模型自拟金额结论。
+    各阶段的试用工资项使用{rule:"probation_pay",parameters:{contract_pay:金额对象,grade_pay:金额对象,minimum_pay:金额对象,probation_pay:金额对象}}。金额对象为{amount:"原文金额含元/万元",citation:{path,quote,sha256,chunk}}，引用须含对应标签且四项同一片段。程序按实施条例15条计算两种80%候选及月差额并生成候选条款，替代本项模型自填的fact/basis/risk/action。缺值/疑点只保留本项待核，其他意见照常保存；查看rule_reviews。标题、风险或行动中的试用工资定额同样接受来源检查；覆盖说明及非定额条件条款仍保留。
+    已匹配引文的事实栏由程序保留完整原句，source_observations区分source_statement与unbound；引用匹配不证明真实。saved_with_pending表示已保存待核稿，应回读导出，不反复用相同参数重存以试图消除待核。
     竞业金额比较可用{rule:"noncompete_comparison",parameters:{penalty:金额对象,loss:金额对象,monthly_compensation:金额对象,monthly_pay:金额对象}}；参数可缺省，不补零。标签分别为违约金、损失、月补偿、月工资；同源且口径明确才算比值，比值不自动认定过高或失衡。查看rule_reviews的逐项结果。保存前会检查常见的未知变否定、重复试用候选条款、无依据竞业比较；只修关联语句，review_changes及内部核对稿保留原稿和理由，最终交付user_summary与本次note_ids的导出。
     """
     from employment_review import save_employment_review as save
-    return attach_delivery(cases, case_id, save(cases, case_id, stage, findings, request_id, supersedes))
+    return attach_delivery(cases, case_id, save(cases, case_id, stage,
+        [f.model_dump(exclude_none=True) for f in findings], request_id, supersedes))
 
 
 @mcp.tool()

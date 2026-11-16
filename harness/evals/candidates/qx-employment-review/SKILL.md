@@ -43,6 +43,8 @@ description: Use when reviewing mainland China employment contracts, amendments,
 
 检查 recorded、warnings、rule_reviews 和 review_changes；成功后用 `read_case_note` 回读本次 id 的全部分页，确认覆盖、原文、条件和建议。修正只追加记录；明确更正时才用 supersedes，同一 request_id 重试保持参数一致。
 
+`workflow_status="saved_with_pending"` 是待核稿已保存，不是工具失败。按 next_step 回读、导出，继续完成其他意见；同一原文和参数不重复保存/核算。输入错误按 schema 修正一次；仍有疑点就交付已保存的待核版本并列明原因。事实栏及 source_observations 以程序匹配原句为准，不另补口头/书面媒介、考勤条目或工资周期。
+
 需要 Word 时以该 id 调用 `export_case(note_ids=[id], audience="internal")`，交付实际 `user_summary` 与本次文件路径。程序替换过的意见以保存版本为准，聊天不另写一套金额或条款。内部核对稿单列。保存失败、版本变化或导出失败时分别报告实际结果，不能用旧文件冒充。
 
 工具不可用时，可基于已给摘录提供标注“未归档、未核原件”的审查草稿及候选条款，列明无法执行的读取/保存/导出步骤；不声称具有来源绑定保障。工具可用时走上述保存交付流程，不绕过失败结果。生成草稿不授权签署、发送、仲裁或诉讼提交。

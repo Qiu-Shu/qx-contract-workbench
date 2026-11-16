@@ -30,6 +30,41 @@ class Money(Input):
     amount: str
 
 
+class EmploymentCitation(Input):
+    path: str
+    quote: str
+    sha256: str | None = None
+    chunk: StrictInt | None = None
+    start: StrictInt | None = None
+    end: StrictInt | None = None
+    status: Literal['matched','unmatched','ambiguous','unverified'] | None = None
+    source_kind: str | None = None
+
+
+class EmploymentParameters(Input):
+    contract_pay: Money | None = None
+    grade_pay: Money | None = None
+    minimum_pay: Money | None = None
+    probation_pay: Money | None = None
+    penalty: Money | None = None
+    loss: Money | None = None
+    monthly_compensation: Money | None = None
+    monthly_pay: Money | None = None
+
+
+class EmploymentFinding(Input):
+    fact: str = Field(min_length=1,max_length=20000)
+    basis: str = Field(min_length=1,max_length=20000)
+    source: str = Field(min_length=1,max_length=20000)
+    risk: str = Field(min_length=1,max_length=20000)
+    action: str = Field(min_length=1,max_length=20000)
+    topic: str | None = None
+    pending: str | None = None
+    citations: list[EmploymentCitation] | None = Field(default=None,max_length=20)
+    rule: Literal['probation_pay','noncompete_comparison'] | None = None
+    parameters: EmploymentParameters | None = None
+
+
 class Calculation(Input):
     minuend: Money
     subtrahends: list[Money]

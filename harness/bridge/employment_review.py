@@ -31,6 +31,7 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
     lines = [f'劳动用工审查｜阶段：{stage}｜内部工作稿，事实及法律适用均待核']
     citations = []
     rule_reviews=[]
+    source_observations=[]
     from draft_review import DraftReview,save_review_audit
     review=DraftReview(cases,case_id)
     labels = {'fact':'事实/陈述', 'basis':'依据及适用边界', 'source':'来源', 'risk':'风险', 'action':'行动'}
@@ -39,13 +40,15 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
             raise ValueError('审查项含不支持字段，请使用fact/basis/source/risk/action/topic/pending/citations。')
         rule=item.get('rule')
         if rule is not None and rule not in ('probation_pay','noncompete_comparison'):raise ValueError('不支持的程序审查规则。')
-        pay_topic=isinstance(item.get('topic'),str) and re.search(r'试用.{0,4}工资|工资.{0,4}试用',item['topic'])
-        program_owned=rule in ('probation_pay','noncompete_comparison') or (stage=='hiring' and pay_topic)
+        # A source/coverage mention is not a monetary conclusion. Facts are
+        # bound below; only numeric opinions or explicit rules own this finding.
+        pay_claim=any(re.search(r'试用(?:期)?(?:月)?工资[^。；\n]{0,24}\d+\s*元',str(item.get(k,'')))
+                      for k in ('topic','risk','action'))
+        program_owned=rule in ('probation_pay','noncompete_comparison') or pay_claim
         if rule=='noncompete_comparison':
             from employment_rule_review import prepare_noncompete_comparison
             item,rule_review=prepare_noncompete_comparison(cases,case_id,item,i-1);rule_reviews.append(rule_review)
-        elif rule=='probation_pay' or (stage=='hiring' and pay_topic):
-            if stage!='hiring':raise ValueError('试用工资规则用于hiring阶段。')
+        elif rule=='probation_pay' or pay_claim:
             from employment_rule_review import prepare_probation_pay
             item,rule_review=prepare_probation_pay(cases,case_id,item,i-1);rule_reviews.append(rule_review)
         elif 'parameters' in item:raise ValueError('parameters须与支持的rule共同使用。')
@@ -74,6 +77,10 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
             if field in item and not program_owned:
                 item[field]=review.text(item[field],f'第{i}项{field}',refs if isinstance(refs,list) else [],
                     noncompete=nc and field in ('topic','fact','risk','action'),proposal=field=='action')
+        if not program_owned:
+            from employment_source_claims import bind_source_facts
+            item,observation=bind_source_facts(item,review,i)
+            source_observations.append(observation)
         if nc and not program_owned:
             from noncompete_conditions import finalize_noncompete_conditions
             item=finalize_noncompete_conditions(item,review,i,release_issue=release_issue)
@@ -117,6 +124,9 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
     summary+=('\n\n同一保存记录：\n'+body if len(body)<=150000 else
               '\n记录超过聊天展示上限，请回读本次笔记或导出Word查看完整内容；未截断保存。')
     return {**result,'user_summary':summary,'rule_reviews':rule_reviews,'review_changes':review.changes,
+            'source_observations':source_observations,
+            'workflow_status':'saved_with_pending' if any(r.get('pending_reason') or r.get('pending_fields') for r in rule_reviews) else 'saved',
+            'next_step':'回读本次id全部分页；需要Word时导出该id。待核项已经保存，不重复提交相同参数，不改写原文消除待核。',
             **save_review_audit(cases,case_id,review.changes)}
 
 

@@ -14,28 +14,22 @@ BASIS=('劳动合同法第20条、劳动合同法实施条例第15条：分别�
 
 def _same_wage_record(source,spans):
     from employment_parameter_extraction import _extract_lines, extract_term_parameters, parameter_context_warnings
-    # Only a standalone, explicitly unknown *duration* can be set aside for
-    # wage arithmetic. Preserve all unclassified context, including preceding
-    # and following statements about these amounts, their owners or pay period.
-    def duration_only(match):
+    # Mask only complete, classified clauses unrelated to the four operands.
+    # Keep character offsets and every unclassified qualification unchanged.
+    def unrelated_clause(match):
         clause=match.group()
-        if re.fullmatch(r'\s*试用期(?:限)?\s*(?:尚未约定|未约定|尚未确定|未确定|待核|未知)\s*',clause):
+        if re.fullmatch(r'\s*(?:试用期(?:限)?\s*(?:尚未约定|未约定|尚未确定|未确定|待核|未知)'
+                       r'|(?:奖金按员工手册支付[，,])?员工手册(?:本次)?未提供)\s*',clause):
             return ' '*len(clause)
         return clause
-    view={**source,'text':re.sub(r'[^。\r\n]+',duration_only,source['text'])}
+    view={**source,'text':re.sub(r'[^。\r\n]+',unrelated_clause,source['text'])}
     full,_=extract_term_parameters('hiring',[view])
     qualified=list(view['text'])
-    # The existing identity parser permits hyphens in worker/contract IDs.
-    # Exempt only values in its recognized header spans from the signed-number
-    # context check; amounts and unrecognized headers remain untouched.
-    for group in full['linked_groups']:
-        ids={'劳动者编号':group['worker_id'],'合同编号':group['contract_id']}
-        header_rows=len(group['header']['raw'].splitlines())
-        for row in group['source_spans'][:header_rows]:
-            for match in re.finditer(r'(劳动者编号|合同编号)\s*[:：\t]\s*([A-Za-z0-9][A-Za-z0-9_-]{0,63})',row['raw']):
-                if match[2]==ids[match[1]]:
-                    a,b=row['start']+match.start(2),row['start']+match.end(2)
-                    qualified[a:b]=' '*(b-a)
+    # A labeled identifier is not a signed amount even when a preceding sentence
+    # prevents full-line identity recognition. This exemption never links rows.
+    for match in re.finditer(r'(?:^|[。；;\r\n\t])\s*(?:劳动者编号|合同编号)\s*[:：\t]\s*'
+                            r'([A-Za-z0-9][A-Za-z0-9_-]{0,63})(?=\s*(?:[。；;\r\n]|$))',view['text']):
+        a,b=match.span(1);qualified[a:b]=' '*(b-a)
     if parameter_context_warnings(''.join(qualified)):return False
     local,_=_extract_lines('hiring',[view])
     def complete(group):
@@ -76,6 +70,16 @@ def prepare_probation_pay(cases,case_id,item,index):
         comparison=compare_term_scenario('hiring',formula,formula,0,len(formula))
     except (ValueError,TypeError,KeyError) as exc:
         error=str(exc)
+    if not comparison:
+        # Missing operands must not erase independently matched source statements.
+        from source_bound_litigation import _reference
+        sources={s['path']:s for s in cases.materials(case_id)}
+        for candidate in item.get('citations',[]) if isinstance(item.get('citations',[]),list) else []:
+            try:
+                bound,text=_reference(cases,case_id,candidate,sources)
+                bound_texts[(bound['path'],bound['sha256'],bound['chunk'])]=text
+                refs.append(bound)
+            except (ValueError,TypeError,KeyError):pass
     if comparison:
         candidate=max(Decimal(comparison['contract_floor']),Decimal(comparison['grade_floor']))
         risk=comparison['text']

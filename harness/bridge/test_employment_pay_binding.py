@@ -125,3 +125,43 @@ def test_real_mcp_keeps_blocked_wage_and_other_findings_in_the_same_word(tmp_pat
             assert '附件全部审查完毕' not in delivered
             assert '附件覆盖' in delivered and '同一可核算记录' in delivered
     asyncio.run(run())
+
+
+@pytest.mark.parametrize('prefix,suffix', [
+    ('', '\n奖金按员工手册支付，员工手册本次未提供。'),
+    ('', '上述四项均为税前月工资标准。'),
+    ('独立虚构测试，均为同一员工同一工资期间的数据。劳动者：测试甲；合同编号：C-1\n', ''),
+])
+def test_supported_wages_survive_unrelated_missing_material_and_explicit_monthly_context(tmp_path, prefix, suffix):
+    cases, cid, ref = source_case(tmp_path, prefix + '合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。' + suffix)
+    result = review(cases, cid, ref)
+    assert result['rule_reviews'][0]['comparison']['contract_floor'] == '4800.00'
+    assert suffix.strip() in result['user_summary']
+
+
+@pytest.mark.parametrize('stage', ['hiring', 'change', 'termination', 'dispute'])
+@pytest.mark.parametrize('explicit_rule', [False, True])
+def test_probation_wage_cannot_bypass_binding_by_stage_or_generic_topic(tmp_path, stage, explicit_rule):
+    cases, cid, ref = source_case(tmp_path, '乙试用工资3500元，周期未说明。甲合同工资6000元。')
+    item = dict(topic='报酬问题', fact='乙试用期月工资3500元。', basis='待核', source='合成材料',
+                risk='试用工资应调高', action='试用工资拟约定为4800元/月。', citations=[ref])
+    if explicit_rule:item['rule']='probation_pay'
+    result = save_employment_review(cases, cid, stage, [item])
+    assert result['rule_reviews'][0]['comparison'] is None
+    body = cases.read_note(cid, result['id'])['content']
+    assert '试用期月工资3500' not in body
+    assert '拟约定为4800' not in body
+    assert '周期未说明' in body
+
+
+def test_coverage_mentions_do_not_replace_scope_or_duplicate_wage_rules(tmp_path):
+    original='合同工资6000元，同岗最低档工资5000元，适用最低工资2200元，试用工资3500元。'
+    cases,cid,ref=source_case(tmp_path,original)
+    items=findings(ref)
+    items.insert(0,dict(topic='材料覆盖与审查范围',fact='已读工资片段，其中试用工资3500元。',
+        source='合成材料',basis='覆盖核对',risk='其他附件本次未审',action='补充附件后继续',citations=[ref]))
+    result=save_employment_review(cases,cid,'hiring',items)
+    assert len(result['rule_reviews'])==1
+    body=cases.read_note(cid,result['id'])['content']
+    assert '材料覆盖与审查范围' in body and '补充附件后继续' in body
+    assert original in body

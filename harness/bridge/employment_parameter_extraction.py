@@ -39,6 +39,7 @@ def _plain_gap(value, *, prefix=False):
     # Only simple field separators/connectors are consumed. Names, qualifiers,
     # extra units and unsupported operands remain visible and block comparisons.
     if prefix:value=BULLET.sub('',value,count=1)
+    value=re.sub(r'(?:上述|这)(?:四项|四个金额)均为(?:税前)?月工资标准[。]?','',value)
     return not re.sub(r'\s|[，,；;。:：、]|/月|每月|劳动合同|合同|约定|拟定|其中|以及|为|是|并|和','',value)
 
 
