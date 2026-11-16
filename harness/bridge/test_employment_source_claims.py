@@ -9,6 +9,9 @@ from test_employment_decisions import source_case
     ('fact','本轮为员工口头陈述。'),
     ('source','员工口述'),
     ('risk','考勤显示员工未出勤，存在严重违纪。'),
+    ('risk','材料中考勤记录显示张三连续旷工。'),
+    ('risk','材料中记载的情况属于员工口头陈述。'),
+    ('risk','考勤内容待核但考勤记录显示张三连续旷工。'),
 ])
 def test_missing_attendance_content_and_unspecified_medium_cannot_become_facts(tmp_path, field, claim):
     original='公司提供考勤摘录，员工称已申请产检假。具体考勤条目本次未展示，请假审批记录未提供。陈述媒介未说明。'

@@ -1,6 +1,9 @@
 """Keep cited facts verbatim; bound checks are not a general entailment engine."""
 import re
-from draft_review import CONDITIONAL, QUALIFIED
+from draft_review import CONDITIONAL
+
+CLAIM=re.compile(r'口头|口述|考勤.{0,12}(?:显示|证明|记载|反映)|(?:存在|构成|属于)严重违纪')
+CLAIM_QUALIFIER=re.compile(r'不要|不能|不得|不应|不作|不认定|不据|不等于|不代表|不足以|避免|是否|与否|未能确认|无法确认|尚无材料证明')
 
 
 def bind_source_facts(item, review, index):
@@ -36,12 +39,16 @@ def bind_source_facts(item, review, index):
         sentences=re.findall(r'[^。！？\n]+[。！？\n]?|[。！？\n]',value)
         for i,sentence in enumerate(sentences):
             if sentence.strip('。！？\n ') in source_sentences or CONDITIONAL.search(sentence):continue
-            parts=re.split(r'[，,；;]',sentence)
+            parts=re.split(r'[，,；;]|但是|但|然而|因此|所以|却|而且',sentence)
             unsupported=False
             for part in parts:
-                if QUALIFIED.search(part) or re.search(r'核对|核实|收集|补充|请提供',part):continue
-                if re.search(r'口头|口述|考勤.{0,12}(?:显示|证明|记载|反映)|(?:存在|构成|属于)严重违纪',part):
-                    unsupported=True
+                match=CLAIM.search(part)
+                if not match:continue
+                prefix=part[:match.start()]
+                if (CLAIM_QUALIFIER.search(prefix) or CONDITIONAL.search(part)
+                        or re.match(r'\s*(?:请|应|建议|需|待|进一步)?(?:核对|核实|收集|补充|提供)',prefix)):
+                    continue
+                unsupported=True
             if unsupported:
                 sentences[i]='本项陈述媒介、考勤具体内容及违纪判断尚需原文和适用条件支持，当前不作确定认定。'
         replace(field,''.join(sentences),'所引完整原句不支持该媒介、考勤内容或违纪认定；保留来源陈述供核对。')

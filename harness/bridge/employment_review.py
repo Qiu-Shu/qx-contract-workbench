@@ -44,6 +44,9 @@ def save_employment_review(cases, case_id, stage, findings, request_id='', super
         # bound below; only numeric opinions or explicit rules own this finding.
         pay_claim=any(re.search(r'试用(?:期)?(?:月)?工资[^。；\n]{0,24}\d+\s*元',str(item.get(k,'')))
                       for k in ('topic','risk','action'))
+        pay_topic=re.search(r'试用.{0,4}工资|工资.{0,4}试用',str(item.get('topic','')))
+        if pay_topic and any(re.search(r'\d+\s*元',str(item.get(k,''))) for k in ('risk','action')):
+            pay_claim=True
         program_owned=rule in ('probation_pay','noncompete_comparison') or pay_claim
         if rule=='noncompete_comparison':
             from employment_rule_review import prepare_noncompete_comparison

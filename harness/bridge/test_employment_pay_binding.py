@@ -165,3 +165,13 @@ def test_coverage_mentions_do_not_replace_scope_or_duplicate_wage_rules(tmp_path
     body=cases.read_note(cid,result['id'])['content']
     assert '材料覆盖与审查范围' in body and '补充附件后继续' in body
     assert original in body
+
+
+@pytest.mark.parametrize('stage',['hiring','dispute'])
+def test_wage_amount_in_action_inherits_its_topic_without_repeating_the_label(tmp_path,stage):
+    cases,cid,ref=source_case(tmp_path,'乙试用工资3500元，周期未说明。甲合同工资6000元。')
+    item=dict(topic='试用工资',fact='见原文',source='合成材料',basis='待核',risk='待核',
+              action='建议改为4800元/月。',citations=[ref])
+    result=save_employment_review(cases,cid,stage,[item])
+    assert result['rule_reviews'][0]['comparison'] is None
+    assert '建议改为4800元/月' not in result['content']
