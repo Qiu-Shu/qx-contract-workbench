@@ -1,0 +1,87 @@
+法官背调与开庭提纲　工具包　安装说明
+====================================
+
+一、这是什么
+
+一个 WorkBuddy 技能包，用来生成法官背景调查与开庭提纲的 Word 文档。
+装上以后，对 WorkBuddy 说“查一下某某法院某某法官，出一份提纲”，
+它就会按固定路径检索、按来源分级、按固定版式成稿。
+
+产出物特征：七到八页 A4，全文只用中文标点，零半角符号，
+末尾两张附表分别是检索台账与结论一页纸。
+
+二、目录结构
+
+    judge-background-dossier/
+        SKILL.md              技能主文件，WorkBuddy 读这个
+        scripts/
+            build_dossier.py  文档生成器，读 JSON 出 docx
+        references/
+            channels.md       三十二路检索清单
+            format.md         版式参数与 JSON 语法
+            verify.md         分页复核方法
+        templates/
+            blank_outline.json            空白骨架，占位写成【待填】
+            法官背调与开庭提纲模板.docx     由骨架生成的空白模板，六页
+            参考范本-通用背调提纲.docx      十章方法论范本，十一页
+        examples/
+            example.json      可直接运行的最小示例
+        安装说明.txt          本文件
+
+两份模板的分工：要动手写稿，复制 blank_outline.json 逐处替换；
+要给客户或同事看整体结构与口径，打印参考范本；要给纸质稿手填，
+打印模板。
+
+三、安装（推荐方式）
+
+1. 把整个 judge-background-dossier 文件夹复制到这台电脑的
+   C:\Users\你的用户名\.workbuddy\skills\ 目录下。
+   最终路径应为 .workbuddy\skills\judge-background-dossier\SKILL.md
+
+2. 重启 WorkBuddy，或新建一个会话。
+
+3. 说一句“用法官背调技能”，确认技能被识别。
+
+四、环境要求
+
+必须：Python 3，以及 python-docx。
+
+    pip install python-docx
+
+可选：本机装了 Microsoft Word 时，可以跑分页复核脚本，
+见 references\verify.md。没有 Word 也能出稿，只是分页要肉眼确认。
+
+五、自测
+
+在该文件夹下执行：
+
+    python scripts\build_dossier.py examples\example.json examples\test.docx
+
+应当输出四行以内的自检信息，其中一行是“半角符号：合格，全文仅用中文标点”。
+再打开 test.docx，应看到四页：正文两页，附表一页，附表二一页。
+
+六、怎么用
+
+1. 确认法官姓名、法院、庭室、案由、程序阶段。
+2. 让 WorkBuddy 按 channels.md 的三十二路检索，每次不少于二十路。
+3. 检索结果按甲、乙、丙三级标注来源。丙级只能作方向，不进庭审发言。
+4. 内容写成 JSON，字段见 format.md。
+5. 运行 build_dossier.py 生成，读自检结果。
+6. 按 verify.md 复核分页。
+
+七、两条不能破的规矩
+
+一是全文零半角符号。脚本会自检，不合格就回改 JSON 重新生成，
+不要在 Word 里手工替换，手工会漏。
+
+二是每篇独立成稿。不写“与上一篇不同”“如前所述”，
+不假定读者看过别的法官的材料。
+
+八、已知限制
+
+裁判文书公开率逐年下降，部分法官查不到以本人名义署名的文书。
+这种情况不要硬凑数据，改用以同组合议庭、同庭资深法官作代理口径，
+并在文中写明代理关系，不得写成该法官本人的指标。
+
+文档在预览面板打开时文件被独占，脚本无法覆盖同名文件。
+连续改稿时先关闭预览，或另存新名后再合并。
