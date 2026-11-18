@@ -246,7 +246,7 @@ def rects_for_line(b, W, H, hits, line, precise, keep_surname=True):
     """返回该行要涂黑的矩形列表。
 
     precise 时按每处命中分别定位并合并重叠。
-    keep_surname=True 时，人名只涂姓氏后面的部分（「赵德福」→ 图上留「赵██」），
+    keep_surname=True 时，人名只涂姓氏后面的部分（「某某某」→ 图上留「某██」），
     与文档里的化名规则（赵某）保持一致；不保留姓氏会把整个姓名连姓一起糊掉，
     既不符合最高法化名惯例，也让笔录读不出是谁。
     """
@@ -288,7 +288,7 @@ def rects_for_line(b, W, H, hits, line, precise, keep_surname=True):
     merged = []
     for r in rects:
         # 只在**实际重叠**时合并。原来用 r[0] <= 前框右边界+1 的容差，
-        # 会把「周志强」和「李海涛」中间隔着「、」的两个框连成一片，
+        # 会把「某某某」和「某某某」中间隔着「、」的两个框连成一片，
         # 连带把保留的姓氏一起涂黑。
         if merged and r[0] < merged[-1][2] and r[1] < merged[-1][3] and r[3] > merged[-1][1]:
             m = merged[-1]
@@ -923,7 +923,7 @@ def main():
     print("涂黑记录（还原钥匙，单独保管）：", mapf)
     print("OCR 识别到 %d 段文字，涂黑 %d 处" % (ocr_count, len(records)))
     if args.precise:
-        print("精细模式：只涂命中片段，人名保留姓氏（赵德福 → 图上只留「赵」）。")
+        print("精细模式：只涂命中片段，人名保留姓氏（某某某 → 图上只留「某」）。")
         print("  字符位置按字宽加权推算并留了安全边距；重要卷宗交付前仍建议看图抽查一眼。")
         print("  若发现残留半个字，加 --whole-line 改用整行涂黑（最保险，但文书可读性差）。")
     if ocr_count == 0:
