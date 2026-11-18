@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>还原预览 · 立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  html, body { height: 100%; margin: 0; background: var(--bg); }
+  body { display: flex; flex-direction: column; }
+  .topbar .nm { font-size: 13px; color: var(--muted); max-width: 32vw; overflow: hidden;
+                text-overflow: ellipsis; white-space: nowrap; }
+  .wrap { flex: 1; display: flex; min-height: 0; }
+  .main { flex: 1; overflow: auto; padding: 22px 26px 90px; }
+  .paper { max-width: 780px; margin: 0 auto; background: #fff; border: 1px solid var(--border);
+           border-radius: 6px; box-shadow: 0 8px 26px rgba(0,0,0,.08); padding: 46px 52px; }
+  .paper p { margin: 0 0 12px; line-height: 2.0; font-size: 15px; color: #1c1c1e;
+             text-indent: 2em; text-align: justify; word-break: break-word; }
+  .paper p.bold { font-weight: 600; }
+  .rt { background: #ffe3e3; border-bottom: 1px dashed var(--brand); cursor: pointer;
+        padding: 0 2px; border-radius: 3px; text-indent: 0; }
+  .rt:hover { background: #ffd0d0; }
+  .rt.set { background: #e3f4e6; border-bottom-color: var(--ok); color: #1d6b2c; }
+  .rt.ai { border-bottom-style: dotted; }
+
+  aside.side { flex: 0 0 272px; border-left: 1px solid var(--border); background: var(--panel);
+               display: flex; flex-direction: column; min-height: 0; }
+  .side h3 { margin: 0; padding: 14px 16px 6px; font-size: 13.5px; font-weight: 600; }
+  .side .tip { padding: 0 16px 8px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .side .list { flex: 1; overflow: auto; padding: 0 12px 12px; }
+  .g { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px;
+       background: var(--bg); padding: 8px 10px; }
+  .g .r1 { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+  .g .ph { font-weight: 600; }
+  .g .n { color: var(--muted); }
+  .g .badge { font-size: 10.5px; padding: 0 6px; border-radius: 999px;
+              border: 1px solid var(--warn); color: var(--warn); }
+  .g .r2 { display: flex; gap: 6px; margin-top: 6px; }
+  .g input { flex: 1; min-width: 0; padding: 4px 8px; font-family: inherit; font-size: 12px;
+             border: 1px solid var(--border); border-radius: 7px; background: var(--panel);
+             color: var(--text); }
+  .g button { font-family: inherit; font-size: 11.5px; padding: 4px 8px; border-radius: 7px;
+              border: 1px solid var(--border); background: var(--panel); color: var(--text);
+              cursor: pointer; white-space: nowrap; }
+  .g button:hover { border-color: var(--brand); color: var(--brand); }
+
+  .foot { position: fixed; left: 0; right: 0; bottom: 0; background: var(--panel);
+          border-top: 1px solid var(--border); padding: 11px 20px; display: flex;
+          gap: 12px; align-items: center; justify-content: flex-end; }
+  .foot .st { flex: 1; font-size: 12.5px; color: var(--muted); }
+
+  #pop { position: absolute; z-index: 20; background: var(--panel); border: 1px solid var(--border);
+         border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,.18); padding: 10px 12px;
+         display: none; width: 260px; }
+  #pop .h { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  #pop input { width: 100%; box-sizing: border-box; padding: 6px 9px; font-family: inherit;
+               font-size: 13px; border: 1px solid var(--border); border-radius: 8px;
+               background: var(--bg); color: var(--text); }
+  #pop .a { display: flex; gap: 8px; margin-top: 8px; }
+  #pop .a button { flex: 1; font-family: inherit; font-size: 12.5px; padding: 5px 0;
+                   border-radius: 8px; cursor: pointer; border: 1px solid var(--border);
+                   background: var(--panel); color: var(--text); }
+  #pop .a button.ok { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .empty { padding: 60px; text-align: center; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="mark"><img src="logo.png" srcset="logo.png 1x, logo@2x.png 2x" alt="立丰"></div>
+  <div>
+    <div class="t">还原预览</div>
+    <div class="s">点文中红色占位符，直接填这一处该换回谁；改过的变绿</div>
+  </div>
+  <span class="sp"></span>
+  <span class="nm" id="fname"></span>
+  <button class="btn ghost" id="back">返回</button>
+</header>
+
+<div class="wrap">
+  <main class="main">
+    <div class="paper" id="paper"><div class="empty" id="empty">正在读取…</div></div>
+  </main>
+  <aside class="side">
+    <h3>假名一览</h3>
+    <div class="tip">右侧「全部设为」可一次改掉这个假名的所有位置；点文中红字可单改。</div>
+    <div class="list" id="list"></div>
+  </aside>
+</div>
+
+<div class="foot">
+  <span class="st" id="stat"></span>
+  <button class="btn ghost" id="aiBtn" title="只在有歧义时有用（一个假名对应多个原值）：让本地模型按上下文判断这一处是谁">AI 猜一遍</button>
+  <button class="btn ghost" id="reset">恢复默认</button>
+  <button class="btn primary" id="go">生成还原件</button>
+</div>
+
+<div id="pop">
+  <div class="h" id="popH">这一处</div>
+  <input id="popIn" list="popDl">
+  <datalist id="popDl"></datalist>
+  <div class="a">
+    <button id="popCancel">取消</button>
+    <button class="ok" id="popOk">确定</button>
+  </div>
+</div>
+
+<script>
+const API = '';
+const $ = id => document.getElementById(id);
+const qs = new URLSearchParams(location.search);
+const EID = qs.get('id') || '';
+// 两种入口：账本记录（id）或「某个文件 + 某份映射表」（path/map）。
+// 后者用于批注修订后另存的新文件——账本里没有它，但占位符还是老一套。
+const PATH = qs.get('path') || '';
+const MAP = qs.get('map') || '';
+const MODE = EID ? 'id' : 'file';
+const planUrl = () => MODE === 'id' ? '/api/restore/blocks' : '/api/restore/file-plan';
+const applyUrl = () => MODE === 'id' ? '/api/restore/apply' : '/api/restore/file-apply';
+const baseBody = () => MODE === 'id' ? {id: EID} : {path: PATH, map: MAP};
+let DATA = null;
+let CHOICES = {};        // oid -> 用户指定的原值
+let CUR = null;          // 当前编辑的 span
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"]/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+function setStat(t, cls){
+  const el = $('stat');
+  el.textContent = t || '';
+  el.style.color = cls === 'warn' ? 'var(--warn)' : (cls === 'ok' ? 'var(--ok)' : 'var(--muted)');
+}
+
+async function boot(){
+  if(!EID && !(PATH && MAP)){ $('paper').innerHTML = '<div class="empty">缺少记录编号或文件参数</div>'; return; }
+  try{
+    const d = await (await fetch(API + planUrl(), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(baseBody())
+    })).json();
+    if(!d.ok) throw new Error(d.msg || '读取失败');
+    DATA = d;
+    $('fname').textContent = d.name || d.file || '';
+    $('fname').title = $('fname').textContent;
+    renderDoc(d);
+    renderSide(d);
+    setStat('共 ' + d.total + ' 处占位符，点红字改');
+  }catch(e){
+    $('paper').innerHTML = '<div class="empty">读取失败：' + esc(e.message) + '</div>';
+  }
+}
+
+/* 把整段文字渲出来，占位符切成可点的 span —— 和手动涂黑一个思路：
+   在文件本身上操作，而不是对着一张清单脑补上下文。 */
+function renderDoc(d){
+  const paper = $('paper');
+  paper.innerHTML = '';
+  if(!d.blocks || !d.blocks.length){
+    paper.innerHTML = '<div class="empty">这份成品里没有扫到映射表里的占位符</div>';
+    return;
+  }
+  d.blocks.forEach(b => {
+    const p = document.createElement('p');
+    if(b.bold) p.className = 'bold';
+    let html = '', last = 0;
+    (b.occ || []).forEach(o => {
+      html += esc(b.text.slice(last, o.pos));
+      html += '<span class="rt" data-oid="' + esc(o.oid) + '" data-ph="' + esc(o.ph) +
+              '" data-orig="' + esc(o.orig) + '">' + esc(o.ph) + '</span>';
+      last = o.pos + o.len;
+    });
+    html += esc(b.text.slice(last));
+    p.innerHTML = html;
+    paper.appendChild(p);
+  });
+  paper.querySelectorAll('.rt').forEach(sp => {
+    sp.onclick = e => { e.stopPropagation(); openPop(sp); };
+  });
+}
+
+function renderSide(d){
+  const list = $('list');
+  list.innerHTML = '';
+  (d.groups || []).forEach(g => {
+    const changed = Array.from(document.querySelectorAll('.rt.set'))
+      .filter(sp => sp.dataset.ph === g.ph).length;
+    const box = document.createElement('div');
+    box.className = 'g';
+    box.innerHTML =
+      '<div class="r1"><span class="ph">' + esc(g.ph) + '</span>' +
+      '<span class="n">' + g.count + ' 处' + (changed ? ('，已改 ' + changed) : '') + '</span>' +
+      (g.conflict ? '<span class="badge">多原值</span>' : '') + '</div>' +
+      '<div class="r2"><input id="bulk-' + encodeURIComponent(g.ph) + '" placeholder="' +
+      esc(g.orig) + '" list="dl-' + encodeURIComponent(g.ph) + '">' +
+      '<button data-bulk="' + encodeURIComponent(g.ph) + '">全部设为</button></div>' +
+      '<datalist id="dl-' + encodeURIComponent(g.ph) + '">' +
+      (g.candidates || []).map(c => '<option value="' + esc(c) + '">').join('') + '</datalist>';
+    list.appendChild(box);
+  });
+  list.querySelectorAll('button[data-bulk]').forEach(btn => {
+    btn.onclick = () => {
+      const ph = decodeURIComponent(btn.dataset.bulk);
+      const inp = document.getElementById('bulk-' + encodeURIComponent(ph));
+      const val = (inp.value || '').trim();
+      if(!val){ setStat('先填要统一设成的名字', 'warn'); return; }
+      document.querySelectorAll('.rt').forEach(sp => {
+        if(sp.dataset.ph === ph) applyValue(sp, val);
+      });
+      renderSide(DATA);
+      setStat('已把「' + ph + '」全部设为 ' + val, 'ok');
+    };
+  });
+}
+
+function applyValue(sp, val){
+  const oid = sp.dataset.oid;
+  const orig = sp.dataset.orig || '';
+  if(val === orig){
+    delete CHOICES[oid];
+    sp.classList.remove('set');
+    sp.textContent = sp.dataset.ph;
+  }else{
+    CHOICES[oid] = val;
+    sp.classList.add('set');
+    sp.textContent = val;
+  }
+}
+
+function openPop(sp){
+  CUR = sp;
+  const r = sp.getBoundingClientRect();
+  const pop = $('pop');
+  $('popH').textContent = sp.dataset.ph + '　默认：' + (sp.dataset.orig || '');
+  $('popIn').value = sp.classList.contains('set') ? sp.textContent : (sp.dataset.orig || '');
+  const dl = $('popDl');
+  dl.innerHTML = '';
+  const g = (DATA.groups || []).find(x => x.ph === sp.dataset.ph);
+  (g && g.candidates || []).forEach(c => {
+    const o = document.createElement('option'); o.value = c; dl.appendChild(o);
+  });
+  pop.style.display = 'block';
+  pop.style.left = Math.min(r.left + window.scrollX, window.innerWidth - 290) + 'px';
+  pop.style.top = (r.bottom + window.scrollY + 8) + 'px';
+  $('popIn').focus();
+  $('popIn').select();
+}
+
+function closePop(){ $('pop').style.display = 'none'; CUR = null; }
+
+$('popOk').onclick = () => {
+  if(!CUR) return;
+  const v = ($('popIn').value || '').trim();
+  if(!v){ setStat('不能填空', 'warn'); return; }
+  applyValue(CUR, v);
+  closePop();
+  renderSide(DATA);
+  setStat('已改 ' + Object.keys(CHOICES).length + ' 处');
+};
+$('popCancel').onclick = closePop;
+$('popIn').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); $('popOk').click(); }
+});
+document.addEventListener('click', e => {
+  if($('pop').style.display === 'block' && !e.target.closest('#pop')) closePop();
+});
+
+/* AI 兜底：只处理有歧义的位置（一个假名对应多个真实主体）。
+   判断结果只作为"建议"填进去，还要人过一眼——猜错就是张冠李戴。 */
+$('aiBtn').onclick = async () => {
+  if(MODE !== 'id'){ setStat('AI 猜名只对账本记录可用', 'warn'); return; }
+  const btn = $('aiBtn');
+  btn.disabled = true; btn.textContent = 'AI 判断中…';
+  try{
+    const d = await (await fetch(API + '/api/restore/ai-suggest', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({id: EID})
+    })).json();
+    if(!d.ok) throw new Error(d.msg || '判断失败');
+    let n = 0;
+    Object.entries(d.suggest || {}).forEach(([oid, val]) => {
+      const sp = document.querySelector('.rt[data-oid="' + CSS.escape(oid) + '"]');
+      if(!sp) return;
+      applyValue(sp, val);
+      sp.classList.add('ai');
+      n++;
+    });
+    renderSide(DATA);
+    setStat((d.note || '') + (n ? ('，已填入 ' + n + ' 处，请核对') : ''), n ? 'ok' : '');
+  }catch(e){
+    setStat('AI 判断失败：' + e.message + '（没有模型也能手动改）', 'warn');
+  }finally{
+    btn.disabled = false; btn.textContent = 'AI 猜一遍';
+  }
+};
+
+$('reset').onclick = () => { CHOICES = {}; boot(); };
+$('back').onclick = () => { location.href = 'index.html'; };
+
+$('go').onclick = async () => {
+  const btn = $('go');
+  btn.disabled = true; btn.textContent = '正在生成…';
+  try{
+    const d = await (await fetch(API + applyUrl(), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign(baseBody(), {choices: CHOICES}))
+    })).json();
+    if(!d.ok) throw new Error(d.msg || '还原失败');
+    const rc = d.residual_count || 0;
+    setStat('已生成：' + d.name + '（替换 ' + d.replaced + ' 处，按你的指定 ' +
+            d.overridden + ' 处）' +
+            (rc ? ('；还有 ' + rc + ' 类占位符没还原：' + (d.residual || []).join('、') +
+                   '，多半是被批注修订切碎了') : ''), rc ? 'warn' : 'ok');
+    fetch(API + '/api/openout?dir=restore');   // 完成即调出「还原」文件夹
+    btn.textContent = '已生成';
+  }catch(e){
+    setStat('还原失败：' + e.message, 'warn');
+    btn.disabled = false; btn.textContent = '生成还原件';
+  }
+};
+
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文件转 Markdown · 立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 22px 20px 60px; }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  header h1 { font-size: 17px; margin: 0; font-weight: 600; }
+  header .sub { font-size: 12.5px; color: var(--muted); }
+  header .sp { flex: 1; }
+  a.back { font-size: 13px; color: var(--muted); text-decoration: none; }
+  a.back:hover { color: var(--brand); }
+
+  .card { background: var(--panel); border: 1px solid var(--border);
+          border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .card h2 { font-size: 13.5px; font-weight: 600; margin: 0 0 12px; }
+  .drop { border: 1.5px dashed var(--border); border-radius: 12px;
+          padding: 32px 20px; text-align: center; cursor: pointer;
+          transition: .15s; background: var(--panel); }
+  .drop:hover, .drop.hot { border-color: var(--brand); background: var(--brand-soft); }
+  .drop .big { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .drop .hint { font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+
+  .warn { font-size: 12.5px; line-height: 1.8; padding: 10px 12px; border-radius: 8px;
+          background: var(--warn-soft); color: var(--warn); margin-bottom: 14px; }
+  .warn b { color: var(--text); }
+
+  .tip { font-size: 12.5px; color: var(--muted); line-height: 1.75;
+         padding: 10px 12px; background: var(--bg); border: 1px solid var(--border);
+         border-radius: 8px; }
+  .tip b { color: var(--text); }
+
+  button, .btn { font: inherit; font-size: 13px; padding: 7px 14px; border-radius: 8px;
+                 cursor: pointer; border: 1px solid var(--border); background: var(--panel);
+                 color: var(--text); }
+  button:hover, .btn:hover { border-color: var(--brand); color: var(--brand); }
+  button.primary, .btn.primary { background: var(--brand); border-color: var(--brand);
+                                 color: #fff; font-weight: 600; }
+  button.primary:hover, .btn.primary:hover { opacity: .9; color: #fff; }
+  button:disabled { opacity: .45; cursor: default; }
+  button.mini { font-size: 11.5px; padding: 3px 9px; }
+
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .row .sp { flex: 1; }
+  label.ck { font-size: 12.5px; color: var(--muted); display: inline-flex;
+             align-items: center; gap: 5px; cursor: pointer; }
+  select { font: inherit; font-size: 12.5px; padding: 6px 9px; border-radius: 8px;
+           border: 1px solid var(--border); background: var(--panel); color: var(--text); }
+
+  .item { display: flex; align-items: center; gap: 10px; font-size: 13px;
+          padding: 9px 2px; border-bottom: 1px solid var(--border); }
+  .item:last-child { border-bottom: none; }
+  .item .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item .meta { font-size: 11.5px; color: var(--muted); flex: 0 0 auto; }
+  .item .rm { color: var(--muted); cursor: pointer; font-size: 16px; padding: 0 4px; }
+  .item .rm:hover { color: var(--brand); }
+  .item.ok .nm { color: var(--ok); }
+  .item.bad .nm { color: var(--warn); }
+  .empty { color: var(--muted); font-size: 13px; text-align: center; padding: 20px 12px; }
+
+  .msg { font-size: 13px; padding: 9px 12px; border-radius: 8px; margin-top: 12px;
+         background: var(--warn-soft); color: var(--warn); }
+  .msg.ok { background: var(--ok-soft); color: var(--ok); }
+  .hide { display: none !important; }
+
+  #mdModal { position: fixed; inset: 0; z-index: 60; display: none;
+             background: rgba(0,0,0,.32); align-items: center; justify-content: center; }
+  #mdModal.show { display: flex; }
+  .mbox { width: 820px; max-width: 94vw; max-height: 88vh; display: flex; flex-direction: column;
+          background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+          padding: 18px 20px 16px; box-shadow: 0 22px 64px rgba(0,0,0,.26); }
+  .mbox h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; word-break: break-all; }
+  .mbox .sub { font-size: 11.5px; color: var(--muted); word-break: break-all; }
+  .mbox pre { flex: 1; overflow: auto; white-space: pre-wrap; word-break: break-word;
+              font: 12.5px/1.75 ui-monospace, "SF Mono", Menlo, monospace;
+              background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+              padding: 12px 14px; margin: 12px 0 0; color: var(--text); }
+  .mbox .acts { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>文件转 Markdown</h1>
+    <span class="sub">独立入口 · 只转格式</span>
+    <span class="sp"></span>
+    <button id="openFolder" title="打开输出文件夹">打开 MD 文件夹</button>
+    <a class="back" href="index.html">← 返回首页</a>
+  </header>
+
+  <div class="warn"><b>只转格式，不脱敏。</b>原件真名会原样写进 md，别当脱敏件外发。</div>
+
+  <div class="card">
+    <div class="drop" id="drop">
+      <div class="big" id="dropBig">点击选择，或拖入文件</div>
+      <div class="hint">Word · PDF · 表格 · 文本 · 图片　可多选</div>
+    </div>
+    <div id="fileList" style="margin-top:10px"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="primary" id="go" disabled>开始转换</button>
+      <button id="clearFiles" disabled>清空列表</button>
+      <span class="sp"></span>
+      <span style="font-size:12.5px;color:var(--muted)">输出到</span>
+      <select id="outDir">
+        <option value="">统一的 MD 文件夹</option>
+        <option value="source">源文件所在文件夹</option>
+      </select>
+      <label class="ck"><input type="checkbox" id="ocr" checked> 扫描件 / 图片跑 OCR</label>
+    </div>
+    <div class="msg hide" id="msg"></div>
+  </div>
+
+  <div class="card hide" id="resultCard">
+    <h2>本次转换结果 <span id="resultSum" style="font-weight:400;color:var(--muted);font-size:12px"></span></h2>
+    <div id="resultList"></div>
+  </div>
+
+  <div class="card">
+    <h2>已转出的 MD</h2>
+    <div class="row" style="margin-bottom:8px">
+      <span id="mdDir" style="font-size:11.5px;color:var(--muted);word-break:break-all;flex:1"></span>
+      <button class="mini" id="refreshMd">刷新</button>
+    </div>
+    <div id="mdList"><div class="empty">加载中…</div></div>
+  </div>
+
+  <div class="tip">保留标题层级与表格；扫描页走本机 OCR；同名不同格式自动加后缀。</div>
+</div>
+
+<div id="mdModal">
+  <div class="mbox">
+    <h3 id="mdTitle"></h3>
+    <div class="sub" id="mdPath"></div>
+    <pre id="mdText"></pre>
+    <div class="acts">
+      <button id="mdCopy">复制全文</button>
+      <button id="mdReveal">在访达中显示</button>
+      <button class="primary" id="mdClose">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "";
+const $ = (id) => document.getElementById(id);
+const OK_EXT = /\.(docx|docm|pdf|xlsx|xlsm|txt|md|markdown|png|jpe?g|tif|tiff|bmp)$/i;
+let FILES = [];        // [{path, name}]
+let BUSY = false;
+let CUR_PATH = "";
+
+function show(el, on) { el.classList.toggle("hide", !on); }
+function say(t, ok) {
+  const m = $("msg");
+  m.textContent = t;
+  m.classList.toggle("ok", !!ok);
+  show(m, true);
+}
+function base(p) { return String(p || "").split("/").pop(); }
+function fmtSize(n) {
+  n = Number(n || 0);
+  return n > 1024 * 1024 ? (n / 1024 / 1024).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB";
+}
+function fmtTime(ts) {
+  if (!ts) return "";
+  const d = new Date(ts * 1000);
+  const p = (x) => String(x).padStart(2, "0");
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+}
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+async function post(url, body) {
+  const r = await fetch(API + url, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body || {}),
+  });
+  return r.json();
+}
+
+/* ---------- 选文件 ---------- */
+function addPaths(paths) {
+  const seen = new Set(FILES.map((x) => x.path));
+  let bad = 0;
+  (paths || []).forEach((p) => {
+    if (!p || seen.has(p)) return;
+    seen.add(p);
+    if (!OK_EXT.test(p)) { bad++; return; }
+    FILES.push({ path: p, name: base(p) });
+  });
+  renderFiles();
+  if (bad) say("已忽略 " + bad + " 个不支持的文件。");
+  else show($("msg"), false);
+}
+
+function renderFiles() {
+  const box = $("fileList");
+  box.innerHTML = "";
+  if (!FILES.length) {
+    box.innerHTML = '<div class="empty">还没有选文件</div>';
+  } else {
+    FILES.forEach((f, i) => {
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = '<span class="meta">' + (i + 1) + '</span>' +
+        '<span class="nm" title="' + esc(f.path) + '">' + esc(f.name) + '</span>' +
+        '<span class="meta">待转换</span>' +
+        '<span class="rm" title="移除">&times;</span>';
+      row.querySelector(".rm").onclick = () => { FILES.splice(i, 1); renderFiles(); };
+      box.appendChild(row);
+    });
+  }
+  $("go").disabled = BUSY || !FILES.length;
+  $("clearFiles").disabled = BUSY || !FILES.length;
+  $("go").textContent = FILES.length > 1 ? ("开始转换（" + FILES.length + " 个）") : "开始转换";
+}
+
+const drop = $("drop");
+drop.onclick = async () => {
+  if (BUSY) return;
+  const big = $("dropBig"), old = big.textContent;
+  big.textContent = "正在打开选择框…";
+  try {
+    const d = await post("/api/pick", {
+      prompt: "选择要转 Markdown 的文件（可多选）", multiple: true,
+    });
+    big.textContent = old;
+    addPaths(d.paths || []);
+  } catch (e) {
+    big.textContent = old;
+    say("选择文件失败：" + e.message);
+  }
+};
+["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => {
+  e.preventDefault(); drop.classList.add("hot");
+}));
+["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => {
+  e.preventDefault(); drop.classList.remove("hot");
+}));
+drop.addEventListener("drop", async (e) => {
+  if (BUSY) return;
+  const fs = Array.from(e.dataTransfer.files || []);
+  if (!fs.length) return;
+  const big = $("dropBig"), old = big.textContent;
+  const paths = [];
+  try {
+    for (let i = 0; i < fs.length; i++) {
+      big.textContent = "正在读入 " + (i + 1) + " / " + fs.length + "…";
+      const r = await fetch(API + "/api/upload", {
+        method: "POST", headers: { "X-Filename": encodeURIComponent(fs[i].name) },
+        body: fs[i],
+      });
+      const d = await r.json();
+      if (d.ok) paths.push(d.path);
+    }
+  } finally {
+    big.textContent = old;
+  }
+  addPaths(paths);
+});
+$("clearFiles").onclick = () => { FILES = []; renderFiles(); show($("msg"), false); };
+
+/* ---------- 转换 ---------- */
+$("go").onclick = async () => {
+  if (BUSY || !FILES.length) return;
+  BUSY = true;
+  renderFiles();
+  show($("resultCard"), true);
+  const list = $("resultList");
+  list.innerHTML = "";
+  $("resultSum").textContent = "";
+  const ocr = $("ocr").checked;
+  const outDir = $("outDir").value;
+  let okc = 0;
+  let FIRST_OK = "";
+
+  for (let i = 0; i < FILES.length; i++) {
+    const f = FILES[i];
+    say("正在转换 " + (i + 1) + " / " + FILES.length + "：" + f.name + "（扫描件可能要几分钟）", true);
+    const row = document.createElement("div");
+    row.className = "item";
+    row.innerHTML = '<span class="nm">' + esc(f.name) + '</span><span class="meta">转换中…</span>';
+    list.appendChild(row);
+    try {
+      const d = await post("/api/to-md", { paths: [f.path], ocr: ocr, out_dir: outDir });
+      row.className = "item " + (d.ok ? "ok" : "bad");
+      if (d.ok) {
+        okc++;
+        if (!FIRST_OK) FIRST_OK = d.md || "";
+        row.innerHTML = '<span class="nm" title="' + esc(d.md || "") + '">✓ ' + esc(base(d.md)) + '</span>' +
+          '<span class="meta">' + (d.chars || 0) + ' 字 · ' + (d.seconds || 0) + 's</span>' +
+          '<button class="mini">查看</button><button class="mini">访达</button>';
+        const bs = row.querySelectorAll("button");
+        bs[0].onclick = () => viewMd(d.md);
+        bs[1].onclick = () => reveal(d.md);
+      } else {
+        row.innerHTML = '<span class="nm" title="' + esc(d.msg || "") + '">× ' + esc(f.name) + '</span>' +
+          '<span class="meta">' + esc((d.msg || "转换失败").slice(0, 90)) + '</span>';
+      }
+    } catch (e) {
+      row.className = "item bad";
+      row.innerHTML = '<span class="nm">× ' + esc(f.name) + '</span><span class="meta">' + esc(e.message) + '</span>';
+    }
+  }
+  BUSY = false;
+  renderFiles();
+  $("resultSum").textContent = "成功 " + okc + " / " + FILES.length;
+  say("转换完成：成功 " + okc + " 份，失败 " + (FILES.length - okc) + " 份。", okc === FILES.length);
+  // 完成即调出成品所在文件夹；选了「源文件旁」就按首个成功文件定位
+  if (okc) {
+    fetch(API + (outDir === "source" && FIRST_OK
+      ? ("/api/openout?path=" + encodeURIComponent(FIRST_OK))
+      : "/api/openout?dir=md"));
+  }
+  loadMd();
+};
+
+/* ---------- 预览 / 定位 ---------- */
+function reveal(p) {
+  if (p) fetch(API + "/api/open?path=" + encodeURIComponent(p));
+}
+async function viewMd(p) {
+  if (!p) return;
+  CUR_PATH = p;
+  $("mdTitle").textContent = base(p);
+  $("mdPath").textContent = p;
+  $("mdText").textContent = "读取中…";
+  $("mdModal").classList.add("show");
+  try {
+    const d = await post("/api/to-md/read", { path: p });
+    $("mdText").textContent = d.ok ? (d.text || "（空文件）") : ("读取失败：" + (d.msg || ""));
+  } catch (e) {
+    $("mdText").textContent = "读取失败：" + e.message;
+  }
+}
+$("mdClose").onclick = () => $("mdModal").classList.remove("show");
+$("mdModal").addEventListener("click", (e) => {
+  if (e.target === $("mdModal")) $("mdModal").classList.remove("show");
+});
+$("mdReveal").onclick = () => reveal(CUR_PATH);
+$("mdCopy").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText($("mdText").textContent);
+    $("mdCopy").textContent = "已复制";
+    setTimeout(() => { $("mdCopy").textContent = "复制全文"; }, 1500);
+  } catch (e) {
+    say("无法自动复制，请手动选中。");
+  }
+};
+
+/* ---------- 已转出的 MD ---------- */
+async function loadMd() {
+  const box = $("mdList");
+  box.innerHTML = '<div class="empty">加载中…</div>';
+  try {
+    const d = await post("/api/to-md/list", {});
+    $("mdDir").textContent = d.dir || "";
+    box.innerHTML = "";
+    if (!d.ok || !(d.items || []).length) {
+      box.innerHTML = '<div class="empty">还没有转出过 md</div>';
+      return;
+    }
+    // 后端已过滤隐藏文件，这里再挡一层：编辑器临时残留不该混进「已转出的 MD」
+    (d.items || []).filter((it) => !String(it.name || "").startsWith("."))
+      .slice().reverse().forEach((it) => {
+      const row = document.createElement("div");
+      row.className = "item";
+      row.innerHTML = '<span class="nm" title="' + esc(it.path) + '">' + esc(it.name) + '</span>' +
+        '<span class="meta">' + fmtSize(it.size) + ' · ' + fmtTime(it.mtime) + '</span>' +
+        '<button class="mini">查看</button><button class="mini">访达</button>';
+      const bs = row.querySelectorAll("button");
+      bs[0].onclick = () => viewMd(it.path);
+      bs[1].onclick = () => reveal(it.path);
+      box.appendChild(row);
+    });
+  } catch (e) {
+    box.innerHTML = '<div class="empty">列表加载失败：' + esc(e.message) + '</div>';
+  }
+}
+$("refreshMd").onclick = loadMd;
+$("openFolder").onclick = async () => {
+  try { await post("/api/to-md/folder", {}); } catch (e) { say("打开文件夹失败：" + e.message); }
+};
+
+renderFiles();
+loadMd();
+</script>
+</body>
+</html>

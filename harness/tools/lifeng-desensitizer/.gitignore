@@ -1,0 +1,24 @@
+# 运行期数据（含真实案卷与词表，绝不能进仓库）
+*.pyc
+__pycache__/
+.DS_Store
+
+# 词表与映射表
+敏感词表*.txt
+*_映射表.csv
+*_图片涂黑记录.csv
+词条对照表*.xlsx
+
+# 中间产物
+*.docx
+*.pdf
+*.png
+!web/*.png
+*.jpg
+*.jpeg
+
+# 打包产物
+dist/
+build/
+*.zip
+*.app/

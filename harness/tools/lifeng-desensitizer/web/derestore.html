@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>逆向还原 · 立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.6 -apple-system, "PingFang SC", "Helvetica Neue", sans-serif; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 20px 20px 50px; }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  header h1 { font-size: 17px; margin: 0; font-weight: 600; }
+  header .sub { font-size: 12.5px; color: var(--muted); }
+  header .sp { flex: 1; }
+  a.back { font-size: 13px; color: var(--muted); text-decoration: none; }
+  a.back:hover { color: var(--brand); }
+
+  .card { background: var(--panel); border: 1px solid var(--border);
+          border-radius: 12px; padding: 14px 16px; margin-bottom: 13px; }
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .row .lbl { font-size: 13px; color: var(--muted); }
+  .stat { font-size: 13px; color: var(--muted); }
+  .stat b { color: var(--brand); font-size: 15px; }
+  .note { font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+  .note b { color: var(--text); }
+  .hide { display: none !important; }
+  .msg { font-size: 13px; padding: 8px 12px; border-radius: 8px;
+         background: var(--warn-soft); color: var(--warn); margin-top: 8px; }
+
+  .maplist { margin-top: 8px; max-height: 210px; overflow: auto;
+             border: 1px solid var(--border); border-radius: 9px; }
+  .maplist .mi { display: flex; align-items: center; gap: 9px;
+                 padding: 7px 12px; border-bottom: 1px solid var(--border);
+                 font-size: 13px; cursor: pointer; }
+  .maplist .mi:last-child { border-bottom: none; }
+  .maplist .mi:hover { background: var(--brand-soft); }
+  .maplist .mi input { margin: 0; }
+  .maplist .mi .nm { flex: 1; overflow: hidden; text-overflow: ellipsis;
+                     white-space: nowrap; }
+  .maplist .mi .mt { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+  button { font: inherit; padding: 8px 18px; border-radius: 8px; cursor: pointer;
+           border: 1px solid var(--border); background: var(--panel); color: var(--text); }
+  button:hover { border-color: var(--brand); color: var(--brand); }
+  button.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  button.primary:hover { opacity: .9; color: #fff; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>逆向还原</h1>
+    <span class="sub">在原文件副本上把替代词换回真名</span>
+    <span class="sp"></span>
+    <a class="back" href="index.html">← 返回首页</a>
+  </header>
+
+  <div class="card">
+    <div class="row">
+      <span class="lbl">还原依据</span>
+      <span class="stat" id="mapInfo">正在读取…</span>
+      <span style="flex:1"></span>
+      <button id="selAll">全选</button>
+      <button id="selNone">全不选</button>
+      <button id="refresh">刷新</button>
+    </div>
+    <div id="mapList" class="maplist"></div>
+    <div class="note" style="margin-top:6px">
+      映射表优先；词表反向补上没覆盖的词，冲突时保留映射表。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <b style="font-size:13.5px">选择文件</b>
+      <span class="stat">在原件副本上只换字，版式保留</span>
+      <span style="flex:1"></span>
+      <button id="fileRestore" class="primary">选文件并还原</button>
+    </div>
+    <div class="note" style="margin-top:8px">
+      Word / Excel / 文本可用；PDF 不支持保格式替换。成品在「文稿 / 立丰脱敏 / 还原」，原文件不动。
+    </div>
+    <div class="stat" id="tip" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card hide" id="fileCard">
+    <div class="row" style="margin-bottom:8px">
+      <b style="font-size:13.5px">还原结果</b>
+      <span class="stat" id="fileSum"></span>
+      <span style="flex:1"></span>
+      <button id="fileReveal">在访达中显示</button>
+    </div>
+    <div class="note" id="filePath"></div>
+    <div id="fileConflict"></div>
+  </div>
+
+  <div class="card">
+    <div class="note">
+      <b>做什么</b>：映射表 + 脱敏词表，把替代词换回真名；词表替代词若是常见词可能误伤正文，取消勾选即可。<br>
+      <b>只改字</b>：段落、表格、字体、页眉页脚都留着；Word / Excel / 文本可用，PDF 请先转成 docx。<br>
+      <b>注意</b>：还原件含真名，别和脱敏成品一起外发；选错依据会把 A 的事写到 B 头上。<br>
+      <b>只在本机</b>：不上传、不联网，原文件不动。
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "";
+const $ = (id) => document.getElementById(id);
+let MAPS = [];
+let FILE_OUT = "";
+
+function show(el, on) { el.classList.toggle("hide", !on); }
+
+async function loadMaps() {
+  $("mapList").innerHTML = "<div class='mi'>正在读取…</div>";
+  try {
+    const r = await fetch(API + "/api/derestore/maps");
+    const d = await r.json();
+    MAPS = d.maps || [];
+    const box = $("mapList");
+    box.innerHTML = "";
+    if (!MAPS.length) {
+      box.innerHTML = "<div class='mi'>没有还原依据，先脱敏一次或在规则里登记词条</div>";
+      $("mapInfo").textContent = "";
+      return;
+    }
+    const firstCsv = MAPS.findIndex((x) => !x.kind);
+    MAPS.forEach((m, i) => {
+      const lab = document.createElement("label");
+      lab.className = "mi";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.value = m.name;
+      // 词表默认勾，CSV 仍只默认勾最新那份
+      cb.checked = (m.kind === "terms") || (i === firstCsv);
+      cb.onchange = updateInfo;
+      const nm = document.createElement("span");
+      nm.className = "nm";
+      nm.textContent = m.label || m.name;
+      const mt = document.createElement("span");
+      mt.className = "mt";
+      mt.textContent = m.count + " 条 · " + m.mtime;
+      lab.append(cb, nm, mt);
+      box.appendChild(lab);
+    });
+    updateInfo();
+  } catch (e) {
+    $("mapList").innerHTML = "<div class='mi'>读取失败</div>";
+    $("mapInfo").textContent = e.message;
+  }
+}
+
+function selectedMaps() {
+  return Array.from(document.querySelectorAll("#mapList input:checked"))
+    .map((x) => x.value);
+}
+
+function updateInfo() {
+  const sel = selectedMaps();
+  if (!sel.length) { $("mapInfo").textContent = "还没选"; return; }
+  const sum = sel.reduce((s, n) => {
+    const m = MAPS.find((x) => x.name === n);
+    return s + (m ? m.count : 0);
+  }, 0);
+  $("mapInfo").textContent = sel.length === 1
+    ? (sum + " 条")
+    : ("已选 " + sel.length + " 份 · 合计 " + sum + " 条，重复的自动去重");
+}
+
+$("selAll").onclick = () => {
+  document.querySelectorAll("#mapList input").forEach((x) => { x.checked = true; });
+  updateInfo();
+};
+$("selNone").onclick = () => {
+  document.querySelectorAll("#mapList input").forEach((x) => { x.checked = false; });
+  updateInfo();
+};
+$("refresh").onclick = loadMaps;
+
+/* 只保留文件模式：选文件 → 后端在副本上只改文字 → 输出同格式文件。
+   不再抽文字、不再新建文档，排版原样保留。 */
+$("fileRestore").onclick = async () => {
+  const btn = $("fileRestore");
+  const old = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "处理中…";
+  try {
+    const r = await fetch(API + "/api/pick", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: "选择要还原的文件（Word / Excel / 文本）", multiple: false }),
+    });
+    const d = await r.json();
+    const p = (d.paths || [])[0];
+    if (!p) return;
+    const r2 = await fetch(API + "/api/derestore/file", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: p, maps: selectedMaps() }),
+    });
+    const d2 = await r2.json();
+    if (!d2.ok) throw new Error(d2.msg || "还原失败");
+    FILE_OUT = d2.path || "";
+    $("fileSum").textContent = "替换 " + (d2.total || 0) + " 处";
+    $("filePath").textContent = (d2.name || "") + "　→　" + FILE_OUT;
+    const cf = $("fileConflict");
+    cf.innerHTML = "";
+    if (d2.conflict_total) {
+      const warn = document.createElement("div");
+      warn.className = "msg";
+      warn.textContent = "有 " + d2.conflict_total +
+        " 个替代词在不同依据里指向不同原值，已保留映射表的；如还原错了，只勾正确的那份重来。";
+      cf.appendChild(warn);
+    }
+    show($("fileCard"), true);
+    $("tip").textContent = d2.msg || "";
+    fetch(API + "/api/openout?dir=restore");   // 还原完成，自动调出「还原」文件夹
+  } catch (e) {
+    alert("还原失败：" + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = old;
+  }
+};
+
+$("fileReveal").onclick = () => {
+  if (FILE_OUT) fetch(API + "/api/open?path=" + encodeURIComponent(FILE_OUT));
+};
+
+loadMaps();
+</script>
+</body>
+</html>

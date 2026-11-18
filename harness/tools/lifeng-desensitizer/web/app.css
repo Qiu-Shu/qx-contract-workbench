@@ -1,0 +1,117 @@
+/* 立丰脱敏 · 三页共用基础样式
+   主页 / 预览页 / 还原页都引用本文件，变量与主题在此统一定义。 */
+
+:root {
+  --bg: #faf9f8;
+  --panel: #fff;
+  --border: #e6e2df;
+  --text: #1f1c1a;
+  --muted: #78716c;
+  --brand: #b21a22;
+  --brand-soft: #fdf2f2;
+  --ok: #15803d;
+  --ok-soft: #f0fdf4;
+  --warn: #b45309;
+  --warn-soft: #fffbeb;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17151a;
+    --panel: #201d23;
+    --border: #332f38;
+    --text: #ece9ef;
+    --muted: #a29aa8;
+    --brand: #e0505a;
+    --brand-soft: #2b1c1f;
+    --ok: #4ade80;
+    --ok-soft: #12261a;
+    --warn: #fbbf24;
+    --warn-soft: #2a2213;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  font-size: 14.5px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--brand); text-decoration: none; }
+
+/* 通用按钮 */
+.btn {
+  font-family: inherit;
+  font-size: 13.5px;
+  border-radius: 9px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  transition: .15s;
+}
+.btn:hover { border-color: var(--brand); color: var(--brand); }
+.btn.primary {
+  background: var(--brand);
+  color: #fff;
+  border-color: var(--brand);
+  font-weight: 600;
+}
+.btn.primary:hover { opacity: .9; color: #fff; }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn:disabled:hover { border-color: var(--border); color: var(--text); }
+.btn.ghost { font-size: 12.5px; padding: 6px 12px; color: var(--muted); }
+
+/* 顶栏 */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.topbar .mark { width: 32px; height: 32px; display: grid; place-items: center; }
+.topbar .mark img { width: 100%; height: 100%; object-fit: contain; }
+.topbar .t { font-size: 15.5px; font-weight: 700; letter-spacing: .3px; }
+.topbar .s { font-size: 11.5px; color: var(--muted); margin-top: -2px; }
+.topbar .sp { flex: 1; }
+
+/* 空状态 */
+.empty {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 26px 12px;
+}
+
+/* 提示条 */
+.tip {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.tip b { color: var(--text); }
+
+/* 加载中 */
+.loading { color: var(--muted); font-size: 13px; padding: 30px; text-align: center; }
+.spin {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid var(--border); border-top-color: var(--brand);
+  border-radius: 50%; animation: sp .7s linear infinite;
+  vertical-align: -2px; margin-right: 6px;
+}
+@keyframes sp { to { transform: rotate(360deg); } }

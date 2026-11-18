@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>脱敏预览 · 立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  body { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+  .topbar .file { font-size: 13px; color: var(--muted); }
+  .topbar .stat { font-size: 12.5px; color: var(--muted); }
+  .topbar .stat b { color: var(--brand); font-size: 14px; }
+  /* 2026-11-05 用户死命令：质检未通过在预览页直接标红，不另开目录 */
+  .qflag { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:6px;
+           background:var(--warn); color:#fff; font-size:12px; vertical-align:middle; cursor:help; }
+  .topbar select {
+    font-family: inherit; font-size: 12.5px; padding: 4px 8px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+    max-width: 230px;
+  }
+
+  #listBox .li { display: flex; align-items: center; gap: 6px; padding: 5px 8px;
+                 border-bottom: 1px dashed var(--border); font-size: 12px; cursor: pointer; }
+  #listBox .li:hover { background: var(--brand-soft); }
+  #listBox .li .ph { font-weight: 600; max-width: 104px; overflow: hidden;
+                     text-overflow: ellipsis; white-space: nowrap; }
+  #listBox .li .og { flex: 1; color: var(--muted); overflow: hidden; text-overflow: ellipsis;
+                     white-space: nowrap; }
+  #listBox .li .x { border: 1px solid var(--border); background: var(--panel);
+                    color: var(--muted); border-radius: 6px; font-size: 11px;
+                    padding: 1px 6px; cursor: pointer; font-family: inherit; }
+  #listBox .li .x:hover { color: var(--brand); border-color: var(--brand); }
+  .body { flex: 1; display: flex; min-height: 0; }
+
+  /* 左：文档 */
+  .doc-wrap { flex: 1; overflow-y: auto; padding: 22px 26px 60px; }
+  .doc {
+    max-width: 760px; margin: 0 auto; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 34px 40px; line-height: 2; font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .doc .p { margin: 0 0 10px; text-indent: 2em; }
+  .doc h1.dt { font-size: 17px; text-align: center; margin: 0 0 18px; text-indent: 0; }
+  .doc table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 13px; }
+  .doc td { border: 1px solid var(--border); padding: 6px 8px; vertical-align: top; line-height: 1.7; }
+
+  .mk {
+    background: var(--brand-soft); color: var(--brand);
+    border-bottom: 2px solid var(--brand); border-radius: 3px 3px 0 0;
+    padding: 0 2px; cursor: pointer; font-weight: 600;
+  }
+  .mk:hover { background: var(--brand); color: #fff; }
+  .mk.dim { background: transparent; color: var(--muted); border-bottom-color: var(--border); font-weight: 400; }
+  .mk.jump {
+    background: var(--brand); color: #fff;
+    box-shadow: 0 0 0 3px var(--brand-soft);
+  }
+
+  /* 右：统计 */
+  .side {
+    width: 268px; flex: 0 0 268px; border-left: 1px solid var(--border);
+    background: var(--panel); overflow-y: auto; padding: 16px 14px;
+  }
+  .side h3 { font-size: 12.5px; color: var(--muted); font-weight: 600; margin: 0 0 10px; }
+  #sum { float: right; font-weight: 400; color: var(--muted); }
+  .cat {
+    display: flex; align-items: center; gap: 8px; padding: 7px 9px;
+    border-radius: 7px; cursor: pointer; font-size: 13px;
+  }
+  .cat:hover { background: var(--bg); }
+  .cat.on { background: var(--brand-soft); }
+  .cat .n { flex: 1; }
+  .cat .c { color: var(--brand); font-weight: 600; font-size: 12.5px; }
+  .side .allcat {
+    margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--border);
+  }
+
+  /* 原值卡片：固定在右栏顶部，不跟着鼠标跑。
+     早先是跟随点击位置定位，标记靠下时算出来的坐标会顶到视口外，
+     看起来就是「点了没反应」；而且关闭逻辑绑在整个文档上，
+     点卡片内部也会立刻关闭，想复制原文一点就没了。 */
+  #ov {
+    display: none; margin-bottom: 12px; padding: 10px 12px;
+    background: var(--bg); border: 1px solid var(--brand); border-radius: 10px;
+    font-size: 13px;
+  }
+  #ov.show { display: block; }
+  #ov .cat {
+    font-size: 11.5px; color: var(--brand); margin-bottom: 5px; padding: 0;
+    background: none; cursor: default;
+  }
+  #ov .orig { word-break: break-all; line-height: 1.7; }
+  #ov .orig b { color: var(--brand); }
+  #ov .warn { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+
+  /* 手动标记 */
+  .mkm {
+    background: #eef4ff; color: #1f5bbf; border-bottom: 2px dashed #1f5bbf;
+    border-radius: 3px 3px 0 0; padding: 0 2px; cursor: pointer; font-weight: 600;
+  }
+  .mkm:hover { background: #1f5bbf; color: #fff; }
+
+  #bar {
+    position: fixed; z-index: 280; display: none; width: 372px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 11px;
+    box-shadow: 0 12px 36px rgba(0,0,0,.2); padding: 10px 12px;
+  }
+  #bar.show { display: block; }
+  #bar .bar-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  #bar .bar-row + .bar-row { margin-top: 8px; }
+  #bar button {
+    font-family: inherit; font-size: 12px; padding: 4px 10px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--panel); color: var(--text);
+    cursor: pointer;
+  }
+  #bar button:hover { border-color: var(--brand); color: var(--brand); }
+  #bar button.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  #bar .bc-inp {
+    font-family: inherit; font-size: 12.5px; padding: 4px 8px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text); width: 110px;
+  }
+  #bar .bc-info { font-size: 11.5px; color: var(--muted); align-self: center; }
+  #bar .bc-txt { font-size: 12.5px; align-self: center; color: var(--muted); }
+  /* 类别选择器：分组标题独占一行，字段在下面自动换行。
+     原来 #barMore 是 flex 容器，分组标题被当成弹性项，标题和胶囊挤在一行，很乱。 */
+  #barMore { display: none; }
+  #barMore.show { display: block; }
+  #barMore .bm-search {
+    width: 100%; box-sizing: border-box; margin-bottom: 8px;
+    font-family: inherit; font-size: 12.5px; padding: 5px 9px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  }
+  #barMore .bm-list { max-height: 240px; overflow-y: auto; }
+  #barMore .bm-group { margin-bottom: 9px; }
+  #barMore .bm-group:last-child { margin-bottom: 2px; }
+  #barMore .bm-h {
+    font-size: 11px; color: var(--muted); font-weight: 600;
+    margin: 0 0 5px; padding-left: 2px;
+  }
+  #barMore .bm-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  #barMore .bm-none { font-size: 12px; color: var(--muted); padding: 6px 2px; }
+
+  .manual-box { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .manual-box h3 { font-size: 12.5px; color: var(--muted); font-weight: 600; margin: 0 0 8px; }
+  .mrow {
+    display: flex; align-items: center; gap: 6px; padding: 5px 7px;
+    border-radius: 7px; font-size: 12px; background: var(--bg); margin-bottom: 5px;
+  }
+  .mrow .mo { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mrow .mr { color: #1f5bbf; flex: 0 0 auto; }
+  .mrow button {
+    font-size: 10.5px; padding: 2px 8px; border-radius: 5px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--panel); color: var(--muted);
+    font-family: inherit; pointer-events: auto; position: relative; z-index: 2;
+  }
+  #undoBox { pointer-events: auto; }
+  #undoBox .mrow { pointer-events: auto; }
+  .mrow button:hover { color: var(--brand); border-color: var(--brand); }
+
+  /* 底部操作 */
+  .foot {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 22px; border-top: 1px solid var(--border); background: var(--panel);
+  }
+  .foot .sp { flex: 1; }
+  .foot .hint { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- 自动去水印提示条（2026-11-11）：默认在脱敏前先去水印，
+     用户发现去错了可以点右边按钮用原件重做（保留水印）。 -->
+<div id="wmBar" style="display:none;align-items:center;gap:10px;
+     padding:7px 16px;font-size:13px;background:var(--brand-soft);
+     color:var(--brand);border-bottom:1px solid var(--border)">
+  <span id="wmText"></span>
+  <span style="flex:1"></span>
+  <button id="wmUndo" style="font:inherit;font-size:12.5px;padding:4px 12px;
+          border-radius:7px;border:1px solid var(--brand);background:transparent;
+          color:var(--brand);cursor:pointer">保留水印重做</button>
+</div>
+
+<header class="topbar">
+  <button class="btn ghost" id="back">← 返回</button>
+  <div>
+    <div class="t" id="fname">加载中…</div><span class="qflag" id="qflag" style="display:none"></span>
+    <div class="s file" id="fmeta"></div>
+  </div>
+  <select id="fsel" title="切换文件"></select>
+  <span class="sp"></span>
+  <span class="stat">已脱敏 <b id="total">0</b> 处</span>
+  <span class="stat" style="color:var(--muted)">点文中红色处 → 可查看原文并撤销该项脱敏</span>
+</header>
+
+<div class="body">
+  <div class="doc-wrap"><div class="doc" id="doc"><div class="loading">正在加载预览…</div></div></div>
+  <div class="side">
+    <div id="ov">
+      <div class="cat" id="ovCat"></div>
+      <div class="orig" id="ovOrig"></div>
+      <div class="warn" id="ovWarn"></div>
+    </div>
+    <h3>按类别查看<span id="sum"></span></h3>
+    <div id="cats"></div>
+    <div class="allcat"><div class="cat on" id="catAll"><span class="n">显示全部</span></div></div>
+    <div id="listBox" style="margin-top:14px;display:none">
+      <h3>脱敏项一览<span id="listCnt" style="float:right;font-weight:400"></span></h3>
+      <div id="listBody" style="max-height:280px;overflow:auto"></div>
+    </div>
+    <div class="manual-box" id="mBox" style="display:none">
+      <h3>手动标记<span id="mCount" style="float:right;font-weight:400"></span></h3>
+      <div id="mList"></div>
+    </div>
+    <div class="manual-box" id="undoBox" style="display:none">
+      <h3>可撤回的操作<span id="undoCnt" style="float:right;font-weight:400"></span></h3>
+      <div id="undoList"></div>
+    </div>
+    <div class="tip" style="margin-top:14px">
+      点左侧类别<b>跳到正文对应位置</b>，同一类再点看下一处。<br>
+      点文中<b>红色标记</b>可查看此处原值，原值仅在点击时临时读取。
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <span class="hint" id="hint">确认无误后再导出；导出前不会写入成品文件夹。</span>
+  <span class="sp"></span>
+  <button class="btn ghost" id="rerun">重新脱敏</button>
+  <button class="btn" id="ruleBtn">调整规则</button>
+  <button class="btn ghost" id="aiRemap" title="用本地模型给主体起更自然的化名（保持一一对应，不会重名）">AI 重命名假名</button>
+      <button class="btn primary" id="export">导出到成品文件夹</button>
+</div>
+
+<div id="bar">
+  <div class="bar-row" id="barCats"></div>
+  <div class="bar-row" id="barMore"></div>
+  <div class="bar-row" id="barConfirm" style="display:none"></div>
+</div>
+
+<script>
+const API = '';
+const $ = id => document.getElementById(id);
+const qs = new URLSearchParams(location.search);
+const TASK = qs.get('task') || '';
+let FILE = qs.get('file') || '1';
+let DATA = null;
+let filter = '';
+let _origSeq = 0;
+/* 每个占位符在全文里是第几处：单处还原要靠它定位。
+   以前只能"整组还原"，一点就撤掉全部同名——用户明确不要（2026-11-02）。 */
+let NTH = {};
+
+function esc(s){ return String(s == null ? '' : s); }
+
+/* 2026-11-05 用户死命令：合格不合格同一个路径，质检未通过只在界面标红提示。
+   历史条目里带 quality=rejected 的就是没过闸门的那份，鼠标悬停看原因。 */
+async function markQuality(){
+  const el = $('qflag'); if(!el) return;
+  el.style.display = 'none'; el.textContent = ''; el.title = '';
+  try{
+    const r = await fetch(API + '/api/history');
+    const d = await r.json();
+    const hit = (d.items || []).find(x =>
+      x.task_id === TASK && String(x.index == null ? '' : x.index) === String(FILE));
+    if(hit && hit.quality === 'rejected'){
+      el.textContent = '质检未通过';
+      el.title = hit.quality_why || '未通过质检，成品仍与合格件同目录，请人工核对';
+      el.style.display = 'inline-block';
+    }
+  }catch(e){}
+}
+
+async function load(fileNo){
+  if(!TASK){ $('doc').innerHTML = '<div class="empty">缺少任务编号</div>'; return; }
+  // 2026-11-05 根本修法：进来先问类型，PDF/图片一律转到服务端生成的 /view
+  //（原生 PDF + 导出按钮，不依赖本页任何渲染逻辑），彻底绕开 preview.json 缺失。
+  try{
+    const _ir = await fetch(API + '/api/task/info?task=' + encodeURIComponent(TASK));
+    if(_ir.ok){
+      const _info = await _ir.json();
+      if(_info && (_info.kind === 'pdf' || _info.kind === 'image')){
+        location.replace('/view?task=' + encodeURIComponent(TASK));
+        return;
+      }
+    }
+  }catch(_e){}
+  const n = String(fileNo || FILE || '1');
+  $('doc').innerHTML = '<div class="loading">正在加载预览…</div>';
+  try{
+    const r = await fetch(API + '/api/preview?task=' + encodeURIComponent(TASK) + '&file=' + n);
+    if(!r.ok){
+      let msg = '任务不存在或已过期';
+      try{ const d = await r.json(); if(d && d.msg) msg = d.msg; }catch(e){}
+      throw new Error(msg);
+    }
+    DATA = await r.json();
+    FILE = String(DATA.file_no || n);
+  }catch(e){
+    // 2026-11-05：PDF/图片没有 preview.json，落到这里先问类型，是 PDF 就跳专用页，
+    // 不再让用户对着「预览不可用」发呆。
+    try{
+      const ir = await fetch(API + '/api/task/info?task=' + encodeURIComponent(TASK));
+      if(ir.ok){
+        const info = await ir.json();
+        if(info && (info.kind === 'pdf' || info.kind === 'image')){
+          location.replace('pdfview.html?task=' + encodeURIComponent(TASK) + '&file=' + FILE);
+          return;
+        }
+      }
+    }catch(_e){}
+    // 2026-11-05 用户反复报「预览不可用」：根因是页面死认 URL 里的 task，
+    // 旧标签、旧链接、服务重启后目录被清，都只会甩一句不可用，不会自己找当前任务。
+    // 这里自动切到最近一个 preview 任务；带 auto=1 防止死循环。
+    try{
+      const h = await (await fetch(API + '/api/history')).json();
+      const items = (h.items || []);
+      const cand = items.find(x => x.status === 'preview') || items[0];
+      if(cand && cand.task_id && cand.task_id !== TASK && qs.get('auto') !== '1'){
+        location.replace('preview.html?task=' + encodeURIComponent(cand.task_id) +
+                         '&file=' + (cand.index || 1) + '&auto=1');
+        return;
+      }
+    }catch(_e){}
+    // 2026-11-07：走到这里说明「服务端重建也失败了」，别再悄悄跳到另一个任务
+    // —— 用户会以为点的是 A、打开的是 B。如实说明三件事：为什么、东西在哪、
+    // 下一步做什么。服务端会在能救的时候自己救（成品目录 / 废纸篓都会翻）。
+    $('doc').innerHTML = '<div class="empty">' +
+      '<div style="font-size:14px;margin-bottom:10px">' + esc(e.message) + '</div>' +
+      '<div style="line-height:2;font-size:13px;color:var(--muted)">' +
+      '成品目录：文稿 / 立丰脱敏 / 成品<br>' +
+      '清过的记录：废纸篓里的「立丰脱敏-清除-…」文件夹<br>' +
+      '还需要这份预览：把原文件再拖进来脱一次即可</div>' +
+      '<div style="margin-top:14px"><button id="goHist" ' +
+      'style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);' +
+      'background:var(--panel);color:var(--text);font-family:inherit;font-size:13px;' +
+      'cursor:pointer">回首页看最近记录</button></div></div>';
+    const _gh = document.getElementById('goHist');
+    if(_gh) _gh.onclick = () => { location.href = 'index.html'; };
+    $('fname').textContent = '预览不可用';
+    $('fmeta').textContent = '';
+    $('total').textContent = '0';
+    const _s = $('fsel'); if(_s) _s.style.display = 'none';   // 失败时别留一个空下拉
+    return;
+  }
+  $('fname').textContent = DATA.file || '未命名';
+  markQuality();
+  $('fmeta').textContent = (DATA.blocks || []).length + ' 段内容';
+  $('total').textContent = DATA.count || 0;
+  const _cats = Object.keys(DATA.by_category || {}).length;
+  $('sum').textContent = (DATA.count || 0) + ' 处 · ' + _cats + ' 类';
+  computeNth();
+  renderSwitcher();
+  renderDoc();
+  renderCats();
+  renderList();
+  renderManual();
+  renderUndoPanel();
+}
+
+/* 多文件切换：单文件时整个下拉隐藏，界面跟以前一样 */
+function renderSwitcher(){
+  const sel = $('fsel');
+  if(!sel) return;
+  const files = DATA.files || [];
+  if(files.length < 2){ sel.style.display = 'none'; return; }
+  sel.innerHTML = '';
+  files.forEach(f => {
+    const o = document.createElement('option');
+    o.value = String(f.index || 1);
+    o.textContent = (f.file || '未命名') + '（' + (f.count || 0) + ' 处）';
+    if(String(f.index) === FILE) o.selected = true;
+    sel.appendChild(o);
+  });
+  sel.style.display = '';
+  sel.onchange = () => {
+    filter = '';
+    $('ov').classList.remove('show');
+    load(sel.value);
+    const u = new URL(location.href);
+    u.searchParams.set('file', sel.value);
+    history.replaceState(null, '', u.toString());
+  };
+}
+
+/* 把「还没脱敏的文字」按手动标记切开，切出来的片段单独着色。
+   只在非脱敏 run 里切：占位符内部绝不参与，免得把 [地址] 拆坏。 */
+/* 把 text 按 needle 切开，返回 [{t, hit}]。
+   2026-11-18：必须容错 —— 用户在正文里选「张某某」，而预览原文是「张  绪」
+   （Word 断字带空格），`indexOf` 精确匹配返回 -1，
+   于是标记明明存进 marks.json 了，正文却一点变化没有，
+   用户看到的就是「能勾选、不能脱敏」。后端导出侧已经容错，前端这里也得跟上。 */
+function fuzzySplit(text, needle){
+  if(!text || !needle) return null;
+  // 精确优先（绝大多数情况走这条，快）
+  if(text.indexOf(needle) >= 0){
+    const parts = text.split(needle);
+    const out = [];
+    parts.forEach((s, i) => {
+      if(s) out.push({ t: s, hit: false });
+      if(i < parts.length - 1) out.push({ t: needle, hit: true });
+    });
+    return out;
+  }
+  const chars = Array.from(needle).filter(c => !/\s/.test(c));
+  if(chars.length < 2) return null;
+  let rx;
+  try{
+    const esc = chars.map(c => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    rx = new RegExp(esc.join('[\\s\\u00a0\\u3000\\u200b-\\u200d]*'), 'g');
+  }catch(e){ return null; }
+  const out = [];
+  let last = 0, m;
+  while((m = rx.exec(text)) !== null){
+    if(m[0].length === 0){ rx.lastIndex++; continue; }   // 防零宽死循环
+    if(m.index > last) out.push({ t: text.slice(last, m.index), hit: false });
+    out.push({ t: m[0], hit: true });
+    last = m.index + m[0].length;
+  }
+  if(!out.length) return null;
+  if(last < text.length) out.push({ t: text.slice(last), hit: false });
+  return out;
+}
+
+function withMarks(runs){
+  const marks = DATA.marks || [];
+  if(!marks.length) return runs;
+  let out = [];
+  runs.forEach(r => {
+    if(r.mark){ out.push(r); return; }
+    let pieces = [{ text: r.text, m: null }];
+    marks.forEach(mk => {
+      const next = [];
+      pieces.forEach(p => {
+        if(p.m || !p.text) { next.push(p); return; }
+        const segs = fuzzySplit(p.text, mk.text);
+        if(!segs){ next.push(p); return; }
+        segs.forEach(sg => {
+          if(sg.hit) next.push({ text: sg.t, m: mk });
+          else if(sg.t) next.push({ text: sg.t, m: null });
+        });
+      });
+      pieces = next;
+    });
+    pieces.forEach(p => {
+      if(p.m) out.push({ text: p.text, mark: true, manual: true,
+                         id: p.m.id, cat: p.m.category, repl: p.m.repl });
+      else if(p.text) out.push({ text: p.text, mark: false });
+    });
+  });
+  return out;
+}
+
+function computeNth(){
+  NTH = {};
+  const seen = {};
+  const walk = (runs) => (runs || []).forEach(r => {
+    if(!r.mark) return;
+    const key = r.text;
+    seen[key] = (seen[key] || 0) + 1;
+    NTH[r.id] = seen[key];
+  });
+  (DATA.blocks || []).forEach(b => {
+    if(b.type === 'p') walk(b.runs);
+    else if(b.type === 'table') (b.rows || []).forEach(row =>
+      (row || []).forEach(cell => walk(cell)));
+  });
+}
+
+function runsHtml(runs){
+  return runs.map(r => {
+    if(r.manual){
+      return '<span class="mkm" data-mid="' + r.id + '" title="将替换为 ' +
+             esc(r.repl) + '">' + esc(r.text) + '</span>';
+    }
+    if(!r.mark) return esc(r.text);
+    const dim = (filter && r.cat !== filter) ? ' dim' : '';
+    // data-nth：这个假名在全文中是第几处（从 1 起），单处还原要用它
+    const nth = NTH[r.id] || '';
+    return '<span class="mk' + dim + '" data-id="' + r.id + '" data-cat="' +
+           esc(r.cat) + '" data-nth="' + nth + '">' + esc(r.text) + '</span>';
+  }).join('');
+}
+
+function renderDoc(){
+  const box = $('doc');
+  box.innerHTML = '';
+  let first = true;
+  (DATA.blocks || []).forEach(b => {
+    if(b.type === 'p'){
+      const text = (b.runs || []).map(r => r.text).join('');
+      const isTitle = first && text.length < 40 && !/[。；：]/.test(text);
+      const el = document.createElement(isTitle ? 'h1' : 'div');
+      el.className = isTitle ? 'dt' : 'p';
+      el.innerHTML = runsHtml(withMarks(b.runs || []));
+      box.appendChild(el);
+      if(first) first = false;
+    } else {
+      const t = document.createElement('table');
+      const tb = document.createElement('tbody');
+      (b.rows || []).forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach(cell => {
+          const td = document.createElement('td');
+          // cell 本来就是「run 数组」，不是「段落数组」。
+          // 原来写成 cell.map(runsHtml)，等于把单个 run 当数组用，
+          // 一有表格就抛 TypeError，整个 renderDoc 中断 ——
+          // 后果是表格丢失 + 右侧类别列表一个字都不显示（2026-10-30 实测）。
+          if(!cell.length){
+            td.innerHTML = '';
+          } else if(Array.isArray(cell[0])){
+            td.innerHTML = cell.map(c => runsHtml(withMarks(c))).join('<br>');   // 多段落单元格
+          } else {
+            td.innerHTML = runsHtml(withMarks(cell));
+          }
+          tr.appendChild(td);
+        });
+        tb.appendChild(tr);
+      });
+      t.appendChild(tb);
+      box.appendChild(t);
+    }
+  });
+}
+
+let jumpAt = 0;
+let curCat = '';
+
+/* 跳到某一类的第 n 处：类目点一次跳第一处，再点同一类跳下一处，循环 */
+function jumpTo(cat, n){
+  const list = Array.from(document.querySelectorAll('.mk')).filter(e => e.dataset.cat === cat);
+  if(!list.length) return;
+  const el = list[((n % list.length) + list.length) % list.length];
+  list.forEach(x => x.classList.remove('jump'));
+  el.classList.add('jump');
+  el.scrollIntoView({block: 'center', behavior: 'smooth'});
+  setTimeout(() => el.classList.remove('jump'), 1600);
+}
+
+function renderCats(){
+  const box = $('cats');
+  const cats = DATA.by_category || {};
+  const keys = Object.keys(cats).sort((a,b) => cats[b] - cats[a]);
+  if(!keys.length){ box.innerHTML = '<div class="empty">本次未发现需脱敏内容</div>'; return; }
+  box.innerHTML = '';
+  keys.forEach(k => {
+    const el = document.createElement('div');
+    el.className = 'cat' + (filter === k ? ' on' : '');
+    el.innerHTML = '<span class="n"></span><span class="c">' + cats[k] + '</span>';
+    el.querySelector('.n').textContent = k;
+    el.title = '点击跳到正文第一处，再点看下一处';
+    el.onclick = () => {
+      if(filter === k){
+        jumpAt++;                 // 同一类再点：看下一处
+      } else {
+        filter = k; jumpAt = 0;   // 换一类：从头看
+      }
+      curCat = k;
+      document.querySelectorAll('#cats .cat').forEach(x => x.classList.remove('on'));
+      el.classList.add('on');
+      $('catAll').classList.remove('on');
+      renderDoc();
+      jumpTo(k, jumpAt);
+    };
+    box.appendChild(el);
+  });
+}
+
+/* 事件委托：一处绑定，全文档生效。
+   原来给每个 .mk 单独绑 onclick，重绘后容易失效；而且
+   document 上的 hideOrig 会连点卡片内部一起关掉。 */
+document.addEventListener('click', async e => {
+  // ① 右栏「可撤回的操作」里的按钮先处理：
+  //    以前这两类按钮各挂各的监听，capture 与冒泡顺序一乱就永远点不到（2026-11-02）
+  const redoBtn = e.target.closest('button[data-redo]');
+  if(redoBtn){
+    e.preventDefault(); e.stopPropagation();
+    if(redoBtn.disabled) return;
+    const ph = redoBtn.dataset.redo;
+    redoBtn.disabled = true; redoBtn.textContent = '…';
+    try{
+      const rr = await fetch(API + '/api/unredact/redo', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({task: TASK, ph, file: FILE})
+      });
+      const dd = await rr.json();
+      if(!dd.ok) throw new Error(dd.msg || '恢复失败');
+      const base2 = location.pathname + location.search;
+      location.href = base2 + (base2.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Date.now();
+    }catch(err){
+      alert('恢复失败：' + err.message);
+      redoBtn.disabled = false; redoBtn.textContent = '恢复脱敏';
+    }
+    return;
+  }
+  const rmBtn = e.target.closest('button[data-restore-mark]');
+  if(rmBtn){
+    e.preventDefault(); e.stopPropagation();
+    if(rmBtn.disabled) return;
+    rmBtn.disabled = true; rmBtn.textContent = '…';
+    try{
+      await markAction('restore', {id: rmBtn.dataset.restoreMark});
+      await renderUndoPanel();
+    }catch(err){
+      alert('恢复失败：' + err.message);
+      rmBtn.disabled = false; rmBtn.textContent = '恢复标记';
+    }
+    return;
+  }
+
+  const mm = e.target.closest('.mkm');
+  if(mm){ e.preventDefault(); e.stopPropagation(); showManual(mm.dataset.mid); return; }
+  const mk = e.target.closest('.mk');
+  if(mk){ e.preventDefault(); e.stopPropagation(); showOrig(mk); return; }
+  // 右侧所有面板都不该被当成"点空白处"：点里面的按钮如果落在这条兜底逻辑上，
+  // 会先被关面板/收工具条，按钮就成了摆设（2026-11-02「可撤回操作点不了」）
+  if(e.target.closest('#ov')) return;
+  if(e.target.closest('#bar')) return;
+  if(e.target.closest('#undoBox')) return;
+  if(e.target.closest('#mBox')) return;
+  if(e.target.closest('#listBox')) return;
+  if(e.target.closest('.side')) return;
+  $('ov').classList.remove('show');
+  hideBar();
+});
+
+async function showOrig(el){
+  const id = el.getAttribute('data-id');
+  const cat = el.getAttribute('data-cat');
+  const ov = $('ov');
+  const seq = ++_origSeq;
+
+  $('ovCat').textContent = '此处替换：' + (cat || '敏感项');
+  $('ovOrig').innerHTML = '<span class="loading"><span class="spin"></span>读取中…</span>';
+  $('ovWarn').textContent = '';
+  ov.classList.add('show');
+
+  // 撤销按钮先挂上：就算原文定位不到（表格小格子里常发生），也能撤销这一项
+  const nth = NTH[id] || 1;
+  const sameCount = Object.keys(NTH).filter(k => {
+    const el2 = document.querySelector('.mk[data-id="' + k + '"]');
+    return el2 && el2.textContent === el.textContent;
+  }).length;
+  const box = document.createElement('div');
+  box.style.cssText = 'margin-top:10px;display:flex;gap:8px;flex-wrap:wrap';
+
+  // 默认只还原这一处 —— 用户明确要求「单个脱敏项还原，不要一次还原」
+  const oneBtn = document.createElement('button');
+  oneBtn.className = 'btn primary';
+  oneBtn.textContent = '只还原这一处';
+  oneBtn.onclick = async () => {
+    const ph = (el.textContent || '').trim();
+    if(!confirm('只把第 ' + nth + ' 处「' + ph + '」换回原文？\n其余 ' +
+                Math.max(0, sameCount - 1) + ' 处保持脱敏。')) return;
+    oneBtn.disabled = true; oneBtn.textContent = '还原中…';
+    try{
+      const rr = await fetch(API + '/api/unredact/one', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({task: TASK, ph, nth, file: FILE})
+      });
+      const dd = await rr.json();
+      if(!dd.ok) throw new Error(dd.msg || '还原失败');
+      alert('第 ' + dd.nth + ' 处已还原为「' + dd.orig + '」，其余保留脱敏');
+      const base2 = location.pathname + location.search;
+      location.href = base2 + (base2.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Date.now();
+    }catch(err){
+      oneBtn.disabled = false; oneBtn.textContent = '只还原这一处';
+      alert('还原失败：' + err.message);
+    }
+  };
+
+  const undoBtn = document.createElement('button');
+  undoBtn.className = 'btn ghost';
+  undoBtn.textContent = '还原全部 ' + (sameCount || '') + ' 处';
+  undoBtn.onclick = async () => {
+    const ph = (el.textContent || '').trim();
+    if(!ph){ alert('这一处没有占位符文字，无法撤销'); return; }
+    if(!confirm('把「' + ph + '」的全部 ' + (sameCount || '') + ' 处都换回原文？')) return;
+    undoBtn.disabled = true; undoBtn.textContent = '正在恢复…';
+    try{
+      const rr = await fetch(API + '/api/unredact', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({task: TASK, ph: ph})
+      });
+      const dd = await rr.json();
+      if(!dd.ok) throw new Error(dd.msg || '撤销失败');
+      alert('已把「' + dd.ph + '」恢复成「' + dd.orig + '」，共 ' + dd.count + ' 处');
+      const base2 = location.pathname + location.search;
+      location.href = base2 + (base2.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Date.now();
+    }catch(err){
+      undoBtn.disabled = false; undoBtn.textContent = '还原全部';
+      alert('还原失败：' + err.message);
+    }
+  };
+  box.append(oneBtn, undoBtn);
+  // 按钮挂在 #ov 上、不进 #ovWarn：
+  // 后面几处会改写 ovWarn 的文字，挂里面等于刚放上去就被擦掉（2026-11-02 实测）
+  // 注意：这里曾经复用 id="undoBox"，先把右侧「可撤回的操作」整块 remove 掉，
+  // 再把自己的按钮组塞进 #ov —— 用户看到的就是"右侧那块卡住了、点不动"（2026-11-02）。
+  // 改成独立 id，两者互不干扰。
+  const oldAct = document.getElementById('ovActions');
+  if(oldAct) oldAct.remove();
+  box.id = 'ovActions';
+  ov.appendChild(box);
+
+  try{
+    const r = await fetch(API + '/api/preview/orig?task=' + encodeURIComponent(TASK) +
+                          '&file=' + encodeURIComponent(FILE) + '&id=' + encodeURIComponent(id) +
+                          '&ph=' + encodeURIComponent(el.textContent || ''));
+    const d = await r.json();
+    if(seq !== _origSeq) return;
+    if(d.ok && d.orig){
+      $('ovOrig').textContent = '';
+      $('ovOrig').append('原文：');
+      const b = document.createElement('b');
+      b.textContent = d.orig;
+      $('ovOrig').appendChild(b);
+      // 脱错了就撤：把这一组假名换回原文，同时从映射表里删掉这一条
+    } else {
+      $('ovOrig').textContent = '原文未能定位';
+      $('ovWarn').textContent = '该处可能是按占位符整体替换的，映射表里没有单条记录。';
+    }
+  }catch(err){
+    if(seq !== _origSeq) return;
+    $('ovOrig').textContent = '读取失败';
+    $('ovWarn').textContent = '请再点一次；若持续如此，说明后台服务已重启。';
+  }
+}
+
+$('catAll').onclick = () => {
+  filter = ''; curCat = ''; jumpAt = 0;
+  document.querySelectorAll('#cats .cat').forEach(x => x.classList.remove('on'));
+  $('catAll').classList.add('on');
+  renderDoc();
+  document.querySelector('.doc-wrap').scrollTo({top: 0, behavior: 'smooth'});
+};
+
+/* ---------------- 手动标记 ---------------- */
+let CATS = null;
+let pendingMark = null;
+const COMMON_CATS = ['人名', '企业名', '地址', '手机号', '身份证号', '银行卡号'];
+
+function hideBar(){
+  const b = $('bar');
+  if(b) b.classList.remove('show');
+  // 每次收起都回到「干净类别条」：上一轮的确认框若残留，
+  // 下一次划选看起来就是「点了没反应」（2026-11-12 连续标记修复）
+  const bc = $('barConfirm'); if(bc) bc.style.display = 'none';
+  const cc = $('barCats'); if(cc) cc.style.display = 'flex';
+  const bm = $('barMore'); if(bm) bm.classList.remove('show');
+  pendingMark = null;
+}
+
+/* 划选后浮出类别条；只认正文里的选区，占位符上不弹 */
+document.addEventListener('mouseup', e => {
+  const doc = $('doc');
+  if(!doc || !doc.contains(e.target)) return;
+  // 旧逻辑：只要松手落在 .mk / .mkm 上就直接 return。
+  // 第一次标记后正文里会出现 .mkm，从它附近起手划第二个不同的词时
+  // mouseup 常落在该 span 上 → 类别条静默不弹，表现为「第二个选不动」。
+  // 改成只看选区内容，不再按 e.target 早退。
+  setTimeout(() => {
+    const sel = window.getSelection();
+    const text = (sel ? sel.toString() : '').trim();
+    hideBar();                       // 先清掉上一轮的确认框，保证这次是全新状态
+    if(!text || text.length < 2 || !sel.rangeCount) return;
+    const range = sel.getRangeAt(0);
+    if(!doc.contains(range.commonAncestorContainer)) return;
+    // 整段选区恰好等于某个占位符 / 已标记词时仍不弹（避免拆坏方括号）
+    const anc = range.commonAncestorContainer;
+    const holder = anc.nodeType === 1 ? anc : anc.parentElement;
+    const marked = holder && holder.closest('.mk, .mkm');
+    if(marked && text === (marked.textContent || '').trim()) return;
+    showBar(range.getBoundingClientRect(), text);
+  }, 10);
+});
+
+document.querySelector('.doc-wrap').addEventListener('scroll', hideBar);
+
+function showBar(rect, text){
+  const bar = $('bar');
+  pendingMark = null;   // 新划选一律从上一条的确认状态里退出来
+  // 只用类控制展开状态：留内联 display:none 会把 .show 压住，面板永远打不开
+  $('barMore').classList.remove('show');
+  $('barConfirm').style.display = 'none';
+  $('barCats').style.display = 'flex';
+  const cats = $('barCats');
+  cats.innerHTML = '';
+  COMMON_CATS.forEach(c => {
+    const b = document.createElement('button');
+    b.textContent = c;
+    b.onclick = () => previewMark(text, c);
+    cats.appendChild(b);
+  });
+  const more = document.createElement('button');
+  more.textContent = '更多…';
+  more.onclick = () => toggleMore(text);
+  cats.appendChild(more);
+
+  bar.classList.add('show');
+  const bw = bar.offsetWidth || 372;
+  let left = rect.left + rect.width / 2 - bw / 2;
+  left = Math.max(10, Math.min(left, window.innerWidth - bw - 10));
+  let top = rect.top - bar.offsetHeight - 10;
+  if(top < 8) top = rect.bottom + 10;
+  bar.style.left = left + 'px';
+  bar.style.top = top + 'px';
+}
+
+let _moreText = '';
+
+async function toggleMore(text){
+  const box = $('barMore');
+  if(box.classList.contains('show')){ box.classList.remove('show'); return; }
+  _moreText = text;
+  box.innerHTML = '<div class="bm-none">加载中…</div>';
+  box.classList.add('show');
+  if(!CATS){
+    try{
+      const r = await fetch(API + '/api/rules');
+      CATS = await r.json();
+    }catch(e){ CATS = null; }
+  }
+  if(!CATS || !CATS.rules){ box.innerHTML = '<div class="bm-none">类别加载失败</div>'; return; }
+  box.innerHTML = '';
+  const inp = document.createElement('input');
+  inp.className = 'bm-search';
+  inp.placeholder = '搜索类别，如 地址、证号、银行…';
+  inp.oninput = () => renderMoreList(inp.value);
+  const list = document.createElement('div');
+  list.className = 'bm-list';
+  list.id = 'bmList';
+  box.append(inp, list);
+  renderMoreList('');
+  setTimeout(() => inp.focus(), 30);
+}
+
+function renderMoreList(kw){
+  const list = $('bmList');
+  if(!list) return;
+  const q = (kw || '').trim();
+  const byG = {};
+  (CATS.rules || []).forEach(x => {
+    if(q && x.category.indexOf(q) < 0) return;
+    const g = x.group || 'other';
+    (byG[g] = byG[g] || []).push(x.category);
+  });
+  list.innerHTML = '';
+  let total = 0;
+  (CATS.groups || []).forEach(g => {
+    const names = byG[g.id] || [];
+    if(!names.length) return;
+    total += names.length;
+    const wrap = document.createElement('div');
+    wrap.className = 'bm-group';
+    const h = document.createElement('div');
+    h.className = 'bm-h';
+    h.textContent = g.name + '（' + names.length + '）';
+    const chips = document.createElement('div');
+    chips.className = 'bm-chips';
+    names.forEach(nm => {
+      const b = document.createElement('button');
+      b.textContent = nm;
+      b.onclick = () => previewMark(_moreText, nm);
+      chips.appendChild(b);
+    });
+    wrap.append(h, chips);
+    list.appendChild(wrap);
+  });
+  if(!total){
+    const e = document.createElement('div');
+    e.className = 'bm-none';
+    e.textContent = '没有匹配「' + q + '」的类别';
+    list.appendChild(e);
+  }
+}
+
+/* 先试算：拿到默认替换词与影响处数，不落库 */
+async function previewMark(text, cat){
+  try{
+    const r = await fetch(API + '/api/mark', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, file: FILE, action:'preview',
+                            text, category: cat})
+    });
+    const d = await r.json();
+    if(!d.ok){ alert(d.msg || '这个位置不能标记'); return; }
+    pendingMark = { text, category: cat, repl: d.mark.repl, hits: d.mark.hits };
+    renderConfirm();
+  }catch(e){ alert('标记失败：' + e.message); }
+}
+
+function renderConfirm(){
+  const box = $('barConfirm');
+  $('barCats').style.display = 'none';
+  $('barMore').classList.remove('show');
+  box.innerHTML = '';
+  box.style.display = 'flex';
+
+  const t = document.createElement('span');
+  t.className = 'bc-txt';
+  t.textContent = pendingMark.text + ' → ';
+  const inp = document.createElement('input');
+  inp.className = 'bc-inp';
+  inp.value = pendingMark.repl;
+  const info = document.createElement('span');
+  info.className = 'bc-info';
+  info.textContent = '全文 ' + pendingMark.hits + ' 处';
+  const ok = document.createElement('button');
+  ok.className = 'primary';
+  ok.textContent = '确认';
+  ok.onclick = () => confirmMark(inp.value);
+  const cancel = document.createElement('button');
+  cancel.textContent = '取消';
+  cancel.onclick = hideBar;
+  box.append(t, inp, info, ok, cancel);
+}
+
+async function confirmMark(repl){
+  if(!pendingMark) return;
+  try{
+    const r = await fetch(API + '/api/mark', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, file: FILE, action:'add',
+                            text: pendingMark.text, category: pendingMark.category,
+                            repl: (repl || '').trim()})
+    });
+    const d = await r.json();
+    if(!d.ok){ alert(d.msg || '标记失败'); return; }
+    DATA.marks = d.marks || [];
+    DATA.deleted = d.deleted || [];
+    hideBar();
+    window.getSelection().removeAllRanges();
+    renderDoc();
+    renderManual();
+  }catch(e){ alert('标记失败：' + e.message); }
+}
+
+/* 手动标记的统一动作入口：删除是软删除，restore 可撤 */
+async function markAction(action, extra){
+  const body = Object.assign({task: TASK, file: FILE, action}, extra || {});
+  const r = await fetch(API + '/api/mark', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  const d = await r.json();
+  if(!d.ok) throw new Error(d.msg || '操作失败');
+  DATA.marks = d.marks || [];
+  DATA.deleted = d.deleted || [];
+  $('ov').classList.remove('show');
+  renderDoc();
+  renderManual();
+  return d;
+}
+
+async function removeMark(mid){
+  try{
+    const m = (DATA.marks || []).find(x => x.id === mid);
+    await markAction('remove', {id: mid});
+    // 删了就提示能撤回：不提示的话，谁也不知道自己刚删掉的东西还在
+    const tip = $('hint');
+    if(tip && m){
+      tip.innerHTML = '已删除标记「' + m.text + ' → ' + m.repl +
+                      '」；在右侧「已删除的手动标记」里点「恢复」可以撤回。';
+    }
+  }catch(e){ alert('取消失败：' + e.message); }
+}
+
+function showManual(mid){
+  const m = (DATA.marks || []).find(x => x.id === mid);
+  if(!m) return;
+  $('ovCat').textContent = '手动标记 · ' + m.category;
+  $('ovOrig').textContent = m.text + ' → ' + m.repl;
+  $('ovWarn').innerHTML = '导出时按此替换，共 ' + (m.hits || 0) + ' 处。';
+  const b = document.createElement('button');
+  b.textContent = '取消这个标记';
+  b.style.cssText = 'margin-top:8px;font-size:11.5px;padding:3px 9px;border-radius:6px;' +
+                    'border:1px solid var(--border);background:var(--panel);cursor:pointer;font-family:inherit';
+  b.onclick = () => removeMark(m.id);
+  $('ovWarn').appendChild(b);
+  $('ov').classList.add('show');
+}
+
+/* 脱敏项一览：把全文所有标记列成一张表。
+   为什么加：撤销按钮藏在"点红字"这个动作后面，人不一定点得到
+   （表格小格子、跨页断行的地方尤其难找）。给一张清单，逐条都能撤。 */
+function renderList(){
+  const box = $('listBox'), body = $('listBody');
+  if(!box || !body) return;
+  const items = [];
+  (DATA.blocks || []).forEach(b => {
+    const collect = (runs) => (runs || []).forEach(r => {
+      if(r.mark) items.push({id: r.id, ph: r.text, cat: r.cat || '',
+                             nth: NTH[r.id] || 1});
+    });
+    if(b.type === 'p') collect(b.runs);
+    else if(b.type === 'table') (b.rows || []).forEach(row =>
+      (row || []).forEach(cell => collect(cell)));
+  });
+  if(!items.length){ box.style.display = 'none'; return; }
+  box.style.display = '';
+  $('listCnt').textContent = items.length + ' 处';
+  body.innerHTML = '';
+  items.forEach(it => {
+    const row = document.createElement('div');
+    row.className = 'li';
+    const ph = document.createElement('span');
+    ph.className = 'ph'; ph.textContent = it.ph; ph.title = it.ph;
+    const og = document.createElement('span');
+    og.className = 'og';
+    og.textContent = (it.cat || '') + (it.nth > 1 ? ' · 第' + it.nth + '处' : '');
+    const x = document.createElement('button');
+    x.className = 'x'; x.textContent = '还原';
+    x.title = '只把这一处「' + it.ph + '」换回原文';
+    x.onclick = async (ev) => {
+      ev.stopPropagation();
+      if(!confirm('只还原这一处「' + it.ph + '」（第 ' + it.nth + ' 处）？其余保持脱敏。')) return;
+      x.disabled = true; x.textContent = '…';
+      try{
+        const rr = await fetch(API + '/api/unredact/one', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({task: TASK, ph: it.ph, nth: it.nth, file: FILE})
+        });
+        const dd = await rr.json();
+        if(!dd.ok) throw new Error(dd.msg || '撤销失败');
+        const base2 = location.pathname + location.search;
+        location.href = base2 + (base2.indexOf('?') >= 0 ? '&' : '?') + 'v=' + Date.now();
+      }catch(e){
+        alert('撤销失败：' + e.message);
+        x.disabled = false; x.textContent = '撤销';
+      }
+    };
+    row.append(ph, og, x);
+    row.onclick = () => {
+      const el = document.querySelector('.mk[data-id="' + it.id + '"]');
+      if(el){ el.scrollIntoView({block:'center', behavior:'smooth'}); showOrig(el); }
+    };
+    body.appendChild(row);
+  });
+}
+
+/* 可撤回的操作：自动脱敏的还原、手动标记的删除，统一放右边一块。
+   以前自动撤销在顶部黄条、手动删除在「手动标记」下方，两处各说各的（2026-11-02 用户要求合并）。 */
+async function renderUndoPanel(){
+  const box = $('undoBox'), list = $('undoList');
+  if(!box || !list) return;
+  // 防重入：渲染期间又被调用一次会清空正在点的节点
+  if(box.dataset.busy === '1') return;
+  box.dataset.busy = '1';
+  try{
+    await renderUndoPanelInner(box, list);
+  }catch(e){
+    console.warn('可撤回面板渲染失败', e);
+  }finally{
+    delete box.dataset.busy;
+  }
+}
+
+async function renderUndoPanelInner(box, list){
+  let auto = [];
+  try{
+    const r = await fetch(API + '/api/unredact/log', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, file: FILE})
+    });
+    const d = await r.json();
+    auto = (d && d.items) || [];
+  }catch(e){ auto = []; }
+
+  const del = Array.isArray(DATA.deleted) ? DATA.deleted.slice().reverse() : [];
+  if(!auto.length && !del.length){ box.style.display = 'none'; return; }
+  box.style.display = '';
+  $('undoCnt').textContent = (auto.length + del.length) + ' 项';
+  list.innerHTML = '';
+
+  auto.forEach(it => {
+    const row = document.createElement('div');
+    row.className = 'mrow';
+    const a = document.createElement('span');
+    a.className = 'mo';
+    a.textContent = it.one ? ('第 ' + (it.nth || 1) + ' 处 ' + it.ph) : it.ph;
+    a.title = a.textContent;
+    const b = document.createElement('span');
+    b.className = 'mr';
+    b.textContent = '→ ' + it.orig;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = '恢复脱敏';
+    btn.dataset.redo = it.ph;          // 委托用：data 属性比闭包更抗重建
+    row.append(a, b, btn);
+    list.appendChild(row);
+  });
+
+  del.forEach(m => {
+    const row = document.createElement('div');
+    row.className = 'mrow';
+    const a = document.createElement('span');
+    a.className = 'mo';
+    a.textContent = '手动：' + m.text;
+    a.title = a.textContent;
+    const b = document.createElement('span');
+    b.className = 'mr';
+    b.textContent = '→ ' + m.repl;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = '恢复标记';
+    btn.dataset.restoreMark = m.id;
+    row.append(a, b, btn);
+    list.appendChild(row);
+  });
+}
+
+function renderManual(){
+  const ms = DATA.marks || [];
+  const box = $('mBox');
+  if(!box) return;
+  box.style.display = ms.length ? '' : 'none';
+  $('mCount').textContent = ms.length ? (ms.length + ' 处') : '';
+  const list = $('mList');
+  list.innerHTML = '';
+  ms.forEach(m => {
+    const row = document.createElement('div');
+    row.className = 'mrow';
+    const a = document.createElement('span');
+    a.className = 'mo'; a.textContent = m.text; a.title = m.text;
+    const b = document.createElement('span');
+    b.className = 'mr'; b.textContent = m.repl;
+    const x = document.createElement('button');
+    x.textContent = '删除';
+    x.onclick = () => removeMark(m.id);
+    row.append(a, b, x);
+    list.appendChild(row);
+  });
+  const btn = $('export');
+  if(btn && !btn.disabled){
+    btn.textContent = ms.length
+      ? ('导出到成品文件夹（含 ' + ms.length + ' 处标记）')
+      : '导出到成品文件夹';
+  }
+}
+
+/* 本地 AI 批量改化名：只替换占位符字符串，不重跑识别；失败就保持原样 */
+$('aiRemap').onclick = async () => {
+  const btn = $('aiRemap');
+  const old = btn.textContent;
+  btn.disabled = true; btn.textContent = 'AI 处理中…';
+  $('hint').textContent = '正在让本地模型给主体起名，可能要十几秒…';
+  try{
+    const r = await fetch(API + '/api/ai/remap', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '处理失败');
+    $('hint').innerHTML = '<span style="color:var(--ok)">已应用 ' + d.changed +
+      ' 个化名，页面即将刷新</span>';
+    setTimeout(() => location.reload(), 700);
+  }catch(e){
+    $('hint').innerHTML = '<span style="color:var(--warn)">AI 改名未生效：' + e.message + '</span>';
+    btn.disabled = false; btn.textContent = old;
+  }
+};
+
+$('back').onclick = () => { location.href = 'index.html'; };$('rerun').onclick = () => {
+  if(confirm('重新跑一遍会新建一个任务，当前预览保留但不再使用。继续吗？')){
+    location.href = 'index.html';
+  }
+};
+$('ruleBtn').onclick = () => {
+  location.href = 'index.html?rules=1';
+};
+$('export').onclick = async () => {
+  const btn = $('export');
+  btn.disabled = true; btn.textContent = '正在导出…';
+  try{
+    const r = await fetch(API + '/api/export', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK})
+    });
+    const d = await r.json();
+    if(!d.ok){ throw new Error(d.msg || '导出失败'); }
+    const _mk = d.marks_applied || 0;
+    $('hint').innerHTML = '<span style="color:var(--ok)">已导出 ' + d.files.length +
+                          ' 个文件' + (_mk ? ('（含 ' + _mk + ' 处手动标记）') : '') +
+                          '；可关闭本页，不必再操作</span>';
+    btn.textContent = '已导出';
+    btn.disabled = true;
+    fetch(API + '/api/openout');   // 导出完成，自动调出成品文件夹
+  }catch(e){
+    alert('导出失败：' + e.message);
+    btn.disabled = false; btn.textContent = '导出到成品文件夹';
+  }
+};
+
+load(FILE);
+</script>
+<script>
+/* 自动去水印提示 + 撤销（2026-11-11 用户要求） */
+(async function () {
+  const task = new URLSearchParams(location.search).get('task') || '';
+  if (!task) return;
+  try {
+    const r = await fetch('/api/watermark/info?task=' + encodeURIComponent(task));
+    const d = await r.json();
+    const wm = d.watermark || {};
+    const keys = Object.keys(wm);
+    if (!keys.length) return;                 // 这个任务没去过水印，不打扰
+    const name = keys[0], it = wm[name] || {};
+    const canUndo = !!(d.undoable && d.undoable[name]);
+
+    document.getElementById('wmText').textContent =
+      '已自动去除水印 ' + (it.cut || 0) + ' 处（' + (it.pages || 0) + ' 页）' +
+      (it.sample ? '：' + it.sample : '') +
+      (canUndo ? '' : '　（原件备份已清理，无法撤销）');
+    document.getElementById('wmBar').style.display = 'flex';
+
+    const btn = document.getElementById('wmUndo');
+    if (!canUndo) { btn.disabled = true; btn.style.opacity = 0.45; return; }
+    btn.onclick = async function () {
+      if (!confirm('要用原件重新脱敏吗？\n\n水印会保留，需要重新跑一遍（几分钟）。')) return;
+      btn.disabled = true;
+      btn.textContent = '正在重跑…';
+      try {
+        const r2 = await fetch('/api/watermark/undo', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name }),
+        });
+        const d2 = await r2.json();
+        if (!d2.ok) throw new Error(d2.msg || '撤销失败');
+        alert('已按原件重新脱敏（保留水印）。\n稍等片刻，首页「最近脱敏」会出现新任务。');
+        location.href = 'index.html';
+      } catch (e) {
+        alert('撤销失败：' + e.message);
+        btn.disabled = false;
+        btn.textContent = '保留水印重做';
+      }
+    };
+  } catch (e) { /* 读不到就不显示，不影响正常预览 */ }
+})();
+</script>
+</body>
+</html>

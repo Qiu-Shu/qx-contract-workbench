@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文件还原 · 立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  .wrap { max-width: 780px; margin: 0 auto; padding: 26px 22px 60px; }
+
+  .drop {
+    border: 2px dashed var(--border); border-radius: 16px; background: var(--panel);
+    padding: 46px 24px; text-align: center; cursor: pointer; transition: .15s;
+  }
+  .drop:hover, .drop.hot { border-color: var(--brand); background: var(--brand-soft); }
+  .drop .big { font-size: 28px; color: var(--brand); margin-bottom: 6px; }
+  .drop h2 { margin: 0 0 8px; font-size: 16px; font-weight: 600; }
+  .drop p { margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+
+  .card {
+    margin-top: 18px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+  .card .hd {
+    display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+    border-bottom: 1px solid var(--border); background: var(--bg);
+  }
+  .card .hd .nm { flex: 1; font-size: 13.5px; font-weight: 600; overflow: hidden;
+                  text-overflow: ellipsis; white-space: nowrap; }
+  .card .bd { padding: 14px 16px; }
+
+  .kv { display: flex; gap: 10px; font-size: 13px; margin-bottom: 8px; }
+  .kv .k { color: var(--muted); flex: 0 0 88px; }
+  .kv .v { flex: 1; word-break: break-all; }
+  .kv .v.ok { color: var(--ok); }
+  .kv .v.warn { color: var(--warn); }
+
+  .acts { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+  .cands { margin-top: 12px; display: none; }
+  .cands.show { display: block; }
+  .cands .hd2 { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .cand-list { max-height: 240px; overflow-y: auto; border: 1px solid var(--border); border-radius: 9px; }
+  .cand {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    font-size: 12.5px; border-bottom: 1px solid var(--border); cursor: pointer;
+  }
+  .cand:last-child { border-bottom: none; }
+  .cand:hover { background: var(--bg); }
+  .cand.on { background: var(--brand-soft); }
+  .cand .n { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cand .r { color: var(--muted); font-size: 11.5px; }
+
+  .banner {
+    margin-top: 16px; padding: 12px 14px; border-radius: 10px; font-size: 13px;
+    border: 1px solid var(--border); line-height: 1.7;
+  }
+  .banner.err { background: var(--warn-soft); color: var(--warn); }
+  .banner.ok { background: var(--ok-soft); color: var(--ok); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="btn ghost" id="back">← 返回</button>
+  <div>
+    <div class="t">文件还原</div>
+    <div class="s">把已脱敏的文件换回真实名称</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="drop" id="drop">
+    <div class="big">＋</div>
+    <h2>把已脱敏的文件拖到这里</h2>
+    <p>支持 Word（.docx）。系统会按文件名或内容自动找到对应的映射表。</p>
+    <p>扫描件与图片无法还原——脱敏时已抹除原始像素，原内容不复存在。</p>
+  </div>
+
+  <div id="result"></div>
+
+  <div class="tip" style="margin-top:22px">
+    <b>映射表是什么：</b>每次脱敏都会生成一份「原值 → 占位符」的对照表，存在工作区里，是还原的唯一钥匙。<br>
+    还原全程在本机完成，不经过任何模型或网络。
+  </div>
+</div>
+
+<script>
+const API = '';
+const $ = id => document.getElementById(id);
+let state = { path: '', best: null, cands: [] };
+
+function esc(s){ return String(s == null ? '' : s); }
+
+async function pickFile(){
+  try{
+    const r = await fetch(API + '/api/pick', {method:'POST', body:'{}'});
+    const d = await r.json();
+    const p = (d.paths || [])[0];
+    if(p) handlePath(p);
+  }catch(e){ alert('选择文件失败：' + e.message); }
+}
+$('drop').onclick = pickFile;
+$('drop').addEventListener('dragover', e => { e.preventDefault(); $('drop').classList.add('hot'); });
+$('drop').addEventListener('dragleave', () => $('drop').classList.remove('hot'));
+$('drop').addEventListener('drop', async e => {
+  e.preventDefault(); $('drop').classList.remove('hot');
+  const fs = Array.from(e.dataTransfer.files || []);
+  if(!fs.length) return;
+  const f = fs[0];
+  try{
+    const buf = await f.arrayBuffer();
+    const r = await fetch(API + '/api/upload', {
+      method:'POST',
+      headers:{'X-Filename': encodeURIComponent(f.name), 'Content-Type':'application/octet-stream'},
+      body: buf
+    });
+    const d = await r.json();
+    if(d.ok) handlePath(d.path);
+  }catch(err){ alert('读取失败：' + err.message); }
+});
+
+async function handlePath(path){
+  state.path = path;
+  state.best = null;
+  state.cands = [];
+  render('<div class="loading"><span class="spin"></span>正在匹配映射表…</div>');
+  try{
+    const r = await fetch(API + '/api/restore/match', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({path})
+    });
+    const d = await r.json();
+    if(!d.ok){
+      render('<div class="banner err">' + esc(d.msg || '该文件无法还原') + '</div>');
+      return;
+    }
+    state.best = d.best;
+    state.cands = d.candidates || [];
+    renderMatch(d);
+  }catch(e){
+    render('<div class="banner err">匹配失败：' + esc(e.message) + '</div>');
+  }
+}
+
+function renderMatch(d){
+  const name = state.path.split('/').pop();
+  const byText = {name: '按文件名匹配', content: '按内容反查匹配', none: '未能自动匹配'}[d.by] || d.by;
+  let body = '';
+  if(state.best){
+    body += '<div class="kv"><span class="k">映射表</span><span class="v">' +
+            esc(state.best.file) + '</span></div>';
+    body += '<div class="kv"><span class="k">匹配方式</span><span class="v ' +
+            (d.by === 'name' ? 'ok' : 'warn') + '">' + esc(byText) + '</span></div>';
+    body += '<div class="kv"><span class="k">条目数</span><span class="v">' +
+            (state.best.rows || 0) + ' 条</span></div>';
+    if(d.by === 'content'){
+      body += '<div class="kv"><span class="k">　</span><span class="v warn">' +
+              '文件名对不上，是按内容推测的，请确认这份映射表是否属于该案件。</span></div>';
+    }
+  } else {
+    body += '<div class="banner err">暂无查询到规则表，请选择正确文件。</div>' +
+            '<div class="kv"><span class="k">　</span><span class="v">' +
+            '请拖入由本软件导出的已脱敏文件（文件名形如「XX_已脱敏.docx」）。</span></div>';
+  }
+
+  const html = '<div class="card">' +
+    '<div class="hd"><span class="nm">' + esc(name) + '</span></div>' +
+    '<div class="bd">' + body +
+      '<div class="acts">' +
+        (state.best
+          ? '<button class="btn primary" id="doRestore">还原并导出</button>' +
+            '<button class="btn" id="previewPlan" title="逐处看占位符要换回谁，可手工改">逐处预览</button>' +
+            '<button class="btn" id="pickMap">换一份映射表</button>' +
+            '<button class="btn ghost" id="reselect">换一个文件</button>'
+          : '<button class="btn primary" id="reselect">重新选择文件</button>') +
+      '</div>' +
+      (state.best
+        ? '<div class="cands" id="cands">' +
+            '<div class="hd2" style="margin-top:14px">可选映射表（点选替换）</div>' +
+            '<div class="cand-list" id="candList"></div>' +
+          '</div>'
+        : '') +
+    '</div></div>';
+  render(html);
+
+  const pv = $('previewPlan');
+  if(pv) pv.onclick = () => {
+    if(!(state.path && state.best)) return;
+    const nm = (state.best.file || '').replace(/_映射表\.csv$/, '');
+    location.href = 'restoreplan.html?path=' + encodeURIComponent(state.path) +
+                    '&map=' + encodeURIComponent(state.best.path) +
+                    '&name=' + encodeURIComponent(nm);
+  };
+
+  const list = $('candList');
+  if(!list) return;
+  state.cands.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'cand' + (state.best && c.path === state.best.path ? ' on' : '');
+    el.innerHTML = '<span class="n"></span><span class="r">' + (c.rows || 0) + ' 条</span>';
+    el.querySelector('.n').textContent = c.file;
+    el.onclick = () => {
+      state.best = c;
+      document.querySelectorAll('.cand').forEach(x => x.classList.remove('on'));
+      el.classList.add('on');
+      const btn = $('doRestore'); if(btn) btn.disabled = false;
+    };
+    list.appendChild(el);
+  });
+
+  const dr = $('doRestore');
+  if(dr) dr.onclick = doRestore;
+  const pm = $('pickMap');
+  if(pm) pm.onclick = () => {
+    $('cands').classList.toggle('show');
+    if(!state.cands.length) alert('没有可选的映射表。请确认工作区里是否还保留对照表。');
+  };
+  const rs = $('reselect');
+  if(rs) rs.onclick = pickFile;
+}
+
+async function doRestore(){
+  if(!state.best){ alert('请先选择映射表'); return; }
+  const btn = $('doRestore');
+  btn.disabled = true; btn.textContent = '正在还原…';
+  try{
+    const r = await fetch(API + '/api/restore/run', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({path: state.path, map: state.best.path})
+    });
+    const d = await r.json();
+    if(!d.ok && d.stage === 'conflict'){
+      let h = '<div class="banner err">' + esc(d.msg) + '</div>';
+      h += '<div class="kv"><span class="k">　</span><span class="v">' +
+           '同一个占位符对应多个原值时，软件无法判断该填哪个；继续还原会把其余原值悄悄换成其中一个。' +
+           '</span></div>';
+      h += '<div style="max-height:190px;overflow:auto;font-size:12px;margin-top:6px">';
+      (d.conflicts || []).forEach(c => {
+        const vals = c.values || [];
+        h += '<div class="kv"><span class="k">' + esc(c.placeholder) + '</span>' +
+             '<span class="v">' + esc(vals.slice(0, 3).join(' / ')) +
+             (vals.length > 3 ? ' 等 ' + vals.length + ' 个' : '') + '</span></div>';
+      });
+      h += '</div><div class="acts"><button class="btn" id="back4">重新选择文件</button></div>';
+      render(h);
+      $('back4').onclick = () => { render(''); pickFile(); };
+      return;
+    }
+    if(!d.ok){ throw new Error(d.msg || '还原失败'); }
+    const _rc = d.residual_count || 0;
+    render('<div class="banner ok">已还原：' + esc(d.out.split('/').pop()) +
+           (_rc
+             ? '<br><span style="color:var(--warn)">还有 ' + _rc + ' 处占位符未能还原：' +
+               esc((d.residual || []).join('、')) + '</span>'
+             : '<br>占位符已全部换回，未发现残留。') +
+           '<br>文件已保存到「立丰脱敏/还原」文件夹，请勿与成品一起外发。</div>' +
+           '<div class="acts"><button class="btn primary" id="openOut">在文件夹中显示</button>' +
+           '<button class="btn" id="again">再还原一个</button></div>');
+    $('openOut').onclick = () => fetch(API + '/api/open?path=' + encodeURIComponent(d.out));
+    fetch(API + '/api/openout?dir=restore');   // 完成即调出「还原」文件夹
+    $('again').onclick = () => { render(''); pickFile(); };
+  }catch(e){
+    render('<div class="banner err">' + esc(e.message) + '</div>' +
+           '<div class="acts"><button class="btn" id="back2">重新选择</button></div>');
+    $('back2').onclick = () => { render(''); pickFile(); };
+  }
+}
+
+function render(html){ $('result').innerHTML = html; }
+$('back').onclick = () => { location.href = 'index.html'; };
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>成品预览 · 立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  html, body { height: 100%; }
+  body { margin: 0; display: flex; flex-direction: column; background: var(--bg); }
+  .topbar .nm { font-size: 13px; color: var(--muted); max-width: 36vw; overflow: hidden;
+                text-overflow: ellipsis; white-space: nowrap; }
+  .bar { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+         border-bottom: 1px solid var(--border); background: var(--panel); font-size: 13px;
+         color: var(--muted); flex-wrap: wrap; }
+  .bar .sp { flex: 1; }
+  .bar button { font-family: inherit; font-size: 13px; padding: 6px 12px; border-radius: 8px; }
+  .stagewrap { flex: 1; overflow: auto; padding: 18px; }
+  .stage { width: fit-content; margin: 0 auto; background: #fff; box-shadow: 0 8px 28px rgba(0,0,0,.18); }
+  .stage img { display: block; }
+  .tip { padding: 8px 16px 12px; font-size: 12.5px; color: var(--warn); line-height: 1.8; }
+  .empty { padding: 60px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="mark"><img src="logo.png" srcset="logo.png 1x, logo@2x.png 2x" alt="立丰"></div>
+  <div>
+    <div class="t">成品预览</div>
+    <div class="s">PDF / 图片按整页显示；逐处涂黑请在「不合格」里用「手动涂黑」</div>
+  </div>
+  <span class="sp"></span>
+  <span class="nm" id="fname"></span>
+  <button class="btn ghost" id="back">返回</button>
+</header>
+
+<div class="bar">
+  <button class="btn ghost" id="prev">上一页</button>
+  <span>第 <input id="pn" type="number" min="1" value="1"
+        style="width:56px;text-align:center;font-family:inherit;font-size:13px;
+               border:1px solid var(--border);border-radius:6px;padding:3px 4px;
+               background:var(--panel);color:var(--text)"> / <b id="pall">-</b> 页</span>
+  <button class="btn ghost" id="next">下一页</button>
+  <span class="sp"></span>
+  <button class="btn ghost" id="zoomOut">－</button>
+  <span id="zlabel" style="min-width:46px;text-align:center">适应</span>
+  <button class="btn ghost" id="zoomIn">＋</button>
+  <button class="btn ghost" id="zoomFit">适应</button>
+  <button class="btn ghost" id="paint" title="在这份成品上拉框涂黑；导出会覆盖成品文件夹里的同名文件">手动涂黑</button>
+  <button class="btn primary" id="export" title="确认无误后写入成品文件夹；导出前不会落成品">导出到成品文件夹</button>
+  <button class="btn ghost" id="openOut">在文件夹中显示</button>
+</div>
+
+<div class="stagewrap" id="stagewrap">
+  <div class="stage" id="stage"><img id="pg" alt=""></div>
+  <div class="empty" id="empty" style="display:none"></div>
+</div>
+<p class="tip" id="tip"></p>
+
+<script>
+const API = '';
+const $ = id => document.getElementById(id);
+const qs = new URLSearchParams(location.search);
+const TASK = qs.get('task') || '';
+let FILE = qs.get('file') || '1';
+let INFO = null, page = 1, zoom = 1;
+
+async function boot(){
+  if(!TASK){ $('tip').textContent = '缺少任务编号'; return; }
+  try{
+    const d = await (await fetch(API + '/api/task/info?task=' + encodeURIComponent(TASK))).json();
+    if(!d.ok) throw new Error(d.msg || '读取失败');
+    INFO = d;
+    $('fname').textContent = d.name;
+    $('fname').title = d.name;
+    $('pall').textContent = d.pages || 1;
+    $('pn').max = d.pages || 1;
+    $('tip').textContent = d.saved_exists
+      ? ('成品已放入：' + d.saved)
+      : '成品正在生成，请稍候或返回重试';
+    if(d.kind === 'unknown' || !d.pages){
+      $('empty').style.display = '';
+      $('empty').textContent = '这个格式没有可显示的页面';
+      return;
+    }
+    await go(1);
+  }catch(e){
+    // 2026-11-05：与 preview.html 一致——task 失效（旧标签/旧链接/目录被清）时
+    // 自动切到最近一个 preview 任务，不再只甩一句「打不开」。
+    try{
+      const h = await (await fetch(API + '/api/history')).json();
+      const items = (h.items || []);
+      const cand = items.find(x => x.status === 'preview') || items[0];
+      if(cand && cand.task_id && cand.task_id !== TASK && qs.get('auto') !== '1'){
+        location.replace('pdfview.html?task=' + encodeURIComponent(cand.task_id) +
+                         '&file=' + (cand.index || 1) + '&auto=1');
+        return;
+      }
+    }catch(_e){}
+    $('tip').textContent = '打不开这份预览：' + e.message;
+  }
+}
+
+async function go(n){
+  if(!INFO) return;
+  n = Math.max(1, Math.min(INFO.pages || 1, n));
+  page = n;
+  $('pn').value = n;
+  const img = $('pg');
+  img.onload = () => applyZoom();
+  img.src = API + '/api/task/page?task=' + encodeURIComponent(TASK) +
+            '&file=' + FILE + '&n=' + n + '&t=' + Date.now();
+  if(img.complete) applyZoom();
+}
+
+function applyZoom(){
+  const img = $('pg'), wrap = $('stagewrap');
+  if(!img || !img.naturalWidth || !wrap) return;
+  const fit = Math.max(240, wrap.clientWidth - 40);
+  const base = Math.min(fit, img.naturalWidth);
+  img.style.maxWidth = 'none';
+  img.style.width = Math.round(base * zoom) + 'px';
+  $('zlabel').textContent = zoom === 1 ? '适应' : Math.round(zoom * 100) + '%';
+}
+
+$('prev').onclick = () => go(page - 1);
+$('next').onclick = () => go(page + 1);
+$('pn').onchange = e => go(parseInt(e.target.value || '1', 10));
+$('zoomIn').onclick = () => { zoom = Math.min(3, zoom * 1.25); applyZoom(); };
+$('zoomOut').onclick = () => { zoom = Math.max(0.5, zoom / 1.25); applyZoom(); };
+$('zoomFit').onclick = () => { zoom = 1; applyZoom(); };
+window.addEventListener('resize', () => { if(zoom === 1) applyZoom(); });
+document.addEventListener('keydown', e => {
+  if(e.target.tagName === 'INPUT') return;
+  if(e.key === 'ArrowLeft') go(page - 1);
+  if(e.key === 'ArrowRight') go(page + 1);
+});
+$('back').onclick = () => { location.href = 'index.html'; };
+$('openOut').onclick = () => {
+  if(INFO && INFO.saved) fetch(API + '/api/open?path=' + encodeURIComponent(INFO.saved));
+};
+
+/* 2026-11-05：PDF 页原来没有导出按钮，用户看得到却没处点，只能回主页翻记录。
+   补上，走同一个 /api/export，与 docx 预览页口径一致。 */
+$('export').onclick = async () => {
+  const btn = $('export');
+  btn.disabled = true; btn.textContent = '正在导出…';
+  try{
+    const r = await fetch(API + '/api/export', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '导出失败');
+    // 2026-11-05 起保持「不跳页」；2026-11-12 用户改要求：完成后自动调出成品文件夹。
+    // 只弹访达、不跳页，避免又回到「以为在弹预览」的困扰。
+    fetch(API + '/api/openout');
+    btn.textContent = '已导出 ' + d.files.length + ' 个，可关闭本页';
+    btn.disabled = true;
+    const h = document.getElementById('hint');
+    if(h) h.textContent = '已写入成品文件夹，无需再操作。';
+  }catch(e){
+    alert('导出失败：' + e.message);
+    btn.disabled = false; btn.textContent = '导出到成品文件夹';
+  }
+};
+
+/* 合格了也要能改：直接在这份成品上涂黑，导出覆盖同名成品。
+   以前只有「不合格」才有涂黑入口，等于合格就等于钉死——用户明确不接受（2026-11-02）。 */
+$('paint').onclick = async () => {
+  const btn = $('paint');
+  btn.disabled = true; btn.textContent = '打开中…';
+  try{
+    const r = await fetch(API + '/api/paint/from-task', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, file: FILE})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '打不开');
+    location.href = 'paint.html?task=' + encodeURIComponent(d.task_id);
+  }catch(e){
+    alert('打不开涂黑页：' + e.message);
+    btn.disabled = false; btn.textContent = '手动涂黑';
+  }
+};
+
+boot();
+</script>
+</body>
+</html>

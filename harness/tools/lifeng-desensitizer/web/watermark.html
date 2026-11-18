@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PDF 去水印 · 立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 14px/1.6 -apple-system, "PingFang SC", "Helvetica Neue", sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 22px 20px 60px; }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  header h1 { font-size: 17px; margin: 0; font-weight: 600; }
+  header .sub { font-size: 12.5px; color: var(--muted); }
+  header .sp { flex: 1; }
+  a.back { font-size: 13px; color: var(--muted); text-decoration: none; }
+  a.back:hover { color: var(--brand); }
+
+  .card { background: var(--panel); border: 1px solid var(--border);
+          border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .drop { border: 1.5px dashed var(--border); border-radius: 12px;
+          padding: 34px 20px; text-align: center; cursor: pointer;
+          transition: .15s; background: var(--panel); }
+  .drop:hover, .drop.hot { border-color: var(--brand); background: var(--brand-soft); }
+  .drop .big { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .drop .hint { font-size: 12.5px; color: var(--muted); }
+
+  .file { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+  .file .nm { font-weight: 600; }
+  .file .meta { color: var(--muted); font-size: 12.5px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); }
+  th { font-size: 12px; color: var(--muted); font-weight: 500; }
+  td.tx { max-width: 380px; word-break: break-all; }
+  .tag { display: inline-block; padding: 1px 7px; border-radius: 5px;
+         font-size: 11.5px; background: var(--brand-soft); color: var(--brand); }
+  .tag.gray { background: #f1f0ee; color: #57534e; }
+  .score { font-weight: 600; }
+
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  button { font: inherit; padding: 8px 16px; border-radius: 8px; cursor: pointer;
+           border: 1px solid var(--border); background: var(--panel); color: var(--text); }
+  button:hover { border-color: var(--brand); color: var(--brand); }
+  button.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  button.primary:hover { opacity: .9; color: #fff; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+
+  .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cmp figure { margin: 0; }
+  .cmp figcaption { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .cmp img { width: 100%; border: 1px solid var(--border); border-radius: 8px;
+             background: #fff; display: block; }
+
+  .note { font-size: 12.5px; color: var(--muted); line-height: 1.75; }
+  .note b { color: var(--text); }
+  .msg { font-size: 13px; padding: 9px 12px; border-radius: 8px;
+         background: var(--warn-soft); color: var(--warn); }
+  .msg.ok { background: var(--ok-soft); color: var(--ok); }
+  .hide { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>PDF 去水印</h1>
+    <span class="sub">只删除压在页面上的文字水印，扫描图与文字层不动</span>
+    <span class="sp"></span>
+    <button id="openFolder" title="打开成品所在文件夹">打开文件夹</button>
+    <a class="back" href="index.html">← 返回首页</a>
+  </header>
+
+  <div class="card" id="pickCard">
+    <div class="drop" id="drop">
+      <div class="big">把 PDF 拖进来，或点击选择</div>
+      <div class="hint">支持单个文件 · 处理结果写入「成品」文件夹</div>
+    </div>
+  </div>
+
+  <div class="card hide" id="fileCard">
+    <div class="file">
+      <span class="nm" id="fName"></span>
+      <span class="meta" id="fMeta"></span>
+      <span style="flex:1"></span>
+      <button id="rescan">换个文件</button>
+    </div>
+    <div class="note" id="fileList" style="margin-top:8px;max-height:150px;overflow:auto"></div>
+  </div>
+
+  <div class="card hide" id="scanCard">
+    <div class="row" style="margin-bottom:10px">
+      <b style="font-size:13.5px">检测到的水印</b>
+      <span class="meta" id="scanSum" style="font-size:12.5px;color:var(--muted)"></span>
+      <span style="flex:1"></span>
+      <button id="apply" class="primary">删除勾选的水印</button>
+    </div>
+    <div id="msg" class="msg hide"></div>
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th style="width:34px"></th>
+          <th style="width:56px">字号</th>
+          <th style="width:76px">颜色</th>
+          <th style="width:112px">分布</th>
+          <th style="width:64px">文件</th>
+          <th>水印文字（截断显示）</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="note" style="margin-top:10px">
+      <b>判断依据</b>：同一串文字在整篇里反复出现（平铺水印），字号与正文不同、颜色偏灰。
+      正文里偶尔重复的词不会出现在上表。
+    </div>
+  </div>
+
+  <div class="card hide" id="doneCard">
+    <div class="row" style="margin-bottom:10px">
+      <b style="font-size:13.5px">处理完成</b>
+      <span class="meta" id="doneSum" style="font-size:12.5px;color:var(--muted)"></span>
+      <span style="flex:1"></span>
+      <button id="prevBtn">◀</button>
+      <span class="meta" id="pageInfo" style="font-size:12.5px"></span>
+      <button id="nextBtn">▶</button>
+    </div>
+    <div id="batchList" class="note" style="margin-bottom:10px"></div>
+    <div class="cmp" id="cmpBox">
+      <figure>
+        <figcaption>处理前</figcaption>
+        <img id="imgBefore" alt="处理前">
+      </figure>
+      <figure>
+        <figcaption>处理后</figcaption>
+        <img id="imgAfter" alt="处理后">
+      </figure>
+    </div>
+    <div class="note" style="margin-top:10px">
+      成品保存在「文稿 / 立丰脱敏 / 去水印」，路径：<code id="outPath" style="user-select:text"></code><br>
+      这里只是去掉了水印，<b>没有脱敏</b>。要脱敏，把这个 PDF 拖回首页。
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="openFolder2" class="primary">打开成品文件夹</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="note">
+      <b>能去</b>：后压在 PDF 上的文字水印 —— 律师执业证号+律所名、内部编号、「仅供××使用」这类，
+      通常是 45 度斜向平铺、灰色半透明。</br>
+      <b>去不了</b>：扫描时就已经在纸上的水印（那是图片像素的一部分，文字层里没有这串字）。
+      这类只能图像修复，本页不做，硬做会把正文一起糊掉。
+    </div>
+  </div>
+</div>
+
+<script>
+const API = "";
+const $ = (id) => document.getElementById(id);
+let FILES = [];                    // 待处理的 PDF 绝对路径（批量）
+let SRC = "", CAND = [], OUT = "", CUR = 0, TOTAL = 0;
+let RESULTS = [];                  // 批量处理结果 [{name, ok, msg, out}]
+let OUTDIR = "文稿 / 立丰脱敏 / 去水印";     // 处理成功后替换成真实绝对路径
+
+function show(el, on) { el.classList.toggle("hide", !on); }
+function msg(t, ok) {
+  const m = $("msg");
+  m.textContent = t;
+  m.classList.toggle("ok", !!ok);
+  show(m, true);
+}
+
+/* ---------- 选文件 ---------- */
+// ⚡ 不能用 <input type="file"> + click()：在 WKWebView 里这是**静默无反应**的
+//    （必须由 WKUIDelegate.runOpenPanelWith 接管，本 App 没实现）。
+//    用户原话：「导入未脱水印的文件夹，点了半天唤不出来」就是这个。
+//    改走 /api/pick —— 后端用 AppleScript 调系统的 choose file，主界面一直在用。
+const drop = $("drop");
+drop.onclick = async () => {
+  const big = drop.querySelector(".big");
+  const old = big.textContent;
+  big.textContent = "正在打开选择框…";
+  try {
+    // 多选：同一批材料的水印通常一样，扫一次勾一次就能全处理掉
+    const r = await fetch(API + "/api/pick", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: "选择要去水印的 PDF（可多选）", multiple: true }),
+    });
+    const d = await r.json();
+    let ps = (d.paths || []).filter((x) => /\.pdf$/i.test(x));
+    if (!ps.length) {
+      big.textContent = old;
+      if ((d.paths || []).length) alert("选中的不是 PDF。目前只支持 PDF。");
+      return;
+    }
+    useFiles(ps, true);
+  } catch (e) {
+    alert("选择文件失败：" + e.message);
+    big.textContent = old;
+  }
+};
+
+/* 统一入口：不管是「选择文件」还是拖拽进来，都汇到这里 */
+function useFiles(paths, isLocalPath) {
+  FILES = paths.slice();
+  SRC = FILES[0] || "";
+  CAND = []; RESULTS = []; OUT = "";
+
+  const n = FILES.length;
+  $("fName").textContent = n === 1 ? FILES[0].split("/").pop() : (FILES[0].split("/").pop() + " 等 " + n + " 个文件");
+  $("fMeta").textContent = n === 1 ? "" : ("共 " + n + " 个，将用同一套水印设置批量处理");
+
+  // 多于一个就把清单列出来，让用户确认没选错
+  const box = $("fileList");
+  if (n > 1) {
+    box.innerHTML = "";
+    FILES.forEach((p, i) => {
+      const row = document.createElement("div");
+      row.textContent = (i + 1) + ". " + p.split("/").pop();
+      box.appendChild(row);
+    });
+    show(box, true);
+  } else {
+    show(box, false);
+  }
+
+  show($("pickCard"), false);
+  show($("fileCard"), true);
+  show($("doneCard"), false);
+  scan();
+}
+["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => {
+  e.preventDefault(); drop.classList.add("hot");
+}));
+["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => {
+  e.preventDefault(); drop.classList.remove("hot");
+}));
+drop.addEventListener("drop", async (e) => {
+  const fs = Array.from(e.dataTransfer.files || []).filter((f) => /\.pdf$/i.test(f.name));
+  if (!fs.length) {
+    alert("拖进来的不是 PDF。目前只支持 PDF。");
+    return;
+  }
+  const big = drop.querySelector(".big");
+  const old = big.textContent;
+  const paths = [];
+  try {
+    for (let i = 0; i < fs.length; i++) {
+      big.textContent = fs.length > 1
+        ? ("正在读入 " + (i + 1) + " / " + fs.length + "…")
+        : "正在读入…";
+      const p = await uploadOne(fs[i]);
+      if (p) paths.push(p);
+    }
+  } finally {
+    big.textContent = old;
+  }
+  if (paths.length) useFiles(paths, true);
+});
+
+async function uploadOne(file) {
+  const r = await fetch(API + "/api/upload", {
+    method: "POST",
+    headers: { "X-Filename": encodeURIComponent(file.name) },
+    body: file,
+  });
+  const d = await r.json();
+  return d.ok ? d.path : "";
+}
+
+$("rescan").onclick = () => {
+  FILES = []; SRC = ""; CAND = []; OUT = ""; RESULTS = [];
+  show($("pickCard"), true); show($("fileCard"), false);
+  show($("scanCard"), false); show($("doneCard"), false);
+};
+
+/* ---------- 扫描（批量：逐个扫，按字号合并） ---------- */
+async function scan() {
+  show($("scanCard"), true);
+  $("tbl").querySelector("tbody").innerHTML = "";
+  $("scanSum").textContent = "正在检测…";
+  $("apply").disabled = true;
+
+  // 同一批材料水印通常一致，所以按**字号**合并成一行；
+  // 不同字号留在不同行，用户能看出来这几个文件的水印不一样。
+  const bySize = new Map();
+  let totalPages = 0, scanned = 0;
+  const noWm = [];
+
+  for (let i = 0; i < FILES.length; i++) {
+    const p = FILES[i], nm = p.split("/").pop();
+    $("scanSum").textContent = FILES.length > 1
+      ? ("正在检测 " + (i + 1) + " / " + FILES.length + "…")
+      : "正在检测…";
+    try {
+      const r = await fetch(API + "/api/wm/scan", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: p }),
+      });
+      const d = await r.json();
+      if (!d.ok) { noWm.push(nm); continue; }
+      totalPages += d.pages || 0;
+      scanned++;
+      const cs = d.candidates || [];
+      if (!cs.length) { noWm.push(nm); continue; }
+      cs.forEach((c) => {
+        if (!bySize.has(c.size)) {
+          bySize.set(c.size, Object.assign({}, c, { names: [nm] }));
+        } else {
+          const o = bySize.get(c.size);
+          // 同一文件可能返回多个片段候选（水印被页面边缘裁切），
+          // 只按文件名去重，否则「文件」列会把片段数当文件数（实测显示成 15 个）
+          if (o.names.indexOf(nm) < 0) o.names.push(nm);
+          o.total += c.total;
+        }
+      });
+    } catch (e) {
+      noWm.push(nm);
+    }
+  }
+
+  CAND = Array.from(bySize.values())
+    .sort((a, b) => (b.names.length - a.names.length) || (b.total - a.total));
+
+  $("scanSum").textContent = FILES.length > 1
+    ? (scanned + " 个文件 · " + totalPages + " 页")
+    : (totalPages + " 页");
+
+  if (!CAND.length) {
+    msg(noWm.length
+      ? "没检测到可去除的文字水印：" + noWm.slice(0, 3).join("、") +
+        (noWm.length > 3 ? " 等" : "")
+      : "没找到可去除的文字水印", false);
+    $("apply").disabled = true;
+    return;
+  }
+  if (noWm.length) {
+    msg("有 " + noWm.length + " 个文件没检测到水印，处理时会自动跳过：" +
+        noWm.slice(0, 3).join("、") + (noWm.length > 3 ? " 等" : ""), true);
+  } else {
+    show($("msg"), false);
+  }
+  renderTable();
+}
+
+function renderTable() {
+  const tb = $("tbl").querySelector("tbody");
+  tb.innerHTML = "";
+  CAND.forEach((c, i) => {
+    const tr = document.createElement("tr");
+    const td0 = document.createElement("td");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = true;
+    cb.dataset.i = i;
+    cb.onchange = updateBtn;
+    td0.appendChild(cb);
+
+    const td1 = document.createElement("td");
+    td1.textContent = c.size;
+
+    const td2 = document.createElement("td");
+    td2.innerHTML = '<span class="tag' + (c.gray ? " gray" : "") + '"></span>';
+    td2.querySelector(".tag").textContent = c.hex;
+
+    const td3 = document.createElement("td");
+    td3.textContent = c.pages + " 页 · " + c.per_page + " 次/页";
+
+    const td4 = document.createElement("td");
+    td4.textContent = c.names.length + " 个";
+    td4.title = (c.names || []).join("\n");
+
+    const td5 = document.createElement("td");
+    td5.className = "tx";
+    td5.title = c.text;
+    td5.textContent = c.text.length > 40 ? c.text.slice(0, 40) + "…" : c.text;
+
+    tr.append(td0, td1, td2, td3, td4, td5);
+    tb.appendChild(tr);
+  });
+  updateBtn();
+}
+
+function picked() {
+  return Array.from(document.querySelectorAll("#tbl input:checked"))
+    .map((x) => CAND[+x.dataset.i]);
+}
+
+function updateBtn() {
+  const p = picked();
+  const n = FILES.length;
+  $("apply").disabled = !p.length;
+  if (!p.length) { $("apply").textContent = "删除勾选的水印"; return; }
+  $("apply").textContent = n > 1
+    ? ("批量处理 " + n + " 个文件")
+    : ("删除勾选的 " + p.length + " 项");
+}
+
+/* ---------- 执行（批量：逐个调接口，失败不影响其它） ---------- */
+$("apply").onclick = async () => {
+  const p = picked();
+  if (!p.length) return;
+  const sizes = Array.from(new Set(p.map((x) => x.size)));
+  $("apply").disabled = true;
+  RESULTS = [];
+  const total = FILES.length;
+
+  for (let i = 0; i < total; i++) {
+    const path = FILES[i], nm = path.split("/").pop();
+    $("apply").textContent = total > 1
+      ? ("批量处理中 " + (i + 1) + " / " + total + "…")
+      : "处理中…";
+    try {
+      const r = await fetch(API + "/api/wm/apply", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: path, sizes: sizes }),
+      });
+      const d = await r.json();
+      if (!d.ok) {
+        RESULTS.push({ name: nm, ok: false, msg: d.msg || "处理失败" });
+      } else {
+        RESULTS.push({ name: nm, ok: true, msg: d.msg, out: d.out, pages: d.pages });
+        if (!OUT) { OUT = d.out; OUTDIR = d.out; TOTAL = d.pages || 1; CUR = 0; }
+      }
+    } catch (e) {
+      RESULTS.push({ name: nm, ok: false, msg: e.message });
+    }
+  }
+
+  const okN = RESULTS.filter((x) => x.ok).length;
+  const badN = RESULTS.length - okN;
+  // 批量只弹一次；全失败不弹空文件夹
+  if (okN) fetch(API + "/api/openout?dir=wm");
+  $("doneSum").textContent = badN
+    ? (okN + " 个成功，" + badN + " 个失败")
+    : (okN + " 个文件已处理");
+
+  // 批量结果逐条列出来，失败的把原因写清楚
+  const bl = $("batchList");
+  bl.innerHTML = "";
+  RESULTS.forEach((x) => {
+    const row = document.createElement("div");
+    row.style.cssText = "padding:3px 0;color:" + (x.ok ? "var(--ok)" : "var(--brand)");
+    row.textContent = (x.ok ? "✓ " : "✗ ") + x.name + "　" + (x.msg || "");
+    bl.appendChild(row);
+  });
+  show(bl, total > 1);
+
+  const op = $("outPath");
+  if (op) op.textContent = OUT || OUTDIR;
+
+  show($("doneCard"), true);
+  show($("scanCard"), false);
+
+  // 有成功的才给对比图；全失败就只留错误列表
+  if (OUT) {
+    show($("cmpBox"), true);
+    showPage(0);
+  } else {
+    show($("cmpBox"), false);
+  }
+
+  $("apply").disabled = false;
+  updateBtn();
+};
+
+function showPage(n) {
+  if (n < 0) n = 0;
+  if (n >= TOTAL) n = TOTAL - 1;
+  CUR = n;
+  $("pageInfo").textContent = (n + 1) + " / " + TOTAL;
+  $("imgBefore").src = API + "/api/wm/page?page=" + n +
+    "&path=" + encodeURIComponent(SRC) + "&t=" + Date.now();
+  $("imgAfter").src = API + "/api/wm/page?page=" + n +
+    "&path=" + encodeURIComponent(OUT) + "&t=" + Date.now();
+}
+$("prevBtn").onclick = () => showPage(CUR - 1);
+$("nextBtn").onclick = () => showPage(CUR + 1);
+
+/* 打开成品文件夹。用户原话：「去水印我点了，但是文件夹显示不了啊」——
+   原来处理完只在文字里写了路径，没有可点的入口。两处都挂上：
+   顶部常驻一个（随时能找到），完成卡片里再给一个大按钮。 */
+["openFolder", "openFolder2"].forEach(function (id) {
+  const b = document.getElementById(id);
+  if (!b) return;
+  b.onclick = async function () {
+    const old = b.textContent;
+    b.disabled = true;
+    b.textContent = "正在打开…";
+    try {
+      // dir=wm：打开「去水印」专用文件夹，不是脱敏成品目录
+      const r = await fetch(API + "/api/openout?dir=wm");
+      const d = await r.json();
+      if (!d.ok) {
+        alert("打不开文件夹。\n" + (d.msg || "") +
+              "\n\n成品都在这里：\n" + (d.path || OUTDIR));
+      }
+    } catch (e) {
+      alert("打不开文件夹。\n\n成品都在这里：\n" + OUTDIR);
+    } finally {
+      b.disabled = false;
+      b.textContent = old;
+    }
+  };
+});
+
+/* 支持 ?path=/绝对路径.pdf 直接打开（从预览页或别处跳过来时用） */
+(function () {
+  const q = new URLSearchParams(location.search);
+  const p = q.get("path");
+  if (!p || !/\.pdf$/i.test(p)) return;
+  useFiles([p], true);
+})();
+
+/* 从主窗口 window.open 过来的（独立窗口）：把「返回首页」藏掉。
+   理由两条：
+     1. 独立窗口里点「返回首页」会在同一个窗口跳成第二个脱敏界面，
+        用户会以为自己把主界面弄坏了；
+     2. 不改成 window.close() 是因为 WKWebView 对脚本关窗支持不稳
+        （同 Content-Disposition 那类限制），点了没反应更尴尬。
+        关窗交给窗口左上角红点，那是系统行为，一定有效。 */
+(function () {
+  if (!window.opener) return;
+  const b = document.querySelector("a.back");
+  if (b) b.style.display = "none";
+})();
+</script>
+</body>
+</html>

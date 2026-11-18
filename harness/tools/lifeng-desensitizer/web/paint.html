@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>手动涂黑 · 立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<style>
+  html, body { height: 100%; }
+  body { margin: 0; display: flex; flex-direction: column; background: var(--bg); }
+
+  header.topbar { flex: 0 0 auto; }
+  .topbar .nm { font-size: 13px; color: var(--muted); max-width: 34vw;
+                overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .wrap { flex: 1; display: flex; min-height: 0; }
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+  .bar {
+    flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--panel);
+    font-size: 13px; color: var(--muted);
+  }
+  .bar .sp { flex: 1; }
+  .bar button { font-family: inherit; font-size: 13px; padding: 6px 12px; border-radius: 8px; }
+
+  .stagewrap { flex: 1; overflow: auto; padding: 18px; background: #6b6b6b22; }
+  .stage { position: relative; width: fit-content; margin: 0 auto;
+           box-shadow: 0 8px 28px rgba(0,0,0,.18); background: #fff; }
+  .stage img { display: block; max-width: 100%; user-select: none; -webkit-user-drag: none; }
+  .layer { position: absolute; inset: 0; cursor: crosshair; }
+
+  /* 实心黑：所见即所得。以前用 .88 半透明，底下的字还能透出来，
+     用户以为"没涂干净、AI 还能读"——实际导出是全黑的，但页面上必须先对得上。 */
+  .bx { position: absolute; background: #000; border: 1px solid #000;
+        box-sizing: border-box; z-index: 3; }
+  .bx:hover { outline: 2px solid rgba(255,255,255,.7); outline-offset: 1px; cursor: pointer; }
+  .bx.sel { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .bx.tmp { background: rgba(178,26,34,.35); border: 1px dashed var(--brand); }
+  .bx .tg { position: absolute; left: -1px; top: -19px; height: 18px; line-height: 18px;
+            padding: 0 6px; border-radius: 4px 4px 4px 0; background: var(--brand);
+            color: #fff; font-size: 11px; white-space: nowrap; max-width: 190px;
+            overflow: hidden; text-overflow: ellipsis; }
+
+  /* 标注编辑器 */
+  .lbl { border-top: 1px solid var(--border); padding: 10px 14px 4px; }
+  .lbl-h { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .chips button { font-family: inherit; font-size: 12px; padding: 3px 9px; border-radius: 999px;
+                  border: 1px solid var(--border); background: var(--panel); color: var(--text);
+                  cursor: pointer; }
+  .chips button:hover { border-color: var(--brand); color: var(--brand); }
+  .lbl input { width: 100%; box-sizing: border-box; padding: 6px 9px; font-family: inherit;
+               font-size: 12.5px; border: 1px solid var(--border); border-radius: 8px;
+               background: var(--bg); color: var(--text); }
+  .lbl-a { display: flex; gap: 8px; margin-top: 8px; }
+  .lbl-a .btn { flex: 1; justify-content: center; }
+
+  /* 折叠小节：2026-11-05 用户「侧片的信息太多了，全部精简点，可以折叠收起」
+     收起时只剩一行标题（带数量），侧栏从一屏半压到一屏内。 */
+  .sec { border-bottom: 1px solid var(--border); }
+  .sec-h { display: flex; align-items: center; gap: 7px; padding: 10px 14px;
+           cursor: pointer; user-select: none; }
+  .sec-h:hover { background: var(--bg); }
+  .sec-t { font-size: 12.5px; font-weight: 600; color: var(--text); }
+  .sec-n { flex: 1; font-size: 11.5px; color: var(--muted); text-align: right;
+           overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sec-x { flex: 0 0 auto; color: var(--muted); font-size: 13px; line-height: 1;
+           transition: transform .16s; transform: rotate(90deg); }
+  .sec[open] .sec-x { transform: rotate(-90deg); }
+  .sec-b { display: none; }
+  .sec[open] .sec-b { display: block; }
+  /* 小节里的块自己不再画分隔线，交给 .sec */
+  .sec .lbl { border-top: none; padding: 0 14px 12px; }
+  .sec .list { padding: 0 10px 8px; }
+  .sec .tip { padding: 0 14px 12px; }
+  .sec .dbox { border-top: none; padding: 0 10px 10px; margin-top: 0; }
+
+  /* 侧栏：整体定高，只有中间 .sbody 滚，底部按钮永远钉在下面
+     （2026-11-03 用户："右边内容太长了，你没必要全部显示出来，做滚动就行"） */
+  aside.side {
+    flex: 0 0 268px; border-left: 1px solid var(--border); background: var(--panel);
+    display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+  }
+  .side .sbody { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; }
+  .side h3 { margin: 0; padding: 14px 16px 8px; font-size: 13.5px; font-weight: 600; }
+  .side .tip { padding: 0 16px 10px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .side .list { padding: 0 10px 10px; }
+  .row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px;
+         font-size: 12.5px; color: var(--text); }
+  .row:nth-child(odd) { background: var(--bg); }
+  .row { cursor: pointer; }
+  .row.on { background: var(--brand-soft); }
+  .row.on .k { color: var(--brand); }
+  .row .k { flex: 1; color: var(--muted); }
+  .row .x { cursor: pointer; color: var(--muted); padding: 0 4px; }
+  .row .x:hover { color: var(--brand); }
+  .empty { padding: 12px 10px; font-size: 12.5px; color: var(--muted); }
+
+  .side .foot { flex: 0 0 auto; padding: 12px 14px 14px; border-top: 1px solid var(--border);
+                background: var(--panel); }
+  .side .foot .btn { width: 100%; justify-content: center; font-size: 12.5px; }
+  /* 导出是唯一主操作，独占一行；其余日常操作压成一行小按钮。
+   2026-11-05 精简：四个按钮排 2x2 会剩下一个落单，看着像漏了，
+   所以日常操作只留三个排成一行；「重来（还原原件）」是危险动作，
+   挪到顶栏右侧，跟「返回」放一起，离手远一点不容易误点。 */
+  .side .foot-more { display: flex; gap: 6px; margin-top: 7px; }
+  .side .foot-more .btn { flex: 1; padding: 6px 2px; font-size: 11.5px; }
+
+  /* AI 找漏：PDF/扫描件/照片专用入口
+     扫描件没有文字层，规则引擎一条也命中不了，只能 OCR + 本地模型判断。 */
+  .bar .btn.ai { border-color: #7a5cf0; color: #7a5cf0; font-weight: 600; }
+  .bar .btn.ai:hover { background: #7a5cf0; color: #fff; border-color: #7a5cf0; }
+  .bar .btn.ai:disabled { opacity: .5; border-color: var(--border); color: var(--muted); }
+  .aibox { margin-top: 10px; padding-top: 9px; border-top: 1px dashed var(--border); }
+  .aibox h3 { font-size: 12.5px; color: var(--muted); font-weight: 600; margin: 0 0 6px; }
+  .aibox h3 .n { float: right; font-weight: 400; }
+  .aibox .note { font-size: 11.5px; color: var(--muted); line-height: 1.55; margin-top: 2px; }
+  .aibox .acts { display: flex; gap: 7px; margin-top: 8px; }
+  .aibox .acts .btn { flex: 1; justify-content: center; font-size: 11.5px; padding: 6px 6px; }
+  .aibox .airow { display: flex; align-items: center; gap: 7px; padding: 5px 7px;
+                  border-radius: 7px; font-size: 12px; cursor: pointer; }
+  .aibox .airow:nth-child(odd) { background: var(--bg); }
+  .aibox .airow .ck { width: 13px; height: 13px; flex: 0 0 13px; border-radius: 3px;
+                      border: 1px solid var(--border); background: var(--panel); }
+  .aibox .airow.on .ck { background: #7a5cf0; border-color: #7a5cf0; }
+  .aibox .airow .k { flex: 1; color: var(--text); overflow: hidden;
+                     text-overflow: ellipsis; white-space: nowrap; }
+  .aibox .airow .pg { color: var(--muted); font-size: 10.5px; white-space: nowrap; }
+  .aibox .airow .no { color: var(--muted); font-size: 10.5px; }
+  /* 姓名标记：刑事案卷的重点，单独标出来，跟"模型猜的"区分开 */
+  .aibox .airow .wh { flex: 0 0 auto; font-size: 9.5px; line-height: 1;
+                      padding: 2px 4px; border-radius: 3px;
+                      background: #f4e6c8; color: #8a5a00; white-space: nowrap; }
+  /* 页面上的 AI 候选框：紫色虚线，跟红色（已自动涂黑）、黑色（已涂）区分开。
+   一开始用琥珀色，实测在泛黄的档案扫描件上完全看不出来（纸本身就是 229,189,117），
+   必须选一个跟白纸、黄纸都拉得开、又不跟红/黑撞色的 —— 紫色。 */
+  .layer .aibx { position: absolute; box-sizing: border-box; z-index: 4;
+                 border: 1.5px dashed #6d3ff0; background: rgba(109, 63, 240, .22);
+                 cursor: pointer; border-radius: 2px; }
+  .layer .aibx:hover { background: rgba(109, 63, 240, .42); box-shadow: 0 0 0 2px rgba(109,63,240,.55); }
+  .layer .aibx.off { display: none; }
+
+  /* 套用到其他页 */
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.32); display: none;
+           align-items: center; justify-content: center; z-index: 20; }
+  .modal.show { display: flex; }
+  .modal .card { width: 420px; max-width: 92vw; background: var(--panel); border-radius: 14px;
+                 border: 1px solid var(--border); padding: 20px 22px 16px;
+                 box-shadow: 0 20px 60px rgba(0,0,0,.24); }
+  .modal h3 { margin: 0 0 10px; font-size: 15px; }
+  .modal p { margin: 0 0 12px; font-size: 13px; line-height: 1.8; color: var(--text); }
+  .modal label { display: flex; align-items: center; gap: 8px; font-size: 13px;
+                 padding: 7px 0; color: var(--text); }
+  .modal label input[type=number] { width: 62px; padding: 3px 6px; font-family: inherit;
+                 font-size: 13px; border: 1px solid var(--border); border-radius: 6px;
+                 background: var(--bg); color: var(--text); }
+  .modal .warn { color: var(--warn); font-size: 12.5px; margin: 8px 0 0; }
+  .modal .acts { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+  .layer .ab {
+    position: absolute; box-sizing: border-box; z-index: 2;
+    border: 1px dashed rgba(220, 60, 60, .55);
+    background: rgba(220, 60, 60, .06);
+    cursor: pointer; border-radius: 2px;
+  }
+  .layer .ab.picked {
+    border: 2px solid #d92b2b; background: rgba(217, 43, 43, .3);
+    box-shadow: 0 0 0 3px rgba(217, 43, 43, .25);
+  }
+  .layer .ab:hover {
+    border-color: #e03b3b; background: rgba(224, 59, 59, .22);
+    box-shadow: 0 0 0 2px rgba(224, 59, 59, .35);
+  }
+  .abox { margin-top: 10px; padding-top: 9px; border-top: 1px dashed var(--border);
+          display: flex; flex-direction: column; min-height: 0; flex: 0 1 auto; }
+  /* 置顶的待办面板：不再和上面一条虚线连着，改成实心卡片，滚到哪都在最前面 */
+  .abox.top { margin: 0 0 10px; padding: 9px 10px 10px; border-top: none;
+              border: 1px solid var(--border); border-radius: 8px;
+              background: var(--card, #fff); flex: 0 0 auto; }
+  .abox.top.ai { border-color: #b9a6f5; }
+  /* autoBox 现在包在折叠节里，自己不该再撑一圈边距/边框（2026-11-05 折叠改造） */
+  .sec .abox { margin: 0; padding: 0 12px 10px; border: none; background: none; }
+  .sec .abox .note { padding: 0; }
+  /* 自动涂黑一展开就是十几类，能把整根侧栏拉到底（2026-11-05 截图确认）。
+     给它一个上限、内部自己滚：外面的「本页涂黑」「标注」永远还能滚到。 */
+  .sec[data-sec="auto"] .sec-b { max-height: 46vh; overflow-y: auto; overflow-x: hidden; }
+  .sec[data-sec="list"] .sec-b { max-height: 32vh; overflow-y: auto; overflow-x: hidden; }
+  .abox h3 { font-size: 12.5px; color: var(--muted); font-weight: 600; margin: 0 0 6px; }
+  .abox h3 .n { float: right; font-weight: 400; }
+  .abox .row.ab { opacity: .9; }
+  .abox .row.ab .k { color: var(--muted); }
+  .abox .row.ab.on { background: var(--brand-soft); }
+  .abox .row.ab.on .k { color: var(--brand); }
+  .abox .row.ab.on .x { color: var(--brand); }
+  .abox .row.ab .x { cursor: pointer; color: var(--brand); white-space: nowrap;
+                     flex: 0 0 auto; font-size: 11px; }
+  /* 自动涂黑清单的一行里挤了「内容 + 页数 + 选」三样，侧栏只有 268px，
+     窄的时候页数被「选」压掉半个字（2026-11-05 截图中确认）。
+     内容让位、页数缩到 10px 并允许紧贴，才排得下。 */
+  .abox .row.ab { gap: 5px; padding: 6px 6px; }
+  .abox .row.ab .k { flex: 1 1 auto; min-width: 0; overflow: hidden;
+                     text-overflow: ellipsis; white-space: nowrap; }
+  .abox .row.ab .n2 { color: var(--muted); font-size: 10px; white-space: nowrap;
+                      flex: 0 0 auto; letter-spacing: -.2px; }
+  .abox .note { font-size: 11.5px; color: var(--muted); line-height: 1.55; margin-top: 2px; }
+  .abox .grp-h { font-size: 11px; color: var(--muted); margin: 8px 0 3px; font-weight: 600;
+                 position: sticky; top: 0; background: var(--panel); padding: 2px 0; }
+  /* 清单跟侧栏一起滚（只有一层滚动条，不做嵌套滚动） */
+  .abox .alist { margin-top: 2px; border-top: 1px solid var(--border); padding-top: 2px; }
+  /* 选中后的确认区：这是清上百处的最后一道闸 */
+  .abox .pick { margin: 6px 0 2px; padding: 9px; border-radius: 8px;
+                background: var(--brand-soft); border: 1px solid var(--brand); }
+  .abox .pick .p1 { font-size: 12.5px; color: var(--text); font-weight: 600;
+                    word-break: break-all; line-height: 1.4; }
+  .abox .pick .p2 { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .abox .pick .cta { display: flex; gap: 8px; margin-top: 8px; }
+  .abox .pick .cta .btn { flex: 1; justify-content: center; font-size: 12px; padding: 6px 8px; }
+  .abox .bulk { margin: 6px 0 2px; }
+  .abox .btn.wide { width: 100%; justify-content: center; font-size: 11.5px; padding: 6px 8px; }
+  .dbox { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
+  .dbox h3 { font-size: 12.5px; color: var(--muted); font-weight: 600; margin: 0 0 8px; }
+  .dbox h3 .n { float: right; font-weight: 400; }
+  .dbox .row.del { opacity: .8; }
+  .dbox .row.del .k { color: var(--muted); }
+  .dbox .row.del .x { cursor: pointer; }
+
+  .status { flex: 0 0 auto; padding: 6px 14px 8px; font-size: 12px; color: var(--muted); min-height: 18px; }
+  /* 没话可说时不占地方：状态栏空着还留一条线和 26px 高，侧栏就白矮一截 */
+  .status:empty { display: none; }
+  .status:not(:empty) { border-top: 1px solid var(--border); }
+  .status.ok { color: var(--ok); }
+  .status.warn { color: var(--warn); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="mark"><img src="logo.png" srcset="logo.png 1x, logo@2x.png 2x" alt="立丰"></div>
+  <div>
+    <div class="t">手动涂黑</div>
+    <div class="s">在页面上拉框，框住的地方导出时会被真正抹掉（文字层一并清除）</div>
+  </div>
+  <span class="sp"></span>
+  <span class="nm" id="fname"></span>
+  <button class="btn ghost" id="resetSrc" title="把工作副本换回原件，清掉已经烧进文件的错位黑块">重来（还原原件）</button>
+  <button class="btn ghost" id="back">返回</button>
+</header>
+
+<div class="wrap">
+  <main class="main">
+    <div class="bar">
+      <button class="btn ghost" id="prev">上一页</button>
+      <span>第 <input id="pn" type="number" min="1" value="1"
+            style="width:52px;text-align:center;font-family:inherit;font-size:13px;
+                   border:1px solid var(--border);border-radius:6px;padding:3px 4px;background:var(--panel);color:var(--text)">
+        / <b id="pall">-</b> 页</span>
+      <button class="btn ghost" id="next">下一页</button>
+      <span class="sp"></span>
+      <button class="btn ghost" id="zoomOut" title="缩小">－</button>
+      <span id="zlabel" style="min-width:46px;text-align:center">适应</span>
+      <button class="btn ghost" id="zoomIn" title="放大">＋</button>
+      <button class="btn ghost" id="zoomFit" title="适应窗口宽度">适应</button>
+      <span id="info">未涂黑</span>
+      <button class="btn ai" id="aiFind" title="扫描件和照片没有文字层，用本地 AI 找该盖的地方">AI 找漏</button>
+    </div>
+    <div class="stagewrap" id="stagewrap">
+      <div class="stage" id="stage">
+        <img id="pg" alt="">
+        <div class="layer" id="layer"></div>
+      </div>
+    </div>
+  </main>
+
+  <aside class="side">
+    <div class="sbody">
+      <!-- AI 候选放最上面：它是「待办」，处理完才轮到下面的涂黑明细。
+           之前排在涂黑列表和标注区之后，列表一长用户得滚动才看得见，误以为没出来。 -->
+      <section class="sec" data-sec="ai" id="secAi" style="display:none">
+        <div class="sec-h">
+          <span class="sec-t">AI 找到的</span>
+          <span class="sec-n" id="aiN"></span>
+          <span class="sec-x">›</span>
+        </div>
+        <div class="sec-b">
+          <div class="abox" id="aiBox"></div>
+        </div>
+      </section>
+
+      <!-- 自动涂黑是最大的一块（18 类 / 61 处）。2026-11-05 用户
+           「侧片的信息太多了，全部精简点，可以折叠收起」 ——
+           它默认收起，否则本页涂黑和标注全被挤到屏幕外。 -->
+      <section class="sec" data-sec="auto" id="secAuto" style="display:none">
+        <div class="sec-h">
+          <span class="sec-t">自动涂黑</span>
+          <span class="sec-n" id="autoN"></span>
+          <span class="sec-x">›</span>
+        </div>
+        <div class="sec-b">
+          <div class="abox" id="autoBox"></div>
+        </div>
+      </section>
+
+      <!-- 2026-11-05 用户：「侧片的信息太多了，全部精简点，可以折叠收起」
+           做法：每块一个可折叠小节，标题带数量，默认只开「本页涂黑」，
+           其余收起来。收起后只剩一行标题，侧栏不再被说明文字吃掉。 -->
+      <section class="sec" data-sec="list" open>
+        <div class="sec-h">
+          <span class="sec-t">本页涂黑</span>
+          <span class="sec-n" id="cnt"></span>
+          <span class="sec-x">›</span>
+        </div>
+        <div class="sec-b">
+          <div class="list" id="list"><div class="empty">这一页还没有涂黑处</div></div>
+        </div>
+      </section>
+
+      <section class="sec" data-sec="edit" open>
+        <div class="sec-h">
+          <span class="sec-t">标注</span>
+          <span class="sec-n" id="labNow"></span>
+          <span class="sec-x">›</span>
+        </div>
+        <div class="sec-b">
+          <div class="lbl">
+            <div class="lbl-h" id="labHint">点选一块，标注这里涂的是什么</div>
+            <div class="chips" id="chips"></div>
+            <input id="labInput" maxlength="20" placeholder="例如：被告人姓名">
+            <div class="lbl-a">
+              <button class="btn ghost" id="labClear">清除</button>
+              <button class="btn primary" id="labApply">标注</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" data-sec="undel" id="secUndel" style="display:none">
+        <div class="sec-h">
+          <span class="sec-t">已删除的涂黑</span>
+          <span class="sec-n" id="delN"></span>
+          <span class="sec-x">›</span>
+        </div>
+        <div class="sec-b">
+          <div class="dbox" id="delBox"></div>
+        </div>
+      </section>
+
+      <section class="sec" data-sec="clr" id="secClr" style="display:none">
+        <div class="sec-h">
+          <span class="sec-t">可撤回的清理</span>
+          <span class="sec-n" id="clrN"></span>
+          <span class="sec-x">›</span>
+        </div>
+        <div class="sec-b">
+          <div class="dbox" id="clearUndo"></div>
+        </div>
+      </section>
+
+      <section class="sec" data-sec="help">
+        <div class="sec-h">
+          <span class="sec-t">怎么用</span>
+          <span class="sec-n"></span>
+          <span class="sec-x">›</span>
+        </div>
+        <div class="sec-b">
+          <div class="tip">拖框＝涂黑；双击框或点 <b>×</b> 删除。<br>红色虚线框是自动涂的，点选后再确认，同类内容一起清。<br>标注过的块，导出时白字印在黑块上。</div>
+        </div>
+      </section>
+    </div>
+    <div class="status" id="stat"></div>
+    <div class="foot">
+      <button class="btn primary" id="export">导出到成品文件夹</button>
+      <div class="foot-more">
+        <button class="btn ghost" id="clearPage">清空本页</button>
+        <button class="btn ghost" id="applyBtn">套用到其他页</button>
+        <button class="btn ghost" id="undoBtn" style="display:none">撤销套用</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="modal" id="applyModal">
+  <div class="card">
+    <h3>套用到其他页</h3>
+    <p>把第 <b id="apFrom">1</b> 页的 <b id="apCnt">0</b> 块，按同一位置复制到：</p>
+    <label><input type="radio" name="rg" value="all" checked> 全部页（共 <span id="apAll">-</span> 页）</label>
+    <label><input type="radio" name="rg" value="range"> 指定区间
+      <input id="rgFrom" type="number" min="1" value="1"> 到
+      <input id="rgTo" type="number" min="1" value="1"> 页</label>
+    <label><input type="radio" name="rg" value="empty"> 只套到还没涂过的页（<span id="apEmpty">0</span> 页）</label>
+    <p class="warn">目标页原有的涂黑会被覆盖；套错可点「撤销本次套用」。</p>
+    <div class="acts">
+      <button class="btn ghost" id="apCancel">取消</button>
+      <button class="btn primary" id="apOk">套用</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const $ = id => document.getElementById(id);
+
+const qs = new URLSearchParams(location.search);
+const TASK = qs.get('task') || '';
+
+let META = null;        // {name,kind,pages:[{n,w,h}]}
+let ALL = {};           // {"1": [[x0,y0,x1,y1], ...]}
+let page = 1;
+let dirty = false;
+let saveTimer = null;
+let zoom = 1;          // 1 = 适应窗口宽度；>1 放大，靠滚动看细节
+let SEL = -1;          // 当前选中块（本页索引），用于标注
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"]/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+let UNDO = null;       // 套用前的快照，只保留最近一次，用来整体撤回
+let DELETED = [];      // 已删除的涂黑框（服务端持久化，可恢复）
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+function setStat(t, cls){
+  const el = $('stat');
+  el.textContent = t || '';
+  el.className = 'status' + (cls ? ' ' + cls : '');
+}
+
+/* 侧栏折叠：2026-11-05 用户「侧片的信息太多了，全部精简点，可以折叠收起」
+   点标题整节开合，状态记在 localStorage，下次进来自动还原。
+   为什么要记：翻页时会反复进这个页面，每次都重新点开太烦。 */
+(function(){
+  const KEY = 'lf_paint_secs';
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e){ saved = {}; }
+
+  // 默认开合：本页涂黑 + AI 找到的 都开着。
+  //
+  // ⚡ 2026-11-05 修：原来 DFLT 里漏了 ai 这个键，导致 AI 那一栏永远没有 open 属性，
+  //    里面「涂黑选中的 N 处」按钮被 .sec-b{display:none} 藏住。
+  //    用户看到页面上已经画出紫色虚线框（那部分是对的），却找不到"确认涂黑"的按钮，
+  //    反馈原话：「点了只是高亮框圈出来了，我点让它涂黑没反应」。
+  //    AI 候选是待办事项，生成出来就必须让人一眼看见怎么确认，不能默认折叠。
+  const DFLT = { ai: true, list: true, edit: false, auto: false, undel: false, clr: false, help: false };
+
+  window.SEC_OPEN = function(k, on){
+    const sec = document.querySelector('.sec[data-sec="' + k + '"]');
+    if(!sec) return;
+    if(on) sec.setAttribute('open', ''); else sec.removeAttribute('open');
+  };
+
+  document.querySelectorAll('.sec').forEach(sec => {
+    const k = sec.dataset.sec;
+    const want = (k in saved) ? !!saved[k] : !!DFLT[k];
+    if(want) sec.setAttribute('open', ''); else sec.removeAttribute('open');
+    const h = sec.querySelector('.sec-h');
+    if(h) h.onclick = () => {
+      const now = !sec.hasAttribute('open');
+      if(now) sec.setAttribute('open', ''); else sec.removeAttribute('open');
+      saved[k] = now;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(e){}
+    };
+  });
+})();
+
+/* 重新从服务端拉一次黑块，刷新前端内存里的 ALL 与当前页。
+   ⚡ 2026-11-05 加：acceptAi 之后原来只调 reloadPage()（只换 <img> 的 src），
+   ALL 还是旧的 —— 服务端明明加进去了，界面上的"本页涂黑"列表和黑块都不动，
+   用户看到的就是"点了没反应"。凡是在服务端改过 boxes.json，都必须走这里。 */
+async function refreshBoxes(){
+  try{
+    const r = await fetch(API + '/api/paint/meta?task=' + encodeURIComponent(TASK));
+    const d = await r.json();
+    if(!d.ok) return;
+    ALL = d.boxes || {};
+    DELETED = d.deleted || [];
+    renderInfo();
+    renderDeleted();
+    renderList();
+    drawBoxes();            // 注意：画黑块叫 drawBoxes，没有 renderBoxes 这个函数
+    if(typeof renderAutoList === 'function') renderAutoList();
+    reloadPage();
+  }catch(e){
+    if(window.console) console.warn('刷新黑块失败', e);
+  }
+}
+
+async function boot(){
+  if(!TASK){ setStat('缺少任务参数', 'warn'); return; }
+  try{
+    const r = await fetch(API + '/api/paint/meta?task=' + encodeURIComponent(TASK));
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '读取失败');
+    META = d.meta; ALL = d.boxes || {};
+    DELETED = d.deleted || [];
+    $('fname').textContent = META.name;
+    $('fname').title = META.name;
+    $('pall').textContent = META.pages.length;
+    $('pn').max = META.pages.length;
+    renderInfo();
+    renderDeleted();
+    await go(1);
+    loadAiBoxes();          // 上次 AI 扫过的话，把候选框还原出来
+  }catch(e){
+    setStat('打开失败：' + e.message, 'warn');
+  }
+}
+
+function pageBoxes(n){ return ALL[String(n)] || []; }
+
+function renderInfo(){
+  const painted = Object.keys(ALL).filter(k => (ALL[k] || []).length).length;
+  const total = Object.keys(ALL).reduce((s, k) => s + (ALL[k] || []).length, 0);
+  $('info').textContent = total ? ('已涂 ' + painted + ' 页 / ' + total + ' 块') : '未涂黑';
+}
+
+async function go(n){
+  if(!META) return;
+  n = Math.max(1, Math.min(META.pages.length, n));
+  await flush();
+  page = n;
+  SEL = -1;
+  $('pn').value = n;
+  const li = $('labInput'); if(li) li.value = '';
+  const lh = $('labHint'); if(lh) lh.textContent = '点选一块，标注这里涂的是什么';
+  const ln0 = $('labNow'); if(ln0) ln0.textContent = '';
+  const img = $('pg');
+  const meta = META.pages[n - 1];
+  img.onload = () => { applyZoom(); drawBoxes(); renderAiLayer(); };
+  img.src = API + '/api/paint/page?task=' + encodeURIComponent(TASK) + '&n=' + n + '&t=' + Date.now();
+  if(img.complete) { applyZoom(); drawBoxes(); }
+  renderList();
+  renderDeleted();
+  if(autoLoaded){ renderAutoLayer(); renderAutoList(); }
+  else { loadAuto(); }
+  renderAiLayer();            // 候选框跟着当前页走
+  renderAiBox();
+}
+
+function applyZoom(){
+  const img = $('pg');
+  const wrap = $('stagewrap');
+  if(!img || !img.naturalWidth || !wrap) return;
+  const fit = Math.max(240, wrap.clientWidth - 40);
+  const base = Math.min(fit, img.naturalWidth);   // 适应时不放大超过原始像素，避免糊
+  img.style.maxWidth = 'none';
+  img.style.width = Math.round(base * zoom) + 'px';
+  const lab = $('zlabel');
+  if(lab) lab.textContent = zoom === 1 ? '适应' : Math.round(zoom * 100) + '%';
+}
+
+function drawBoxes(){
+  const layer = $('layer');
+  layer.querySelectorAll('.bx').forEach(x => x.remove());
+  const meta = META.pages[page - 1];
+  pageBoxes(page).forEach((b, i) => {
+    const d = document.createElement('div');
+    d.className = 'bx' + (i === SEL ? ' sel' : '');
+    d.dataset.i = i;
+    d.title = (b[4] ? '这里涂的是：' + b[4] : '未标注') + '　双击删除';
+    d.style.left = (b[0] / meta.w * 100) + '%';
+    d.style.top = (b[1] / meta.h * 100) + '%';
+    d.style.width = ((b[2] - b[0]) / meta.w * 100) + '%';
+    d.style.height = ((b[3] - b[1]) / meta.h * 100) + '%';
+    if(b[4]){
+      const tg = document.createElement('span');
+      tg.className = 'tg';
+      tg.textContent = b[4];
+      d.appendChild(tg);
+    }
+    d.onmousedown = e => e.stopPropagation();
+    d.onclick = e => { e.stopPropagation(); selectBox(i); };
+    d.ondblclick = e => { e.stopPropagation(); delBox(i); };
+    layer.appendChild(d);
+  });
+}
+
+/* 选中一块 → 在右侧标注它涂的是什么（姓名/身份证号…）。
+   2026-11-05 用户定：标注一律烧进成品，白字印在黑块上，不再有开关。 */
+function selectBox(i){
+  SEL = i;
+  drawBoxes(); renderList();
+  const b = pageBoxes(page)[i] || [];
+  $('labInput').value = b[4] || '';
+  $('labHint').textContent = '第 ' + (i + 1) + ' 块：' + (b[4] || '还没标注');
+  const ln = $('labNow');
+  if(ln) ln.textContent = '第 ' + (i + 1) + ' 块 · ' + (b[4] || '未标注');
+  // 标注节默认收起，选中一块就替用户展开 —— 选完了还得自己去找输入框太蠢
+  if(window.SEC_OPEN) window.SEC_OPEN('edit', true);
+  $('labInput').focus();
+}
+
+/* 删除一块涂黑：走服务端软删除，删掉的框进「已删除」堆，可一键恢复。
+   以前是前端 splice 掉再整页覆盖保存 —— 手一抖就真没了，
+   连"刚才删的是哪一块"都说不清（2026-11-03 用户要求加撤销）。 */
+async function delBox(i){
+  const arr = pageBoxes(page);
+  const b = arr[i];
+  if(!b) return;
+  // 有排队中的自动保存就先取消：它是按"旧数组"整页覆盖的，
+  // 让它跑一次等于把刚删掉的框又写回去（2026-11-03 排查出的竞态）
+  if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
+  try{
+    const r = await fetch(API + '/api/paint/del', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, page: page, index: i})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '删除失败');
+    // 本地同步：把这一块从当前页摘掉
+    const next = pageBoxes(page).slice();
+    next.splice(i, 1);
+    ALL[String(page)] = next;
+    DELETED = d.deleted || [];
+    SEL = -1;
+    drawBoxes(); renderList(); renderInfo(); renderDeleted();
+    const lab = b[4] ? ('（' + b[4] + '）') : '';
+    setStat('已删除第 ' + (i + 1) + ' 块' + lab + '，可在右侧下方「已删除的涂黑」里点恢复', 'ok');
+  }catch(e){
+    setStat('删除失败：' + e.message, 'warn');
+  }
+}
+
+/* 撤销删除：把那一块装回它原来那一页 */
+async function restoreBox(id){
+  if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
+  try{
+    const r = await fetch(API + '/api/paint/restore-del', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, id: id})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '恢复失败');
+    const pg = String(d.page);
+    ALL[pg] = (ALL[pg] || []).concat([d.box]);
+    DELETED = d.deleted || [];
+    if(String(page) === pg){
+      drawBoxes(); renderList();
+    }
+    renderInfo(); renderDeleted();
+    setStat('已恢复到第 ' + d.page + ' 页', 'ok');
+  }catch(e){
+    setStat('恢复失败：' + e.message, 'warn');
+  }
+}
+
+/* 自动涂黑（脱敏时烧进 PDF 的黑块）
+
+   交互定为「点一下＝选中，再按确认才清」：
+   一次会清掉全文同位置的上百处（实测水印 121 处），点一下就执行等于给了个核按钮。
+   2026-11-03 用户原话："直接点击就删除很容易误操作"。
+
+   同时给出「全部任务共 N 个位置」的批量视图：
+   同一个版本的水印在别的任务里也是同一个位置，用户不必逐个任务翻。 */
+let GROUPS = [];        // 本文档的位置分组
+let PAGE_MAP = {};      // 页 → [{gid, text, count, x0...}]
+let autoLoaded = false;
+let PICKED = '';        // 当前选中的一类内容 gid（空=没选）
+let CLEARED = [];       // 本次清理记录，用来撤销（栈，后清的也能一步步退）
+let MULTI = [];         // 跨文件清理记录：一次动了好几个文件，撤回要一起退
+let TASKS = [];         // 全部涂黑任务（本次脱敏的那一批文件）
+
+/* ================= AI 找漏（PDF / 扫描件 / 照片） =================
+
+   为什么单独做这一条：自动涂黑（扫黑块）和规则脱敏都要求**文字可提取**。
+   扫描件和照片里文字是像素，规则一条也命中不了，黑块也无从谈起。
+   用户原话（2026-11-03）："有些东西软件出不来，只有 pdf 和照片这种复杂的，介入 ai 脱敏"。
+
+   流程：OCR 取字和坐标 → 本地模型回答"第几块要盖" → 紫色候选框落在页面上
+        → 律师逐条勾选 / 确认 → 才并入 boxes.json → 导出时才真烧黑。
+
+   边界（与 llm_scan.py 同一原则）：模型**只回答序号，不许改写任何原文**。
+   法律原文一个字都不让模型动，否则一处幻觉就是一份错的证据。
+   ================================================================ */
+let AI_ITEMS = [];      // 服务端存的候选：[{page,x0,y0,x1,y1,text}]
+let AI_PICK = {};       // 本地勾选状态：key → true/false
+let aiBusy = false;
+
+function aiKey(it){
+  return it.page + '|' + Math.round(it.x0) + '|' + Math.round(it.y0);
+}
+
+async function loadAiBoxes(){
+  if(!TASK) return;
+  window.__aiLoadTried = true;
+  window.__aiLoadErr = '';
+  try{
+    const r = await fetch(API + '/api/paint/ai-boxes', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK})
+    });
+    const d = await r.json();
+    if(d.ok){
+      AI_ITEMS = d.items || [];
+      // 新出现的候选默认勾上：AI 挑出来的本来就少，让律师删比让他逐个点更省事
+      AI_ITEMS.forEach(it => {
+        const k = aiKey(it);
+        if(!(k in AI_PICK)) AI_PICK[k] = true;
+      });
+      renderAiBox();
+      renderAiLayer();
+    }
+  }catch(e){
+    // 候选拿不到不影响涂黑主流程，但要在状态栏留个痕——
+    // 之前这里静默吞掉，面板不出现时根本看不出是"接口失败"还是"没候选"。
+    window.__aiLoadErr = e && e.message || String(e);
+    if(window.console) console.warn('AI 候选读取失败', e);
+  }
+}
+
+async function runAiFind(){
+  if(aiBusy) return;
+  if(!META) return;
+  const btn = $('aiFind');
+  const n = META.pages.length;
+  const yes = confirm('用本地 AI 扫一遍，找出规则和黑块都没盖住的敏感内容？\n\n' +
+    '共 ' + n + ' 页，只在本机跑（Ollama），不联网。\n' +
+    '每页约 1~3 秒，' + n + ' 页大约需要 ' + Math.max(1, Math.round(n * 2.2 / 60)) + ' 分钟。\n\n' +
+    'AI 只给建议，标成紫色虚线框，你确认后才真涂黑。');
+  if(!yes) return;
+  window.__aiUserAsked = true;      // 用户主动要扫，之后"没候选"才值得提示
+  aiBusy = true;
+  if(btn){ btn.disabled = true; btn.textContent = 'AI 扫描中…'; }
+  setStat('AI 正在逐页 OCR 并判断，' + n + ' 页…（可先继续手动涂黑）');
+  try{
+    const r = await fetch(API + '/api/paint/ai-find', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || 'AI 扫描失败');
+    AI_ITEMS = d.items || [];
+    AI_PICK = {};
+    window.__aiSecShown = false;   // 新一轮扫描，允许再自动展开一次侧栏
+    AI_ITEMS.forEach(it => { AI_PICK[aiKey(it)] = true; });
+    renderAiBox();
+    renderAiLayer();
+    if(d.count){
+      // 姓名单独报数：刑事案卷就看这一项，不能混在总数里说不清
+      const nName = (d.items || []).filter(it => it.why === '姓名').length;
+      let msg = 'AI 在 ' + d.pages + ' 页里找出 ' + d.count + ' 处候选';
+      if(nName) msg += '（其中 ' + nName + ' 处是姓名）';
+      msg += '，紫色虚线框，确认后才会涂黑';
+      if(d.model_up === false) msg += '。注意：Ollama 没启动，本次只扫了姓名，其他敏感项没扫';
+      setStat(msg, 'ok');
+    }else{
+      setStat(d.msg || 'AI 没发现需要补盖的地方', 'ok');
+    }
+  }catch(e){
+    setStat('AI 扫描失败：' + e.message, 'warn');
+  }finally{
+    aiBusy = false;
+    if(btn){ btn.disabled = false; btn.textContent = 'AI 找漏'; }
+  }
+}
+
+/* 页面上把候选画成紫色虚线框 */
+function renderAiLayer(){
+  const layer = $('layer');
+  if(!layer) return;
+  layer.querySelectorAll('.aibx').forEach(x => x.remove());
+  const meta = META && META.pages[page - 1];
+  if(!meta) return;
+  AI_ITEMS.filter(it => it.page === page).forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'aibx';
+    d.title = 'AI 认为这里要盖：' + (it.text || '') + '　（在右侧点一下可取消）';
+    d.style.left = (it.x0 / meta.w * 100) + '%';
+    d.style.top = (it.y0 / meta.h * 100) + '%';
+    d.style.width = ((it.x1 - it.x0) / meta.w * 100) + '%';
+    d.style.height = ((it.y1 - it.y0) / meta.h * 100) + '%';
+    d.dataset.k = aiKey(it);
+    if(AI_PICK[aiKey(it)] === false) d.classList.add('off');
+    // ⚡ 2026-11-05 修：原来点紫框只是切换勾选状态，默认又是勾上的，
+    //    于是「点一下」的实际效果是把它取消 → 框加 .off 直接消失。
+    //    用户看到的就是「点了没反应，框还不见了」（原话：「我点让它涂黑没反应」）。
+    //    点框的本意就是"这一处要盖"，所以改成**点一下就真涂黑该处**：
+    //    直接调 ai-accept 只提交这一条，涂黑后紫框消失、黑块出现，因果一目了然。
+    //    想批量处理仍走右侧的「涂黑选中的 N 处」。
+    d.onclick = e => {
+      e.stopPropagation();
+      if(d.dataset.busy) return;
+      d.dataset.busy = '1';
+      d.style.opacity = '.55';
+      acceptAi([it], false);
+    };
+    layer.appendChild(d);
+  });
+}
+
+/* 右侧候选清单：逐条勾选 + 接受 / 全丢 */
+function renderAiBox(){
+  const box = $('aiBox');
+  if(!box) return;
+  const sec = $('secAi');
+  if(!AI_ITEMS.length){
+    if(sec) sec.style.display = 'none';
+    box.style.display = 'none'; box.innerHTML = '';
+    // 只有用户主动点过「AI 找漏」才在状态栏说"没候选"。
+    // 2026-11-05 精简侧栏时发现：打开页面就自动加载一次候选，于是每次进来
+    // 都挂一条"还没有 AI 候选"提示，白占一行还让人以为出错了。
+    if(window.__aiUserAsked && !window.__aiLoadErr) {
+      const s = $('stat');
+      if(s && !s.textContent) setStat('没有找到可盖的地方');
+    }
+    return;
+  }
+  box.style.display = '';
+  if(sec) sec.style.display = '';
+  // ⚡ 2026-11-05 修：AI 第一次出候选，必须把这一节展开。
+  //    折叠状态存在 localStorage['lf_paint_secs']，用户之前手动收起过就会记住 ai:false，
+  //    下次点「AI 找漏」时紫框照画，但「涂黑选中的 N 处」按钮又被 .sec-b{display:none} 藏住
+  //    —— 和 DFLT 漏键是同一个坑的第二条入口，必须在这里也堵上。
+  //    只在这一轮候选"第一次露面"时强制展开（__aiSecShown 记一次），
+  //    之后用户自己收起就不再打扰：否则他收起面板去看图，随手点个紫框又弹开，很烦。
+  if(sec && !window.__aiSecShown && window.SEC_OPEN){
+    window.SEC_OPEN('ai', true);
+    window.__aiSecShown = true;
+  }
+  if(box.className.indexOf('ai') < 0) box.className += ' ai';
+  const on = AI_ITEMS.filter(it => AI_PICK[aiKey(it)] !== false);
+  const nName = AI_ITEMS.filter(it => it.why === '姓名').length;
+  const nNameOn = on.filter(it => it.why === '姓名').length;
+  const ain = $('aiN');
+  if(ain) ain.textContent = AI_ITEMS.length + ' 处 / 选 ' + on.length;
+  box.innerHTML = '<div class="note">' +
+    (nName
+      ? '其中 <b>' + nName + ' 处是姓名</b>（已选 ' + nNameOn + ' 处）——刑事案卷第一重点，规则强制盖，不靠模型判断。'
+      : '本次没识别到姓名。') +
+    '<br>紫色虚线框＝该盖的地方。<b>勾上的才会涂黑</b>，点条目或页面上的紫框可取消。</div>';
+
+  const acts = document.createElement('div');
+  acts.className = 'acts';
+  const btnOk = document.createElement('button');
+  btnOk.className = 'btn primary';
+  btnOk.textContent = '涂黑选中的 ' + on.length + ' 处';
+  btnOk.disabled = !on.length;
+  btnOk.onclick = () => acceptAi(on, false);
+  const all = document.createElement('button');
+  all.className = 'btn ghost';
+  all.textContent = '全丢';
+  all.onclick = () => dropAi();
+  acts.appendChild(btnOk); acts.appendChild(all);
+  box.appendChild(acts);
+
+  const list = document.createElement('div');
+  list.className = 'alist';
+  // 本页的排前面；同为姓名时按页序。姓名整体排在最前——
+  // 刑事案卷要的就是先保住人名，模型挑的「其他敏感项」次要。
+  const sorted = AI_ITEMS.slice().sort((a, b) => {
+    const na = a.why === '姓名' ? 0 : 1, nb = b.why === '姓名' ? 0 : 1;
+    if(na !== nb) return na - nb;
+    const pa = a.page === page ? 0 : 1, pb = b.page === page ? 0 : 1;
+    return pa - pb || a.page - b.page || a.y0 - b.y0;
+  });
+  sorted.forEach(it => {
+    const k = aiKey(it);
+    const on2 = AI_PICK[k] !== false;
+    const row = document.createElement('div');
+    row.className = 'airow' + (on2 ? ' on' : '');
+    row.title = (it.text || '') + '　第 ' + it.page + ' 页' +
+      (it.why === '姓名' ? '（姓名，规则强制盖）' : '');
+    row.innerHTML = '<span class="ck"></span>' +
+      '<span class="k">' + esc((it.text || '（无字）').slice(0, 16)) + '</span>' +
+      (it.why === '姓名' ? '<span class="wh">姓名</span>' : '') +
+      '<span class="pg">第 ' + it.page + ' 页</span>';
+    row.onclick = () => {
+      AI_PICK[k] = !on2;
+      renderAiBox(); renderAiLayer();
+      if(it.page !== page) { go(it.page); }
+    };
+    list.appendChild(row);
+  });
+  box.appendChild(list);
+}
+
+async function acceptAi(items, all){
+  if(!items.length && !all) return;
+  try{
+    const r = await fetch(API + '/api/paint/ai-accept', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, items: items, all: !!all})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '加入失败');
+    if(d.added > 0){
+      setStat('已加入 ' + d.added + ' 处涂黑（本页共 ' + d.total + ' 块），导出时才会烧进文件', 'ok');
+    }else{
+      // added=0 只有一种情况：这个位置早就在 boxes.json 里了（重复点）。
+      // 这时不能再说"已加入"，否则用户以为成功了却看不到变化。
+      setStat('这些位置本来就已经涂黑了（共 ' + d.total + ' 块），不用重复加', 'ok');
+    }
+    await loadAiBoxes();
+    await refreshBoxes();     // 关键：把新黑块拉回来并重画，否则界面看不出变化
+  }catch(e){
+    setStat('加入失败：' + e.message, 'warn');
+  }
+}
+
+async function dropAi(){
+  if(!confirm('把 AI 找到的 ' + AI_ITEMS.length + ' 处候选全部丢掉？\n（不影响你已经手动涂黑的部分）')) return;
+  try{
+    const r = await fetch(API + '/api/paint/ai-drop', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '操作失败');
+    AI_ITEMS = []; AI_PICK = {};
+    renderAiBox(); renderAiLayer();
+    setStat('已丢掉 AI 候选', 'ok');
+  }catch(e){
+    setStat('操作失败：' + e.message, 'warn');
+  }
+}
+
+/* 只重刷当前页图（不加时间戳会命中浏览器缓存，看到的还是烧过框的旧图） */
+function reloadPage(){
+  const img = $('pg');
+  if(!img) return;
+  img.src = API + '/api/paint/page?task=' + encodeURIComponent(TASK) +
+            '&n=' + page + '&t=' + Date.now();
+}
+
+async function loadAuto(force){
+  const box = $('autoBox');
+  if(!box) return;
+  if(!GROUPS.length){
+    // 扫描中 / 读取失败：外层折叠节要露出来，否则用户看不到任何提示
+    const sec0 = $('secAuto'); if(sec0) sec0.style.display = '';
+    box.style.display = '';
+    box.innerHTML = '<div class="note">正在扫描全文的涂黑块…</div>';
+  }
+  try{
+    const r = await fetch(API + '/api/paint/auto-groups', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, refresh: !!force})
+    });
+    const d = await r.json();
+    if(!d.ok){
+      const sec1 = $('secAuto'); if(sec1) sec1.style.display = '';
+      box.style.display = '';
+      box.innerHTML = '<div class="note">' + esc(d.msg || '读取失败') + '</div>';
+      return;
+    }
+    GROUPS = d.groups || [];
+    PAGE_MAP = {};
+    GROUPS.forEach(g => {
+      (g.items || []).forEach(it => {
+        (PAGE_MAP[it.page] = PAGE_MAP[it.page] || []).push(
+          {gid: g.gid, text: g.text, count: g.count, x0: it.x0, y0: it.y0, x1: it.x1, y1: it.y1});
+      });
+    });
+    // 选中项若已被清掉，取消选中
+    if(PICKED && !GROUPS.some(g => g.gid === PICKED)) PICKED = '';
+    autoLoaded = true;
+    renderAutoLayer();
+    renderAutoList();
+    loadTasks();
+  }catch(e){
+    const sec2 = $('secAuto'); if(sec2) sec2.style.display = '';
+    box.style.display = '';
+    box.innerHTML = '<div class="note">读取失败：' + esc(e.message) + '</div>';
+  }
+}
+
+/* 点一下只选中，不删 */
+function pickGroup(gid){
+  PICKED = (PICKED === gid) ? '' : gid;
+  renderAutoLayer();
+  renderAutoList();
+  /* 在页面上点选框时，把右边确认区滚到眼前，省得用户找不到按钮 */
+  if(PICKED){
+    const p = document.querySelector('.abox .pick');
+    if(p && p.scrollIntoView) p.scrollIntoView({block:'nearest', behavior:'smooth'});
+  }
+}
+
+/* 取全部涂黑任务：用于"清掉全部文件"时告诉用户会影响几个 */
+async function loadTasks(){
+  try{
+    const r = await fetch(API + '/api/paint/tasks', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK})
+    });
+    const d = await r.json();
+    if(d.ok) TASKS = d.tasks || [];
+  }catch(e){ /* 拿不到就不显示数量，不影响主流程 */ }
+}
+
+/* 在页面上把每块自动涂黑画成可点的热点（虚线框，鼠标移上去变色） */
+function renderAutoLayer(){
+  const layer = $('layer');
+  if(!layer) return;
+  layer.querySelectorAll('.ab').forEach(x => x.remove());
+  const meta = META && META.pages[page - 1];
+  if(!meta) return;
+  (PAGE_MAP[page] || []).forEach((b, i) => {
+    const d = document.createElement('div');
+    d.className = 'ab';
+    d.title = '点一下选中：' + (b.text || '（这段没取到原文）') +
+              (b.count > 1 ? '（全文共 ' + b.count + ' 处，同一位置一起清）' : '');
+    d.style.left = (b.x0 / meta.w * 100) + '%';
+    d.style.top = (b.y0 / meta.h * 100) + '%';
+    d.style.width = ((b.x1 - b.x0) / meta.w * 100) + '%';
+    d.style.height = ((b.y1 - b.y0) / meta.h * 100) + '%';
+    d.onmousedown = e => e.stopPropagation();
+    // 点一下只"选中"，不删。删要再点一次确认按钮（2026-11-03 用户：直接点太容易误操作）
+    d.onclick = e => { e.stopPropagation(); pickGroup(b.gid); };
+    if(b.gid === PICKED) d.classList.add('picked');
+    layer.appendChild(d);
+  });
+}
+
+/* 右侧面板：说明 + 内容清单 + 选中后的确认按钮
+
+   清单按「相同遮黑内容」分组，不按位置 —— 用户原话：
+   "只要相同遮黑的内容就要全部删除"（2026-11-03）。
+   一枚水印被切成十几段、铺在 6 个角落，也算一类，点一次全清。
+
+   面板固定高度、内部滚动：内容再多也不把整页撑长。 */
+function renderAutoList(){
+  const box = $('autoBox');
+  if(!box) return;
+  // 外层折叠节（2026-11-05 折叠改造）：标题在外，这里只管内容和数量
+  const sec = $('secAuto');
+  if(!GROUPS.length){
+    if(sec) sec.style.display = 'none';
+    box.style.display = 'none'; box.innerHTML = ''; return;
+  }
+  if(sec) sec.style.display = '';
+  box.style.display = '';
+
+  const curGids = new Set((PAGE_MAP[page] || []).map(x => x.gid));
+  const total = GROUPS.reduce((n, g) => n + (g.count || 0), 0);
+  const picked = PICKED ? GROUPS.find(g => g.gid === PICKED) : null;
+
+  const an = $('autoN');
+  if(an) an.textContent = GROUPS.length + ' 类 / ' + total + ' 处';
+
+  // 说明压成一行：收起时也能从标题看出有多少；展开后不再长篇大论
+  box.innerHTML = '<div class="note">红色虚线框＝自动涂黑处。<b>点一下选中，再确认</b>，不会一点就删；' +
+    '同类内容在全文一起清。</div>';
+
+  /* 选中后的确认区：清几十上百处的最后一道闸 */
+  if(picked){
+    const act = document.createElement('div');
+    act.className = 'pick';
+    const lbl = (picked.text || '（未取到原文）');
+    act.innerHTML = '<div class="p1">' + esc(lbl.slice(0, 30)) + '</div>' +
+      '<div class="p2">全文 <b>' + picked.count + '</b> 处 / <b>' + picked.pages + '</b> 页' +
+      ((picked.spots || []).length > 1 ? '（' + picked.spots.length + ' 个位置）' : '') + '</div>';
+
+    const row = document.createElement('div');
+    row.className = 'cta';
+    const btnGo = document.createElement('button');
+    btnGo.className = 'btn primary';
+    btnGo.textContent = '确认清理 ' + picked.count + ' 处';
+    btnGo.onclick = () => askClearMulti([picked.gid]);
+    const cancel = document.createElement('button');
+    cancel.className = 'btn ghost';
+    cancel.textContent = '取消';
+    cancel.onclick = () => pickGroup(picked.gid);
+    row.appendChild(btnGo); row.appendChild(cancel);
+    act.appendChild(row);
+
+    /* 对本次脱敏的那一批文件都生效 */
+    const all = document.createElement('button');
+    all.className = 'btn ghost wide';
+    all.style.marginTop = '7px';
+    all.textContent = '清掉全部文件里的同样内容（' + (TASKS.length || 1) + ' 个）';
+    all.onclick = () => askClearAllTasks([picked.gid]);
+    act.appendChild(all);
+    box.appendChild(act);
+  }
+
+  /* 一键清"每页都有"的那几类：水印最典型，一页不落 */
+  const frequent = GROUPS.filter(g => g.pages >= Math.max(2, Math.ceil(META.pages.length * 0.6)));
+  if(frequent.length > 1){
+    const b = document.createElement('button');
+    b.className = 'btn ghost wide';
+    b.textContent = '清理每页都有的 ' + frequent.length + ' 类（' +
+      frequent.reduce((n, g) => n + g.count, 0) + ' 处）';
+    b.onclick = () => askClearMulti(frequent.map(g => g.gid));
+    const wrap = document.createElement('div');
+    wrap.className = 'bulk';
+    wrap.appendChild(b);
+    box.appendChild(wrap);
+  }
+
+  /* 清单：本页先列，其余跟后；整块固定高度内部滚动 */
+  const list = document.createElement('div');
+  list.className = 'alist';
+
+  const head = document.createElement('div');
+  head.className = 'grp-h';
+  head.textContent = '本页涉及（' + curGids.size + ' 类）';
+  list.appendChild(head);
+
+  const addRow = g => {
+    const row = document.createElement('div');
+    row.className = 'row ab' + (g.gid === PICKED ? ' on' : '');
+    row.title = (g.text || '（未取到原文）');
+    row.innerHTML = '<span class="k">' + esc((g.text || '（未取到原文）').slice(0, 14)) +
+      '</span><span class="n2">' + g.count + '/' + g.pages + '页</span>' +
+      '<span class="x">' + (g.gid === PICKED ? '已选' : '选') + '</span>';
+    row.onclick = () => pickGroup(g.gid);
+    list.appendChild(row);
+  };
+  GROUPS.filter(g => curGids.has(g.gid)).forEach(addRow);
+
+  const rest = GROUPS.filter(g => !curGids.has(g.gid));
+  if(rest.length){
+    const h2 = document.createElement('div');
+    h2.className = 'grp-h';
+    h2.textContent = '全文其他（' + rest.length + ' 类）';
+    list.appendChild(h2);
+    rest.forEach(addRow);
+  }
+  box.appendChild(list);
+}
+
+/* 清理一类（相同遮黑内容的全文档所有处） */
+async function askClearGroup(gid){ return askClearMulti([gid]); }
+
+/* 清理多类：一次清掉选中内容的全部处
+   以前只支持单个 gid，用户要清 6 个位置的水印就得点 6 次（2026-11-03 反馈）。 */
+async function askClearMulti(gids){
+  gids = (gids || []).filter(Boolean);
+  if(!gids.length) return;
+  const hits = GROUPS.filter(g => gids.indexOf(g.gid) >= 0);
+  if(!hits.length) return;
+  const n = hits.reduce((s, g) => s + g.count, 0);
+  const pgN = new Set();
+  hits.forEach(g => (g.items || []).forEach(it => pgN.add(it.page)));
+  const first = hits[0].text || '（未取到原文）';
+
+  if(!confirm('清理 ' + hits.length + ' 类，共 ' + n + ' 处（涉及 ' + pgN.size + ' 页）？\n\n' +
+      (hits.length === 1 ? '被遮住的内容：「' + first.slice(0, 60) + '」\n' : '') +
+      '清理后这些内容会重新看得见、也能被复制。\n' +
+      '如果本来就该盖住，请点取消。\n\n（清完可在右侧「可撤回」里退回来）')) return;
+
+  setStat('正在清理 ' + n + ' 处…');
+  try{
+    const r = await fetch(API + '/api/paint/clear-groups', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, gids: gids})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '清理失败');
+    CLEARED.push({gids: gids, count: d.count, pages: d.pages || [], task: TASK});
+    PICKED = '';
+    const img = $('pg');
+    img.src = API + '/api/paint/page?task=' + encodeURIComponent(TASK) +
+              '&n=' + page + '&t=' + Date.now();
+    setStat('已清理 ' + d.count + ' 处（' + (d.pages || []).length + ' 页），内容已还原自原件', 'ok');
+    await loadAuto(true);
+    renderUndoClear();
+  }catch(e){
+    setStat('清理失败：' + e.message, 'warn');
+  }
+}
+
+/* 把选中内容的同类遮黑，清到**全部涂黑任务**（本次脱敏的那一批文件）
+   用户原话："我这次一次性脱敏了 5 个，那对这五个文件也要都生效"（2026-11-03）。
+   匹配按"遮住的文字"，不按位置 —— 位置不同也能找到同样内容。 */
+async function askClearAllTasks(gids){
+  gids = (gids || []).filter(Boolean);
+  if(!gids.length) return;
+  const hits = GROUPS.filter(g => gids.indexOf(g.gid) >= 0);
+  if(!hits.length) return;
+  const first = hits[0].text || '（未取到原文）';
+  const nFile = TASKS.length || 1;
+  const others = Math.max(0, nFile - 1);
+
+  if(!confirm('把这段内容在「全部 ' + nFile + ' 个涂黑文件」里都清掉？\n\n' +
+      '内容：「' + first.slice(0, 60) + '」\n' +
+      '本文件 ' + hits[0].count + ' 处；另外 ' + others + ' 个文件里凡是遮住同样内容的也会一并清掉。\n\n' +
+      '别的文件按「遮住的文字」匹配，位置不同也能找到。\n' +
+      '清完可在右侧「可撤回」里退回来。')) return;
+
+  setStat('正在处理全部文件…');
+  try{
+    const r = await fetch(API + '/api/paint/clear-all-tasks', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, gids: gids})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '处理失败');
+    const done = (d.results || []).filter(x => x.ok && x.count > 0);
+    const mine = (d.results || []).find(x => x.task === TASK);
+    const others = done.filter(x => x.task !== TASK);
+
+    /* 撤回记录只记一条，别重复：
+       - 动到了别的文件 → 记成整批（整批里已经包含当前文件，一次退全部）；
+       - 只有当前文件 → 记成本文件的一次清理。
+       注意结果里的 pages 是「页数」，页号在 pages_list 里（2026-11-03 修）。 */
+    if(others.length){
+      MULTI.push({jobs: done.map(x => ({task: x.task, pages: x.pages_list || []})),
+                  total: d.total || 0, files: done.length});
+    }else if(mine && mine.count){
+      CLEARED.push({gids: gids, count: mine.count, pages: mine.pages_list || [], task: TASK});
+    }
+    PICKED = '';
+    const img = $('pg');
+    img.src = API + '/api/paint/page?task=' + encodeURIComponent(TASK) +
+              '&n=' + page + '&t=' + Date.now();
+    setStat('已处理 ' + (d.results || []).length + ' 个文件，共清 ' + d.total + ' 处（' +
+      done.length + ' 个文件有改动）', 'ok');
+    await loadAuto(true);
+    renderUndoClear();
+    if(done.length){
+      alert('清理完成：\n\n' + done.map(x =>
+        '· ' + x.name + '：' + x.count + ' 处 / ' + x.pages + ' 页').join('\n') +
+        '\n\n如需退回，点右侧「可撤回」里的那一条，' + done.length + ' 个文件会一起退回去。');
+    }else{
+      alert('其他文件里没有找到相同遮黑的内容。');
+    }
+  }catch(e){
+    setStat('处理失败：' + e.message, 'warn');
+  }
+}
+
+/* 清理记录的撤回入口：清错了能整套退回来。
+   两类记录合成一个面板：本文件的清理、以及"清到全部文件"那次（要连别的文件一起退）。 */
+function renderUndoClear(){
+  const box = $('clearUndo');
+  if(!box) return;
+  const n = CLEARED.length + MULTI.length;
+  // 标题在 .sec-h 里，这里只更新数量、控制小节显隐（2026-11-05 折叠改造）
+  const sec = $('secClr');
+  if(sec) sec.style.display = n ? '' : 'none';
+  const cn = $('clrN'); if(cn) cn.textContent = n ? (n + ' 次') : '';
+  if(!n){ box.innerHTML = ''; return; }
+  box.innerHTML = '';
+
+  MULTI.slice().reverse().forEach(rec => {
+    const row = document.createElement('div');
+    row.className = 'row del';
+    row.innerHTML = '<span class="k">全部 ' + rec.files + ' 个文件 · 清 ' + rec.total +
+      ' 处</span><span class="x">撤回</span>';
+    row.title = '这条会把当时动过的 ' + rec.files + ' 个文件一起退回去';
+    row.querySelector('.x').onclick = async e => {
+      e.stopPropagation();
+      await undoMulti(rec);
+    };
+    box.appendChild(row);
+  });
+
+  CLEARED.slice().reverse().forEach(rec => {
+    const row = document.createElement('div');
+    row.className = 'row del';
+    row.innerHTML = '<span class="k">清 ' + rec.count + ' 处 / ' + (rec.pages || []).length +
+      ' 页</span><span class="x">撤回</span>';
+    row.querySelector('.x').onclick = async e => {
+      e.stopPropagation();
+      await undoClear(rec);
+    };
+    box.appendChild(row);
+  });
+}
+
+/* 跨文件撤回：一次把当时动过的每个文件都退回来 */
+async function undoMulti(rec){
+  if(!confirm('把这次清理的 ' + rec.files + ' 个文件（共 ' + rec.total + ' 处）一起退回去？')) return;
+  setStat('正在撤回 ' + rec.files + ' 个文件…');
+  try{
+    const r = await fetch(API + '/api/paint/redraw-multi', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, jobs: rec.jobs})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '撤回失败');
+    const i = MULTI.indexOf(rec);
+    if(i >= 0) MULTI.splice(i, 1);
+    const img = $('pg');
+    img.src = API + '/api/paint/page?task=' + encodeURIComponent(TASK) +
+              '&n=' + page + '&t=' + Date.now();
+    setStat('已撤回：' + d.total + ' 处重新盖回', 'ok');
+    await loadAuto(true);
+    renderUndoClear();
+  }catch(e){
+    setStat('撤回失败：' + e.message, 'warn');
+  }
+}
+
+/* 撤回：把清掉的黑块按原坐标重新画回去。
+   涂黑块是矢量图形，重画回去等于"再盖一次"，内容重新看不见。
+   注意原件不动，只是把黑块补回成品这份。 */
+async function undoClear(rec){
+  if(!confirm('把这次清掉的 ' + rec.count + ' 处重新盖回去？')) return;
+  setStat('正在撤回…');
+  try{
+    const r = await fetch(API + '/api/paint/redraw', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, pages: rec.pages})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '撤回失败');
+    const i = CLEARED.indexOf(rec);
+    if(i >= 0) CLEARED.splice(i, 1);
+    const img = $('pg');
+    img.src = API + '/api/paint/page?task=' + encodeURIComponent(TASK) +
+              '&n=' + page + '&t=' + Date.now();
+    setStat('已撤回：' + d.count + ' 处重新盖回', 'ok');
+    await loadAuto(true);
+    renderUndoClear();
+  }catch(e){
+    setStat('撤回失败：' + e.message, 'warn');
+  }
+}
+
+/* 已删除堆：只列当前任务的，按时间倒序，每条一个「恢复」 */
+function renderDeleted(){
+  const box = $('delBox');
+  if(!box) return;
+  // 标题在 .sec-h 里，这里只更新数量、控制小节显隐（2026-11-05 折叠改造）
+  const sec = $('secUndel');
+  if(sec) sec.style.display = DELETED.length ? '' : 'none';
+  const dn = $('delN'); if(dn) dn.textContent = DELETED.length ? (DELETED.length + ' 块') : '';
+  if(!DELETED.length){ box.innerHTML = ''; return; }
+  const rows = DELETED.slice().reverse();
+  box.innerHTML = '';
+  rows.forEach(it => {
+    const row = document.createElement('div');
+    row.className = 'row del';
+    const b = it.box || [];
+    const lab = b[4] ? ('　·　' + b[4]) : '';
+    const pg = it.page + ' 页';
+    row.innerHTML = '<span class="k">' + pg + '　第 ' + (b.length ? '一块' : '?') + esc(lab) + '</span>' +
+      '<span class="x" style="color:var(--brand)">恢复</span>';
+    row.querySelector('.x').onclick = e => { e.stopPropagation(); restoreBox(it.id); };
+    box.appendChild(row);
+  });
+}
+
+function renderList(){
+  const box = $('list');
+  const arr = pageBoxes(page);
+  $('cnt').textContent = arr.length ? (arr.length + ' 块') : '无';
+  if(!arr.length){ box.innerHTML = '<div class="empty">这一页还没有涂黑处</div>'; return; }
+  const meta = META.pages[page - 1];
+  box.innerHTML = '';
+  arr.forEach((b, i) => {
+    const row = document.createElement('div');
+    row.className = 'row' + (i === SEL ? ' on' : '');
+    const lab = b[4] ? ('　·　' + b[4]) : '';
+    row.innerHTML = '<span class="k">第 ' + (i + 1) + ' 块' + esc(lab) + '</span>' +
+      '<span class="x" title="删除">×</span>';
+    row.onclick = () => selectBox(i);
+    row.querySelector('.x').onclick = e => { e.stopPropagation(); delBox(i); };
+    box.appendChild(row);
+  });
+}
+
+/* ---------- 拉框 ---------- */
+let dragging = false, startX = 0, startY = 0, tmp = null, dragMoved = false, clickGuardUntil = 0;
+
+function relPos(e){
+  const img = $('pg');
+  const r = img.getBoundingClientRect();
+  return {
+    x: Math.max(0, Math.min(r.width, e.clientX - r.left)),
+    y: Math.max(0, Math.min(r.height, e.clientY - r.top)),
+    w: r.width, h: r.height
+  };
+}
+
+function toPoint(px, py, dispW, dispH){
+  const meta = META.pages[page - 1];
+  return [ px / dispW * meta.w, py / dispH * meta.h ];
+}
+
+/* 拉框：按下点可能落在自动涂黑热点（.ab）或已有黑块（.bx）上，
+   这些元素以前各自 stopPropagation，事件到不了 layer，框就拉不出来，
+   表现为「有时候突然不能手动批改了」——按在空白处能画、按在黑块和水印上画不了。
+   现在按下统一挂在 window 上，不再看是谁接住的；是不是「点选」等松手时按位移判。
+
+   mouseup 也统一在 window：以前 mousemove 只挂 layer，鼠标一移出图片框就僵住。 */
+function onDown(e){
+  if(!META || e.button !== 0) return;
+  clickGuardUntil = 0;                           // 新手势开始，上一轮的保护立刻作废
+  if(!e.target.closest || !e.target.closest('#layer')) return;  // 只在页面画布上起框
+  const p = relPos(e);
+  if(p.w < 10 || p.h < 10) return;               // 图片还没画出来（切页瞬间），先别起框
+  dragging = true; startX = p.x; startY = p.y;
+  dragMoved = false;
+  tmp = document.createElement('div');
+  tmp.className = 'bx tmp';
+  tmp.style.left = p.x + 'px'; tmp.style.top = p.y + 'px';
+  tmp.style.width = '0px'; tmp.style.height = '0px';
+  $('layer').appendChild(tmp);
+  e.preventDefault();
+}
+
+function onMove(e){
+  if(!dragging || !tmp) return;
+  const p = relPos(e);
+  const dx = Math.abs(p.x - startX), dy = Math.abs(p.y - startY);
+  if(!dragMoved && (dx >= 3 || dy >= 3)) dragMoved = true;   // 3px 内当点选，不动框
+  const x = Math.min(p.x, startX), y = Math.min(p.y, startY);
+  tmp.style.left = x + 'px';
+  tmp.style.top = y + 'px';
+  tmp.style.width = dx + 'px';
+  tmp.style.height = dy + 'px';
+}
+
+function onUp(e){
+  if(!dragging) return;
+  dragging = false;
+  const p = relPos(e);
+  const w = Math.abs(p.x - startX), h = Math.abs(p.y - startY);
+  const moved = dragMoved;
+  if(tmp){ tmp.remove(); tmp = null; }
+  if(!moved && w < 3 && h < 3) return;           // 原地点一下：交给元素的 click 处理
+  if(w < 6 || h < 6) return;                     // 手抖点一下，不算
+  /* 真的画了一个框：把紧跟其后的那次 click 吃掉，
+     否则画完顺手把落点上的自动涂黑选中了（用户会以为"自己乱跳"）。
+     按时间窗判，不用 0ms 定时器 —— 有的浏览器 click 在下一个任务里才派发。 */
+  clickGuardUntil = Date.now() + 400;
+  const a = toPoint(Math.min(p.x, startX), Math.min(p.y, startY), p.w, p.h);
+  const b = toPoint(Math.max(p.x, startX), Math.max(p.y, startY), p.w, p.h);
+  const arr = pageBoxes(page).concat([[a[0], a[1], b[0], b[1]]]);
+  ALL[String(page)] = arr;
+  SEL = arr.length - 1;
+  drawBoxes(); renderList(); renderInfo(); queueSave();
+  selectBox(SEL);
+}
+
+/* 用 capture 抢在最前：热点和黑块自己的 stopPropagation 拦不住这一层。 */
+window.addEventListener('mousedown', onDown, true);
+window.addEventListener('mousemove', onMove, true);
+window.addEventListener('mouseup', onUp, true);
+window.addEventListener('click', e => {
+  if(Date.now() < clickGuardUntil && e.target.closest && e.target.closest('#layer')){
+    e.stopPropagation(); e.preventDefault();
+    clickGuardUntil = 0;
+  }
+}, true);
+window.addEventListener('blur', () => {           // 切窗口回来别留个半截框
+  if(tmp){ tmp.remove(); tmp = null; }
+  dragging = false;
+});
+
+/* ---------- 保存 ---------- */
+function queueSave(){
+  dirty = true;
+  setStat('保存中…');
+  if(saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, 350);
+}
+
+async function save(){
+  if(!META) return;
+  saveTimer = null;
+  try{
+    const r = await fetch(API + '/api/paint/boxes', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, page: page, boxes: pageBoxes(page)})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '保存失败');
+    dirty = false;
+    setStat('已保存（本页 ' + d.page_count + ' 块，全部 ' + d.total + ' 块）', 'ok');
+  }catch(e){
+    setStat('保存失败：' + e.message, 'warn');
+  }
+}
+
+async function flush(){
+  if(dirty && saveTimer){ clearTimeout(saveTimer); await save(); }
+}
+
+/* ---------- 导航与操作 ---------- */
+$('prev').onclick = () => go(page - 1);
+$('next').onclick = () => go(page + 1);
+$('pn').onchange = e => go(parseInt(e.target.value || '1', 10));
+$('zoomIn').onclick = () => { zoom = Math.min(3, zoom * 1.25); applyZoom(); };
+$('zoomOut').onclick = () => { zoom = Math.max(0.5, zoom / 1.25); applyZoom(); };
+$('zoomFit').onclick = () => { zoom = 1; applyZoom(); };
+window.addEventListener('resize', () => { if(zoom === 1) applyZoom(); });
+document.addEventListener('keydown', e => {
+  if(e.target.tagName === 'INPUT') return;
+  if(e.key === 'ArrowLeft') go(page - 1);
+  if(e.key === 'ArrowRight') go(page + 1);
+});
+
+/* ---- 标注 ---- */
+const LAB_PRESETS = ['姓名', '身份证号', '电话', '住址', '单位名称', '银行账号', '金额', '签名'];
+function renderChips(){
+  const box = $('chips');
+  if(!box) return;
+  box.innerHTML = '';
+  LAB_PRESETS.forEach(t => {
+    const b = document.createElement('button');
+    b.textContent = t;
+    b.onclick = () => { $('labInput').value = t; $('labInput').focus(); };
+    box.appendChild(b);
+  });
+}
+function setLabel(v){
+  if(SEL < 0){ setStat('先在页面上点选一块，再标注', 'warn'); return; }
+  const arr = pageBoxes(page).slice();
+  const nb = arr[SEL].slice(0, 4);
+  v = (v || '').trim().slice(0, 20);
+  if(v) nb.push(v);
+  arr[SEL] = nb;
+  ALL[String(page)] = arr;
+  drawBoxes(); renderList(); queueSave();
+  $('labHint').textContent = '第 ' + (SEL + 1) + ' 块：' + (v || '还没标注');
+  // 收起状态下也能从标题看到这一块标了什么（2026-11-05 折叠改造）
+  const ln = $('labNow');
+  if(ln) ln.textContent = v ? ('第 ' + (SEL + 1) + ' 块 · ' + v) : ('第 ' + (SEL + 1) + ' 块 · 未标注');
+  setStat(v ? ('已标注：' + v) : '已清除标注', 'ok');
+}
+$('labApply').onclick = () => setLabel($('labInput').value);
+$('labClear').onclick = () => { $('labInput').value = ''; setLabel(''); };
+$('labInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); setLabel($('labInput').value); }
+});
+
+$('clearPage').onclick = async () => {
+  const arr = pageBoxes(page);
+  if(!arr.length) return;
+  if(!confirm('清空第 ' + page + ' 页的 ' + arr.length + ' 块涂黑？\n' +
+              '清掉的会进「已删除的涂黑」，误清可逐块恢复。')) return;
+  // 一块一块走服务端删除：这样每块都进"已删除"堆，能反悔。
+  // 以前直接 ALL[page]=[] 再整页覆盖保存 —— 一按就全没了。
+  try{
+    if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
+    let n = arr.length;
+    while(n > 0){
+      const r = await fetch(API + '/api/paint/del', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({task: TASK, page: page, index: 0})
+      });
+      const d = await r.json();
+      if(!d.ok) throw new Error(d.msg || '清空失败');
+      DELETED = d.deleted || [];
+      n--;
+    }
+    ALL[String(page)] = [];
+    SEL = -1;
+    drawBoxes(); renderList(); renderInfo(); renderDeleted();
+    setStat('已清空第 ' + page + ' 页，可在「已删除的涂黑」里逐块恢复', 'ok');
+  }catch(e){
+    setStat('清空失败：' + e.message, 'warn');
+  }
+};
+
+$('resetSrc').onclick = async () => {
+  const okd = confirm('重来（还原原件）\n\n' +
+    '会把这份文件的工作副本换回最初的原件，清掉本任务里所有的框。\n\n' +
+    '什么情况下用它：之前导出的黑块位置是歪的（页面本身带旋转时，旧版没换算坐标），\n' +
+    '那些歪掉的黑块已经烧进文件里了，光改坐标救不回来，只能退回原件重画。\n\n' +
+    '原件不会被改动，成品文件夹里的东西也不会被删。确定重来吗？');
+  if(!okd) return;
+  const btn = $('resetSrc');
+  btn.disabled = true; btn.textContent = '正在还原…';
+  try{
+    const r = await fetch(API + '/api/paint/reset', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, confirm:'1'})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '还原失败');
+    setStat('已还原成原件（' + d.pages + ' 页），之前的框都清掉了，可以重新拉框', 'ok');
+    setTimeout(() => { location.reload(); }, 800);
+  }catch(e){
+    setStat('还原失败：' + e.message, 'warn');
+    btn.disabled = false; btn.textContent = '重来（还原原件）';
+  }
+};
+
+$('export').onclick = async () => {
+  const btn = $('export');
+  btn.disabled = true; btn.textContent = '正在导出…';
+  try{
+    await flush();
+    const r = await fetch(API + '/api/paint/export', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '导出失败');
+    let tip = '已导出到成品文件夹：' + d.saved + '（共 ' + d.count + ' 块）';
+    // 勾了开关但一块都没印上（框太小/没写标注），要如实说，不能让用户以为印了
+    if(d.label_on) tip += d.labeled ? ('，' + d.labeled + ' 块带标注') : '，但没有可印的标注';
+    setStat(tip, d.label_on && !d.labeled ? 'warn' : 'ok');
+    btn.textContent = '已导出';
+    fetch(API + '/api/openout');   // 涂黑导出完成，自动调出成品文件夹
+    setTimeout(() => { location.href = 'index.html'; }, 900);
+  }catch(e){
+    setStat('导出失败：' + e.message, 'warn');
+    btn.disabled = false; btn.textContent = '导出到成品文件夹';
+  }
+};
+
+$('back').onclick = async () => {
+  await flush();
+  location.href = 'index.html';
+};
+
+/* ---------- 套用到其他页 ---------- */
+/* 为什么要有：130 页卷宗逐页框不现实；但版式不一致时套错会烧进 PDF，
+   所以这里做成「先选范围 → 套上后仍可逐页改 → 一键撤销」。 */
+function openApply(){
+  const arr = pageBoxes(page);
+  if(!arr.length){ alert('先在当前页框一块，再套用'); return; }
+  $('apFrom').textContent = page;
+  $('apCnt').textContent = arr.length;
+  $('apAll').textContent = META.pages.length;
+  $('rgFrom').value = 1;
+  $('rgTo').value = META.pages.length;
+  $('rgFrom').max = META.pages.length;
+  $('rgTo').max = META.pages.length;
+  const empty = META.pages.filter(p => !(ALL[String(p.n)] || []).length).length;
+  $('apEmpty').textContent = empty;
+  $('applyModal').classList.add('show');
+}
+function closeApply(){ $('applyModal').classList.remove('show'); }
+
+async function doApply(){
+  const mode = (document.querySelector('input[name=rg]:checked') || {}).value || 'all';
+  const boxes = pageBoxes(page).map(b => b.slice());
+  const all = META.pages.map(p => p.n);
+  let targets = [];
+  if(mode === 'all'){
+    targets = all;
+  }else if(mode === 'range'){
+    let a = parseInt($('rgFrom').value || '1', 10);
+    let b = parseInt($('rgTo').value || '1', 10);
+    if(!(a >= 1)) a = 1;
+    if(!(b >= 1)) b = 1;
+    if(a > b){ const t = a; a = b; b = t; }
+    a = Math.min(a, META.pages.length); b = Math.min(b, META.pages.length);
+    targets = all.filter(n => n >= a && n <= b);
+  }else{
+    targets = all.filter(n => !(ALL[String(n)] || []).length);
+  }
+  targets = targets.filter(n => n !== page);
+  if(!targets.length){ alert('没有可套用的页'); return; }
+  if(!confirm('把第 ' + page + ' 页的 ' + boxes.length + ' 块，套到 ' + targets.length +
+              ' 页？\n目标页原有涂黑会被覆盖（可撤销）。')) return;
+
+  UNDO = { all: JSON.parse(JSON.stringify(ALL)),
+           label: '第 ' + page + ' 页 → ' + targets.length + ' 页' };
+  targets.forEach(n => { ALL[String(n)] = boxes.map(b => b.slice()); });
+  closeApply();
+  await saveAll();
+  drawBoxes(); renderList(); renderInfo();
+  $('undoBtn').style.display = '';
+  $('undoBtn').textContent = '撤销本次套用（' + targets.length + ' 页）';
+  setStat('已套用到 ' + targets.length + ' 页，可点「撤销本次套用」回退', 'ok');
+}
+
+async function undoApply(){
+  if(!UNDO) return;
+  ALL = UNDO.all;
+  const label = UNDO.label;
+  UNDO = null;
+  $('undoBtn').style.display = 'none';
+  await saveAll();
+  drawBoxes(); renderList(); renderInfo();
+  setStat('已撤销：' + label, 'ok');
+}
+
+async function saveAll(){
+  try{
+    const r = await fetch(API + '/api/paint/boxes', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({task: TASK, all: ALL})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '保存失败');
+    dirty = false;
+    setStat('已保存（共 ' + d.total + ' 块，' + d.pages + ' 页）', 'ok');
+  }catch(e){
+    setStat('保存失败：' + e.message, 'warn');
+  }
+}
+
+$('applyBtn').onclick = openApply;
+$('apCancel').onclick = closeApply;
+$('apOk').onclick = doApply;
+$('undoBtn').onclick = undoApply;
+$('applyModal').addEventListener('click', e => {
+  if(e.target === $('applyModal')) closeApply();
+});
+
+$('aiFind').onclick = runAiFind;
+
+renderChips();
+boot();
+</script>
+</body>
+</html>

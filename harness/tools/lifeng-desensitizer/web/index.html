@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>立丰脱敏</title>
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="rules.css">
+<style>
+  header .pill {
+    font-size: 12px; padding: 4px 10px; border-radius: 20px;
+    border: 1px solid var(--border); color: var(--muted); background: var(--bg);
+  }
+  header .pill.on { color: var(--ok); border-color: var(--ok); background: var(--ok-soft); }
+
+  .drop {
+    border: 2px dashed var(--border); border-radius: 16px; background: var(--panel);
+    padding: 40px 24px; text-align: center; cursor: pointer; transition: .15s;
+  }
+  .drop:hover, .drop.hot { border-color: var(--brand); background: var(--brand-soft); }
+  .drop h2 { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+  .drop p { margin: 0; color: var(--muted); font-size: 13px; }
+  .drop .big { font-size: 28px; color: var(--brand); margin-bottom: 6px; }
+
+  .files { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .file {
+    display: flex; align-items: center; gap: 10px; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 10px; padding: 9px 13px;
+  }
+  .file .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file .sz { color: var(--muted); font-size: 12px; }
+  .file .rm { color: var(--muted); cursor: pointer; padding: 0 4px; font-size: 15px; }
+  .file .rm:hover { color: var(--brand); }
+
+  .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+  .progress { margin-top: 16px; display: none; }
+  .progress.show { display: block; }
+  .bar { height: 7px; border-radius: 4px; background: var(--border); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--brand); border-radius: 4px;
+           transition: width .4s ease; }
+  .ptxt { font-size: 12.5px; color: var(--muted); margin-top: 7px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .ptxt b { color: var(--brand); }
+
+  /* 最近脱敏 */
+  .history { margin-top: 26px; }
+  .h-head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+    font-size: 13.5px; font-weight: 600;
+  }
+  .h-head .sp { flex: 1; }
+  .h-head button {
+    font-size: 12px; padding: 4px 10px; border-radius: 6px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--panel); color: var(--muted);
+    font-family: inherit;
+  }
+  .h-head button:hover { color: var(--brand); border-color: var(--brand); }
+
+  .h-box {
+    max-height: 268px; overflow-y: auto;
+    border: 1px solid var(--border); border-radius: 12px; background: var(--panel);
+  }
+  .h-item { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+  .h-item:last-child { border-bottom: none; }
+  .h-item:hover { background: var(--bg); }
+  .h-row { display: flex; align-items: center; gap: 8px; }
+  .h-row.sub { margin-top: 4px; }
+  .h-row .nm {
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px;
+  }
+  .h-row .out {
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 11.5px; color: var(--muted);
+  }
+  .h-row .tm { font-size: 11px; color: var(--muted); flex: 0 0 auto; }
+  .h-row .ct { font-size: 11.5px; color: var(--muted); flex: 0 0 auto; }
+  .h-item .st {
+    font-size: 10.5px; padding: 1px 7px; border-radius: 10px; flex: 0 0 auto;
+    border: 1px solid var(--border); color: var(--muted);
+  }
+  .h-item .st.exported { color: var(--ok); border-color: var(--ok); background: var(--ok-soft); }
+  .h-item .st.restored { color: var(--brand); border-color: var(--brand); background: var(--brand-soft); }
+  /* 未通过质检：待处理标黄，已忽略压暗，理由文字用警示色——一屏之内要能看出「这事还没完」 */
+  .h-item .st.pending { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
+  .h-item .st.ignored { opacity: .65; }
+  .h-item.rej .out { color: var(--warn); }
+  .h-item.rej.ignored .out { color: var(--muted); }
+  .h-item button {
+    font-size: 11.5px; padding: 3px 10px; border-radius: 6px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--panel); color: var(--muted);
+    font-family: inherit; flex: 0 0 auto;
+  }
+  .h-item button:hover { color: var(--brand); border-color: var(--brand); }
+  .h-item button.key { color: var(--brand); border-color: var(--brand); }
+  .h-item button:disabled { color: var(--muted); border-color: var(--border); cursor: default; }
+
+  /* 复原确认卡：就地弹出，不跳页 */
+  #rModal {
+    position: fixed; inset: 0; z-index: 420; display: none;
+    background: rgba(0,0,0,.26); align-items: center; justify-content: center;
+  }
+  #rModal.show { display: flex; }
+  .rbox {
+    width: 452px; max-width: 90vw; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 22px 18px; box-shadow: 0 22px 64px rgba(0,0,0,.24);
+  }
+  .rbox h3 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+  .rbox .sub { font-size: 12px; color: var(--muted); word-break: break-all; }
+  .rbox p { font-size: 13px; line-height: 1.8; margin: 12px 0 6px; color: var(--text); }
+  .rbox .kv {
+    display: flex; gap: 10px; font-size: 12.5px; padding: 5px 0;
+    border-top: 1px dashed var(--border); color: var(--muted);
+  }
+  .rbox .kv .k { width: 74px; flex: 0 0 74px; }
+  .rbox .kv .v { flex: 1; color: var(--text); word-break: break-all; }
+  .rbox .kv .v.warn { color: var(--warn); }
+  .rbox .acts { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+  .rbox .done { font-size: 13px; line-height: 1.9; }
+  .rbox .done b { color: var(--ok); }
+
+  /* 清除全部：低调入口 + 必须看清清单才能点 */
+  .danger-row { margin-top: 8px; text-align: right; }
+  .danger-row button + button { margin-left: 12px; }
+  .danger-row button {
+    background: none; border: none; color: var(--muted); font-family: inherit;
+    font-size: 12px; cursor: pointer; padding: 6px 2px;
+  }
+  .danger-row button:hover { color: var(--brand); text-decoration: underline; }
+  #clrModal, #aiModal, #agentModal {
+    position: fixed; inset: 0; background: rgba(0,0,0,.3); display: none;
+    align-items: center; justify-content: center; z-index: 30;
+  }
+  #clrModal.show, #aiModal.show, #agentModal.show { display: flex; }
+  #clrModal .box, #aiModal .box, #agentModal .box {
+    width: 540px; max-width: 94vw; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 22px 16px; box-shadow: 0 22px 64px rgba(0,0,0,.26);
+  }
+  #clrModal h3, #aiModal h3, #agentModal h3 { margin: 0 0 6px; font-size: 15px; }
+  #clrModal .sub, #aiModal .sub, #agentModal .sub { font-size: 12.5px; color: var(--muted); line-height: 1.8; }
+  .clr-list { max-height: 44vh; overflow: auto; margin: 12px 0 10px;
+              border: 1px solid var(--border); border-radius: 10px; }
+  .clr-item { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px;
+              border-bottom: 1px solid var(--border); font-size: 12.5px; }
+  .clr-item:last-child { border-bottom: none; }
+  .clr-item input { margin-top: 3px; }
+  .clr-item .t { flex: 1; }
+  .clr-item .t b { display: block; font-weight: 500; color: var(--text); }
+  .clr-item .t span { color: var(--muted); }
+  .clr-item .sz { color: var(--muted); white-space: nowrap; }
+  .clr-warn { color: var(--warn); font-size: 12.5px; line-height: 1.8; margin: 6px 0 0; }
+  .clr-keep { font-size: 12px; color: var(--muted); line-height: 1.8; }
+  #clrModal .acts, #aiModal .acts, #agentModal .acts { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+
+  /* ===== 界面精简（2026-11-12）：入口收进菜单、留白加大、文字减量 ===== */
+  .topbar { padding: 11px 24px; gap: 10px; box-shadow: 0 1px 0 rgba(0,0,0,.02); }
+  .topbar .mark { width: 30px; height: 30px; }
+  .topbar .s { font-size: 11px; letter-spacing: .2px; }
+  header .pill { font-size: 11px; padding: 3px 9px; }
+
+  /* 顶栏只留一个「工具」入口，其余收进下拉 */
+  .tools { position: relative; }
+  .tools-btn {
+    font: inherit; font-size: 12.5px; color: var(--text); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 13px; border-radius: 9px;
+    border: 1px solid var(--border); background: var(--panel);
+  }
+  .tools-btn:hover, .tools-btn.on { border-color: var(--brand); color: var(--brand); }
+  .tools-btn .chev { font-size: 11px; color: var(--muted); transition: transform .15s; }
+  .tools-btn.on .chev { transform: rotate(180deg); }
+  .tools-menu {
+    display: none; position: absolute; right: 0; top: calc(100% + 8px);
+    min-width: 168px; padding: 6px; z-index: 60;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: 0 16px 40px rgba(0,0,0,.14);
+  }
+  .tools-menu.show { display: block; }
+  .tools-menu button {
+    display: block; width: 100%; text-align: left; font: inherit; font-size: 13px;
+    color: var(--text); background: none; border: 0; border-radius: 8px;
+    padding: 8px 11px; cursor: pointer;
+  }
+  .tools-menu button:hover { background: var(--brand-soft); color: var(--brand); }
+  .tools-sep { height: 1px; background: var(--border); margin: 5px 8px; }
+
+  /* 主区：留白更透气，视觉层级更轻 */
+  .layout { gap: 24px; }
+  .layout > main { padding-top: 26px; }
+  .drop { border-radius: 18px; padding: 38px 24px; border-width: 1.5px; }
+  .drop .big {
+    width: 42px; height: 42px; line-height: 40px; margin: 0 auto 12px;
+    border-radius: 50%; background: var(--brand-soft); font-size: 24px;
+    transition: transform .18s ease;
+  }
+  .drop:hover .big, .drop.hot .big { transform: scale(1.08); }
+  .drop h2 { font-size: 15.5px; font-weight: 600; }
+  .drop p { font-size: 12px; letter-spacing: .2px; }
+
+  /* 次要操作降级为文字按钮，主按钮更突出 */
+  .btn.ghost { background: transparent; border-color: transparent; color: var(--muted); padding: 7px 10px; }
+  .btn.ghost:hover { border-color: var(--border); color: var(--brand); background: var(--panel); }
+  .btn.primary { padding: 9px 22px; border-radius: 10px; }
+  .actions { gap: 6px; margin-top: 14px; }
+
+  .history { margin-top: 30px; }
+  .h-head { font-size: 13px; margin-bottom: 8px; }
+  .h-head button { border-color: transparent; background: transparent; font-size: 12px; }
+  .h-head button:hover { border-color: var(--border); background: var(--panel); }
+  .h-box { border-radius: 12px; max-height: 240px; }
+  .h-item { padding: 8px 13px; }
+  .danger-row { margin-top: 10px; }
+  .danger-row button { font-size: 11.5px; }
+
+  /* 弹窗：说明压到一行，清单更紧凑 */
+  #clrModal .box, #aiModal .box, #agentModal .box { border-radius: 16px; padding: 18px 20px 14px; }
+  .clr-list { max-height: 40vh; }
+  .clr-item { padding: 7px 11px; }
+  .clr-item .t span { font-size: 11.5px; line-height: 1.5; }
+  .clr-warn { font-size: 12px; line-height: 1.6; margin-top: 10px; }
+  .clr-keep { font-size: 11.5px; }
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="mark"><img src="logo.png" srcset="logo.png 1x, logo@2x.png 2x" alt="立丰"></div>
+  <div class="brand">
+    <div class="t">立丰脱敏</div>
+    <div class="s">本机处理 · 不外传</div>
+  </div>
+  <span class="sp"></span>
+  <span class="pill" id="eng">识别引擎检测中</span>
+  <div class="tools" id="tools">
+    <button class="tools-btn" id="toolsBtn" title="工具" aria-haspopup="true" aria-expanded="false">工具 <span class="chev">⌄</span></button>
+    <div class="tools-menu" id="toolsMenu">
+      <button id="openWm" title="去掉 PDF 上的文字水印">去水印</button>
+      <button id="openMd" title="不脱敏，直接转 Markdown">文件转 MD</button>
+      <button id="openRestore" title="按映射表还原真名">文件还原</button>
+      <button id="openDe" title="在原文件副本上换回真名，保留格式">逆向还原</button>
+      <div class="tools-sep"></div>
+      <button id="openAi">本地 AI</button>
+      <button id="openAgent" title="允许本机 agent 调用">Agent</button>
+      <button id="openRules">规则设置</button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+<main>
+  <div class="drop" id="drop">
+    <div class="big">＋</div>
+    <h2>拖入文件，或点击选择</h2>
+    <p>Word · PDF · 图片 · 表格　可多选</p>
+  </div>
+
+  <div class="files" id="files"></div>
+
+  <div class="actions">
+    <button class="btn primary" id="go" disabled>开始脱敏</button>
+    <button class="btn ghost" id="checkQ" disabled>质量体检</button>
+  </div>
+
+  <div class="progress" id="prog">
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="ptxt">
+      <b id="progPct">0%</b>
+      <span id="progCur">准备中…</span>
+      <span id="progStage"></span>
+    </div>
+    <button class="btn ghost" id="cancelBtn" style="display:none;margin-top:10px">取消处理</button>
+  </div>
+
+  <section class="history" id="rejSec" style="display:none">
+    <div class="h-head">
+      未通过质检<span id="rejCnt" style="font-size:12px;color:var(--warn);margin-left:2px"></span>
+      <span class="sp"></span>
+      <button id="openRej">打开文件夹</button>
+    </div>
+    <div class="h-box" id="rejBox"></div>
+  </section>
+
+  <section class="history">
+    <div class="h-head">
+      最近脱敏
+      <span class="sp"></span>
+      <button id="openOut">打开文件夹</button>
+    </div>
+    <div class="h-box" id="histBox"><div class="empty">暂无记录</div></div>
+    <div class="danger-row">
+        <button id="clearAll">清除记录与文件</button>
+        <button id="clearUndo" title="把上次清除的文件搬回原位">撤销清除</button>
+      </div>
+  </section>
+
+</main>
+
+<aside id="rulesPanel">
+  <div class="rp-head">
+    <span class="rp-title">脱敏字段 <span class="rp-count" id="rpCount">—</span></span>
+    <button class="rp-toggle" id="rpToggle" title="收起 / 展开">⟨</button>
+  </div>
+  <div class="rp-actions">
+    <button data-bulk="all">全选</button>
+    <button data-bulk="none">全不选</button>
+    <button data-bulk="reset">恢复默认</button>
+  </div>
+  <div class="rp-body" id="rpBody"></div>
+  <div class="rp-foot"><button id="rpOpen">规则设置…</button></div>
+</aside>
+</div>
+
+<div id="rulesModal">
+  <div class="rm-box">
+    <div class="rm-head">
+      <div>
+        <div class="t">脱敏规则设置</div>
+        <div class="s">下一批按新配置生效</div>
+      </div>
+      <span class="sp"></span>
+      <button class="rm-close" data-io="export">导出配置</button>
+      <button class="rm-close" data-io="import">导入配置</button>
+      <button class="rm-close" id="rmClose">关闭</button>
+    </div>
+    <div class="rm-body">
+      <div class="rm-tree">
+        <div class="rm-search"><input id="rmSearch" type="text" placeholder="搜索字段名…"></div>
+        <div class="rm-list" id="rmList"></div>
+      </div>
+      <div class="rm-edit">
+        <div id="rmEdit"></div>
+        <div class="rm-test">
+          <div class="rm-test-h">
+            <span>正则测试</span><span class="sp"></span>
+            <button class="rm-close" id="rmTestBtn" style="padding:3px 10px;font-size:12px">测试</button>
+          </div>
+          <input id="rmTestText" type="text" placeholder="粘一段样例文本，看命中什么">
+          <div class="rm-test-out" id="rmTestOut"><span class="none">输入样例后点「测试」</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 清除确认弹窗：必须放在内联脚本之前。
+     放在脚本后面时，脚本执行到 $('clrOk').onclick 会拿到 null 抛错，
+     整个脚本后半段（含启动轮询）全停——按钮点了没反应就是这么来的。 -->
+<div id="clrModal">
+  <div class="box">
+    <h3>清除记录与文件</h3>
+    <div class="sub" id="clrSum">正在统计…</div>
+    <div class="clr-list" id="clrList"></div>
+    <div class="clr-keep" id="clrKeep"></div>
+    <p class="clr-warn">文件移入废纸篓，可找回。预览任务、导出账本、涂黑任务默认不勾。</p>
+    <div class="acts">
+      <button class="btn ghost" id="clrCancel">取消</button>
+      <button class="btn primary" id="clrOk">清除选中项</button>
+    </div>
+  </div>
+</div>
+
+<div id="aiModal">
+  <div class="box">
+    <h3>本地 AI</h3>
+    <div class="sub" id="aiState">正在检测…</div>
+    <div class="clr-list" style="padding:12px 14px">
+      <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px">
+        <input type="checkbox" id="aiEnabled" style="margin-top:3px">
+        <span>启用本地 AI（仅本机，不联网）<br>
+          <span style="color:var(--muted);font-size:12px">用于化名与占位符还原；识敏仍走纯规则</span>
+        </span>
+      </label>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px">
+        模型
+        <select id="aiModel" style="flex:1;padding:5px 8px;font-family:inherit;font-size:13px;
+                border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text)">
+        </select>
+      </div>
+    </div>
+    <p class="clr-warn" id="aiHint"></p>
+    <div class="acts">
+      <button class="btn ghost" id="aiTest">重新检测</button>
+      <button class="btn ghost" id="aiCancel">关闭</button>
+      <button class="btn primary" id="aiSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="agentModal">
+  <div class="box">
+    <h3>Agent 接入</h3>
+    <div class="sub" id="agState">正在读取…</div>
+    <div style="padding:12px 14px">
+      <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px">
+        <input type="checkbox" id="agEnabled" style="margin-top:3px">
+        <span>允许本机 agent 调用（关闭后拦截并记录）</span>
+      </label>
+      <div style="margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.9">
+        地址　<span id="agBase" style="color:var(--text)"></span><br>
+        令牌　<span id="agToken" style="color:var(--text);font-family:ui-monospace,Menlo,monospace"></span>
+        <button class="btn ghost" id="agCopy" style="padding:2px 8px;font-size:11px;margin-left:6px">复制</button>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--muted)">
+        最近调用 / 拦截
+        <div id="agLog" style="margin-top:6px;max-height:150px;overflow:auto;font-size:12px;
+             line-height:1.8;border-top:1px dashed var(--border);padding-top:6px"></div>
+      </div>
+    </div>
+    <p class="clr-warn" id="agHint"></p>
+    <div class="acts">
+      <button class="btn ghost" id="agPrompt">复制给 Agent 的说明</button>
+      <button class="btn ghost" id="agClose">关闭</button>
+      <button class="btn primary" id="agSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+let picked = [];
+let timer = null;
+
+const $ = id => document.getElementById(id);
+const drop = $('drop'), filesEl = $('files'), goBtn = $('go');
+const prog = $('prog'), eng = $('eng');
+
+function fmt(n){
+  if(n < 1024) return n + ' B';
+  if(n < 1048576) return (n/1024).toFixed(1) + ' KB';
+  return (n/1048576).toFixed(1) + ' MB';
+}
+function baseName(p){ return p.split('/').pop(); }
+function setTxt(id, v){ const el = $(id); if(el) el.textContent = v; }
+
+function renderFiles(){
+  filesEl.innerHTML = '';
+  picked.forEach((f, i) => {
+    const d = document.createElement('div');
+    d.className = 'file';
+    d.innerHTML = '<span class="nm"></span><span class="sz">' + (f.size ? fmt(f.size) : '') + '</span><span class="rm" title="移除">✕</span>';
+    d.querySelector('.nm').textContent = baseName(f.path);
+    d.querySelector('.rm').onclick = () => { picked.splice(i,1); renderFiles(); };
+    filesEl.appendChild(d);
+  });
+  goBtn.disabled = picked.length === 0;
+  const cq = $('checkQ'); if(cq) cq.disabled = picked.length === 0;
+}
+
+/* ---------- 质量体检 ---------- */
+async function checkQuality(){
+  if(!picked.length) return;
+  const btn = $('checkQ');
+  btn.disabled = true; btn.textContent = '检测中…';
+  const lines = [];
+  for(const f of picked){
+    try{
+      const r = await fetch(API + '/api/check?path=' + encodeURIComponent(f.path));
+      const d = await r.json();
+      if(!d.ok){ lines.push(baseName(f.path) + '：检测失败 ' + (d.msg||'')); continue; }
+      const q = d.quality;
+      const lvl = q.level === 'good' ? '良好' : (q.level === 'fair' ? '一般' : '偏差');
+      lines.push(baseName(f.path) + '：画质' + lvl +
+                 '（字高约 ' + q.text_height_px + 'px，识别 ' + q.ocr_lines + ' 行）');
+      if(q.advice && q.advice.length) lines.push('　建议：' + q.advice.join(' '));
+    }catch(e){ lines.push(baseName(f.path) + '：检测异常'); }
+  }
+  alert(lines.join('\n'));
+  btn.disabled = false; btn.textContent = '质量体检';
+}
+const _cq = $('checkQ'); if(_cq) _cq.onclick = checkQuality;
+
+/* ---------- 选文件 ---------- */
+async function pickFiles(){
+  try{
+    const r = await fetch(API + '/api/pick', {method:'POST', body:'{}'});
+    const d = await r.json();
+    (d.paths || []).forEach(p => {
+      if(!picked.some(x => x.path === p)) picked.push({path: p});
+    });
+    renderFiles();
+  }catch(e){ alert('选择文件失败：' + e.message); }
+}
+drop.onclick = pickFiles;
+
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('hot'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('hot'));
+drop.addEventListener('drop', async e => {
+  e.preventDefault(); drop.classList.remove('hot');
+  const fs = Array.from(e.dataTransfer.files || []);
+  if(!fs.length) return;
+  for(const f of fs){
+    try{
+      const buf = await f.arrayBuffer();
+      const r = await fetch(API + '/api/upload', {
+        method:'POST',
+        headers:{'X-Filename': encodeURIComponent(f.name), 'Content-Type':'application/octet-stream'},
+        body: buf
+      });
+      const d = await r.json();
+      if(d.ok && !picked.some(x => x.path === d.path)) picked.push({path: d.path, size: f.size});
+    }catch(err){ console.warn(err); }
+  }
+  renderFiles();
+});
+
+/* ---------- 开始脱敏：走预览流程 ---------- */
+goBtn.onclick = async () => {
+  if(!picked.length) return;
+  prog.classList.add('show');
+  setTxt('progPct', '0%');
+  setTxt('progCur', '正在启动…');
+  setTxt('progStage', '');
+  const bf = $('barFill'); if(bf) bf.style.width = '0%';
+  goBtn.disabled = true;
+  window.__cancelling = false;
+  _lastFailFp = '';        // 新的一轮，失败提示允许再弹一次
+  showCancel(true);
+  try{
+    const r = await fetch(API + '/api/desensitize', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({paths: picked.map(x=>x.path)})
+    });
+    const d = await r.json();
+    if(!d.ok){ throw new Error(d.msg || '启动失败'); }
+    window.__taskId = d.task_id;
+    if(!timer) timer = setInterval(poll, 1200);
+  }catch(e){
+    setTxt('progCur', '处理失败：' + e.message);
+    goBtn.disabled = false;
+  }
+};
+
+/* ---------- 进度轮询：跑完先确认预览可用，再跳转 ---------- */
+let _pollFails = 0;
+let _lastFailFp = '';   // 已弹过的失败提示指纹，避免反复弹窗
+
+function showCancel(on){
+  const b = $('cancelBtn');
+  if(!b) return;
+  if(!on){ b.style.display = 'none'; return; }
+  if(window.__cancelling) return;
+  b.style.display = 'inline-flex';
+  b.disabled = false;
+  b.textContent = '取消处理';
+}
+
+const _cb = $('cancelBtn');
+if(_cb) _cb.onclick = async () => {
+  if(!confirm('取消本次处理？已经完成的文件会保留，未完成的不会生成成品。')) return;
+  window.__cancelling = true;
+  _cb.disabled = true; _cb.textContent = '正在取消…';
+  try{
+    await fetch(API + '/api/cancel', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'
+    });
+  }catch(e){}
+};
+
+/* 跳转前先探一次预览：探不到就不跳。
+   早先是无条件跳转，闸门拦截或找不到原件时 preview.json 根本没生成，
+   跳过去是一张白纸，用户以为程序坏了 —— 这才是「内容浏览失败」的主因之一。 */
+async function gotoPreview(task, fileNo){
+  const n = fileNo || 1;
+  try{
+    // 2026-11-05：PDF/图片一律进服务端生成的 /view（原生 PDF + 导出按钮），
+    // 不再走 pdfview 的逐页转图——十几页扫描件转图能把页面拖到超时。
+    try{
+      const ir = await fetch(API + '/api/task/info?task=' + encodeURIComponent(task));
+      if(ir.ok){
+        const info = await ir.json();
+        if(info && (info.kind === 'pdf' || info.kind === 'image')){
+          location.href = '/view?task=' + encodeURIComponent(task);
+          return true;
+        }
+      }
+    }catch(_e){}
+    const r = await fetch(API + '/api/preview?task=' + encodeURIComponent(task) + '&file=' + n);
+    if(!r.ok){
+      let msg = '预览尚未生成';
+      try{ const d = await r.json(); if(d && d.msg) msg = d.msg; }catch(e){}
+      throw new Error(msg);
+    }
+    location.href = 'preview.html?task=' + encodeURIComponent(task) + '&file=' + n;
+    return true;
+  }catch(e){
+    prog.classList.add('show');
+    setTxt('progPct', '已完成');
+    setTxt('progCur', '这份文件不支持逐页预览：' + e.message);
+    setTxt('progStage', '· PDF / 图片的成品已直接放入「文稿/立丰脱敏/成品」文件夹，可直接取用');
+    goBtn.disabled = picked.length === 0;
+    loadHistory();
+    return false;
+  }
+}
+
+async function poll(){
+  try{
+    const r = await fetch(API + '/api/status');
+    const d = await r.json();
+    _pollFails = 0;
+    eng.textContent = d.ollama ? '识别引擎就绪' : '识别引擎未启动（将自动拉起）';
+    eng.classList.toggle('on', !!d.ollama);
+
+    const pct = Math.max(0, Math.min(100, d.percent || 0));
+    const bf = $('barFill'); if(bf) bf.style.width = pct + '%';
+    setTxt('progPct', pct + '%');
+    setTxt('progCur', d.current ? ((d.total>1 ? '第 '+(Math.min(d.index+1,d.total))+'/'+d.total+' 个：' : '') + d.current)
+                                : (d.running ? '正在处理…' : ''));
+    setTxt('progStage', d.stage ? '· ' + d.stage : '');
+
+    if(d.running){ showCancel(true); return; }
+
+    clearInterval(timer); timer = null;
+    window.__cancelling = false;
+    showCancel(false);
+
+    if(d.cancelled){
+      setTxt('progCur', '已取消，未完成的产物不计入本次结果');
+      setTxt('progStage', '');
+      goBtn.disabled = picked.length === 0;
+      loadHistory();
+      return;
+    }
+
+    if(window.__taskId){
+      const tid = window.__taskId;
+      window.__taskId = null;
+      // PDF/图片没有段落结构，进 PDF 预览页（整页看图）；Word 走原来的高亮预览
+      const nm = ((d.done || [])[0] || {}).name || '';
+      if(/\.(pdf|png|jpe?g|tiff?|bmp|webp)$/i.test(nm)){
+        location.href = 'pdfview.html?task=' + encodeURIComponent(tid) + '&file=1';
+      }else{
+        await gotoPreview(tid, 1);
+      }
+      return;
+    }
+    goBtn.disabled = picked.length === 0;
+    if(d.failed && d.failed.length){
+      // 同一条提示只弹一次：以前每 25 秒轮询一次 → 每 25 秒弹一次窗，弹到人想摔电脑
+      const fp = (d.failed || []).join('|');
+      if(fp !== _lastFailFp){
+        _lastFailFp = fp;
+        alert('处理未完成：\n' + d.failed.join('\n'));
+      }
+    }
+    loadRejected();
+  }catch(e){
+    _pollFails++;
+    if(_pollFails >= 2){
+      prog.classList.add('show');
+      setTxt('progCur', '与后台服务的连接中断（不是脱敏失败）');
+      setTxt('progStage', '· 正在重试 ' + _pollFails + ' 次；若持续如此，请重启应用');
+    }
+  }
+}
+
+/* ---------- 最近脱敏 ---------- */
+let HIST = [];
+let showAll = false;
+const SHOW_N = 10;
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+async function loadHistory(){
+  const box = $('histBox');
+  if(!box) return;
+  try{
+    const r = await fetch(API + '/api/history');
+    const d = await r.json();
+    HIST = d.items || [];
+    renderHistory();
+  }catch(e){
+    box.innerHTML = '<div class="empty">读取记录失败</div>';
+  }
+}
+
+function renderHistory(){
+  const box = $('histBox');
+  if(!box) return;
+  if(!HIST.length){ box.innerHTML = '<div class="empty">暂无记录</div>'; return; }
+  box.innerHTML = '';
+  const list = showAll ? HIST : HIST.slice(0, SHOW_N);
+  list.forEach(it => box.appendChild(histRow(it)));
+  if(HIST.length > SHOW_N){
+    const more = document.createElement('div');
+    more.style.cssText = 'padding:9px 14px;text-align:center;font-size:12px;color:var(--muted);cursor:pointer;border-top:1px solid var(--border)';
+    more.textContent = showAll ? '收起' : ('查看全部 ' + HIST.length + ' 条');
+    more.onclick = () => { showAll = !showAll; renderHistory(); };
+    box.appendChild(more);
+  }
+}
+
+function histRow(it){
+  const restored = it.status === 'restored';
+  const accepted = it.status === 'accepted';   // 手动改好后放行：显示为「合格」
+  const exported = it.status === 'exported' || restored || accepted;
+  // 2026-11-05 用户死命令：合格不合格放同一个路径，质检未通过只在行内标红提示，
+  // 不再把成品挪去「不合格」，也不再单独占一块。人工反正还要再改一遍。
+  const rej = it.quality === 'rejected';
+
+  const el = document.createElement('div');
+  el.className = 'h-item' + (rej ? ' rej' : '');
+
+  const r1 = document.createElement('div');
+  r1.className = 'h-row';
+  const nm = document.createElement('span');
+  nm.className = 'nm';
+  nm.textContent = it.source || '未命名';
+  nm.title = it.source || '';
+  const tm = document.createElement('span');
+  tm.className = 'tm';
+  tm.textContent = (it.exported_at || it.created_at || '').slice(5, 16);
+  const ct = document.createElement('span');
+  ct.className = 'ct';
+  ct.textContent = (it.count || 0) + ' 处';
+  const st = document.createElement('span');
+  st.className = 'st' + (restored ? ' restored' : (exported ? ' exported' : ''));
+  st.textContent = restored ? '已复原' : (accepted ? '合格' : (exported ? '已导出' : '待导出'));
+  r1.append(nm, tm, ct, st);
+
+  const r2 = document.createElement('div');
+  r2.className = 'h-row sub';
+  const out = document.createElement('span');
+  out.className = 'out';
+  out.textContent = (rej ? '［质检未通过］' : '') + (it.output_name || '');
+  out.title = rej ? (it.quality_why || '未通过质检，成品仍与合格件同目录') : (it.output_name || '');
+  r2.appendChild(out);
+
+  if(exported){
+    // PDF/图片没有段落预览，但历史里也该能回看成品（2026-11-02）
+    if(/\.(pdf|png|jpe?g|tiff?|bmp|webp)$/i.test(it.output_name || '')){
+      const bP = document.createElement('button');
+      bP.textContent = '预览';
+      // 2026-11-07：统一走 /view，不再指 pdfview.html。
+      // 原因两条，都是用户实报的「App 不支持预览文件」：
+      //   ① pdfview 是「先把 PDF 转成逐页 PNG 再看」，十几页扫描件转图慢到超时；
+      //   ② 预览任务目录被「清除全部」搬进废纸篓后，pdfview 只会显示打不开。
+      // /view 有原生 PDF + 自动降级逐页图，且任务目录没了会按账本重建。
+      bP.onclick = () => {
+        location.href = '/view?task=' + encodeURIComponent(it.task_id);
+      };
+      r2.appendChild(bP);
+    }
+    const bMd = document.createElement('button');
+    bMd.textContent = '转 MD';
+    bMd.title = '把这份成品转成 Markdown，供案件研判 agent 读取（输出到 文稿/MD）';
+    bMd.onclick = async () => {
+      bMd.disabled = true; bMd.textContent = '转换中…';
+      try{
+        const r = await fetch(API + '/api/to-md', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({path: it.output_path})
+        });
+        const d = await r.json();
+        if(!d.ok) throw new Error(d.msg || '转换失败');
+        bMd.textContent = '已转 MD';
+        if(confirm('已生成：' + d.md + '\n\n字数 ' + d.chars + '，用时 ' + d.seconds + ' 秒。\n要在访达里显示吗？')){
+          fetch(API + '/api/open?path=' + encodeURIComponent(d.md));
+        }
+      }catch(e){
+        alert('转换失败：' + e.message);
+        bMd.disabled = false; bMd.textContent = '转 MD';
+      }
+    };
+    r2.appendChild(bMd);
+
+    const bR = document.createElement('button');
+    bR.className = 'key';
+    bR.textContent = '复原';
+    bR.title = '用本次脱敏时冻结的映射表换回原值';
+    bR.onclick = () => openRestore(it);
+    r2.appendChild(bR);
+
+    const bO = document.createElement('button');
+    bO.textContent = '在文件夹中显示';
+    bO.onclick = () => {
+      const pth = (restored && it.restore_path) ? it.restore_path : it.output_path;
+      if(pth) fetch(API + '/api/open?path=' + encodeURIComponent(pth));
+    };
+    r2.appendChild(bO);
+
+    // 2026-11-07：已导出的 Word 成品原来没有「预览」，只能去访达里双击。
+    // 用户反馈的「App 不支持预览文件」有一半是这里 —— 他点不到预览入口。
+    if(/\.docx?$/i.test(it.output_name || '')){
+      const bV2 = document.createElement('button');
+      bV2.textContent = '预览';
+      bV2.title = '按脱敏后的成品重新生成可高亮浏览的预览';
+      bV2.onclick = () => gotoPreview(it.task_id, it.index || 1);
+      r2.appendChild(bV2);
+    }
+  } else {
+    const bV = document.createElement('button');
+    bV.textContent = '查看';
+    bV.onclick = () => gotoPreview(it.task_id, it.index || 1);
+    r2.appendChild(bV);
+  }
+
+  el.append(r1, r2);
+  return el;
+}
+
+/* ---------- 复原确认卡 ---------- */
+let RS = null;
+
+function closeRestore(){
+  RS = null;
+  const m = $('rModal');
+  if(m) m.classList.remove('show');
+}
+
+function kvRow(k, v, warn){
+  const d = document.createElement('div');
+  d.className = 'kv';
+  const a = document.createElement('span'); a.className = 'k'; a.textContent = k;
+  const b = document.createElement('span'); b.className = 'v' + (warn ? ' warn' : ''); b.textContent = v;
+  d.append(a, b);
+  return d;
+}
+
+function openRestore(it){
+  RS = it;
+  const box = $('rbox');
+  box.innerHTML = '';
+
+  const h = document.createElement('h3'); h.textContent = '复原';
+  const sub = document.createElement('div'); sub.className = 'sub';
+  sub.textContent = it.output_name || it.source || '';
+  box.append(h, sub);
+
+  const p = document.createElement('p');
+  p.textContent = '使用本次脱敏时冻结的映射表，把 [地址]、[手机号] 这类占位符换回原值。';
+  box.appendChild(p);
+
+  const guess = (it.output_name || '').replace(/_已脱敏/, '_已还原');
+  box.appendChild(kvRow('映射表', (it.map_count || 0) + ' 条（导出时冻结）'));
+  box.appendChild(kvRow('输出', '立丰脱敏/还原 / ' + (guess || '原件')));
+  box.appendChild(kvRow('注意', '该文件含真实信息，不要和成品一起外发', true));
+
+  const acts = document.createElement('div'); acts.className = 'acts';
+  const b1 = document.createElement('button'); b1.className = 'btn'; b1.textContent = '取消';
+  b1.onclick = closeRestore;
+  const b3 = document.createElement('button'); b3.className = 'btn';
+  b3.textContent = '逐处预览与修改';
+  b3.title = '先看每一处占位符要换回谁，可逐条改，再生成还原件';
+  b3.onclick = () => {
+    if(!RS || !RS.id){ alert('这条记录缺少编号'); return; }
+    location.href = 'restoreplan.html?id=' + encodeURIComponent(RS.id);
+  };
+  const b2 = document.createElement('button'); b2.className = 'btn primary';
+  b2.id = 'rsGo'; b2.textContent = '开始复原';
+  b2.onclick = doRestore;
+  acts.append(b1, b3, b2);
+  box.appendChild(acts);
+
+  $('rModal').classList.add('show');
+}
+
+async function doRestore(){
+  if(!RS) return;
+  const box = $('rbox');
+  const btn = $('rsGo');
+  if(btn){ btn.disabled = true; btn.textContent = '正在复原…'; }
+  try{
+    const r = await fetch(API + '/api/restore/entry', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({id: RS.id})
+    });
+    const d = await r.json();
+    if(!d.ok){ showRestoreFail(d); return; }
+
+    box.innerHTML = '';
+    const h = document.createElement('h3'); h.textContent = '已复原';
+    const done = document.createElement('div'); done.className = 'done';
+    const rc = d.residual_count || 0;
+    done.innerHTML = '<b>' + esc(d.name || '') + '</b><br>已保存到「立丰脱敏/还原」文件夹。' +
+                     (rc
+                       ? '<br><span style="color:var(--warn)">还有 ' + rc +
+                         ' 处占位符未能还原：' + esc((d.residual || []).join('、')) +
+                         '</span><br>这些位置需要对照原件人工核对。'
+                       : '<br>占位符已全部换回，未发现残留。') +
+                     '<br>该文件含真实信息，请勿与成品一起外发。';
+    box.append(h, done);
+
+    const acts = document.createElement('div'); acts.className = 'acts';
+    const b1 = document.createElement('button'); b1.className = 'btn primary';
+    b1.textContent = '在文件夹中显示';
+    b1.onclick = () => fetch(API + '/api/open?path=' + encodeURIComponent(d.out));
+    const b2 = document.createElement('button'); b2.className = 'btn';
+    b2.textContent = '关闭'; b2.onclick = closeRestore;
+    acts.append(b1, b2);
+    box.appendChild(acts);
+    loadHistory();
+  }catch(e){
+    showRestoreFail({msg: '复原失败：' + e.message});
+  }
+}
+
+function showRestoreFail(d){
+  const box = $('rbox');
+  box.innerHTML = '';
+  const h = document.createElement('h3'); h.textContent = '无法复原';
+  const sub = document.createElement('div'); sub.className = 'sub';
+  sub.textContent = RS ? (RS.output_name || '') : '';
+  const p = document.createElement('p');
+  p.style.color = 'var(--warn)';
+  p.textContent = d.msg || '未知原因';
+  box.append(h, sub, p);
+
+  if(d.stage === 'conflict' && d.conflicts){
+    const tip = document.createElement('div'); tip.className = 'sub';
+    tip.textContent = '同一个占位符对应了多个原值，软件无法判断该填哪个。' +
+                      '继续还原只会把其余原值悄悄换成其中一个。';
+    box.appendChild(tip);
+    const list = document.createElement('div');
+    list.style.cssText = 'margin-top:8px;max-height:170px;overflow:auto;font-size:12px';
+    d.conflicts.forEach(c => {
+      const row = document.createElement('div');
+      row.style.cssText = 'padding:5px 0;border-top:1px dashed var(--border);line-height:1.6';
+      const vals = (c.values || []);
+      row.textContent = c.placeholder + ' → ' + vals.slice(0, 3).join(' / ') +
+                        (vals.length > 3 ? ' 等 ' + vals.length + ' 个' : '');
+      list.appendChild(row);
+    });
+    box.appendChild(list);
+
+    // 冲突不是死路：逐处预览里每一处都能单独指定原值
+    const go = document.createElement('button');
+    go.className = 'btn primary';
+    go.style.marginTop = '10px';
+    go.textContent = '逐处预览，手动指定每一处 →';
+    go.onclick = () => {
+      if(!RS || !RS.id) return;
+      location.href = 'restoreplan.html?id=' + encodeURIComponent(RS.id);
+    };
+    box.appendChild(go);
+
+    const tip2 = document.createElement('div');
+    tip2.className = 'sub';
+    tip2.style.marginTop = '6px';
+    tip2.textContent = '进了预览页，红字点一下就能选这一处该还原成哪个原值；' +
+                       '选完点「生成还原件」。';
+    box.appendChild(tip2);
+  }
+
+  if(d.stage === 'map'){
+    const tip = document.createElement('div'); tip.className = 'sub';
+    tip.textContent = '可以到「还原其他文件」里拖入这份文件，按内容匹配映射表。';
+    box.appendChild(tip);
+  }
+
+  const acts = document.createElement('div'); acts.className = 'acts';
+  const b1 = document.createElement('button'); b1.className = 'btn'; b1.textContent = '关闭';
+  b1.onclick = closeRestore;
+  acts.appendChild(b1);
+  if(d.stage !== 'conflict'){
+    const b2 = document.createElement('button'); b2.className = 'btn primary';
+    b2.textContent = '还原其他文件';
+    b2.onclick = () => { closeRestore(); location.href = 'restore.html'; };
+    acts.appendChild(b2);
+  }
+  box.appendChild(acts);
+}
+
+$('openOut').onclick = () => fetch(API + '/api/openout');
+
+/* 顶栏工具菜单（2026-11-12 界面精简）：7 个入口收进一个下拉。
+   只管展开/收起，各按钮原有的 onclick 绑定一律不动。 */
+const LF_TOOLS = $('tools'), LF_TOOLS_BTN = $('toolsBtn'), LF_TOOLS_MENU = $('toolsMenu');
+if(LF_TOOLS_BTN && LF_TOOLS_MENU){
+  const closeTools = () => {
+    LF_TOOLS_MENU.classList.remove('show');
+    LF_TOOLS_BTN.classList.remove('on');
+    LF_TOOLS_BTN.setAttribute('aria-expanded', 'false');
+  };
+  LF_TOOLS_BTN.onclick = (e) => {
+    e.stopPropagation();
+    const on = LF_TOOLS_MENU.classList.toggle('show');
+    LF_TOOLS_BTN.classList.toggle('on', on);
+    LF_TOOLS_BTN.setAttribute('aria-expanded', on ? 'true' : 'false');
+  };
+  LF_TOOLS_MENU.addEventListener('click', (e) => {
+    if(e.target.closest && e.target.closest('button')) closeTools();
+  });
+  document.addEventListener('click', (e) => {
+    if(LF_TOOLS && !LF_TOOLS.contains(e.target)) closeTools();
+  });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeTools(); });
+}
+$('openRestore').onclick = () => { location.href = 'restore.html'; };
+let WM_WIN = null;
+$('openWm').onclick = () => {  // 独立窗口：交给原生宿主 createWebViewWith 开一个新 NSWindow，
+  // 去水印和脱敏互不打断。万一被拦（window.open 返回 null），
+  // 退回本窗口跳转，至少功能还在。
+  // 已经开着就聚焦，别每点一次堆一个窗口。
+  if (WM_WIN && !WM_WIN.closed) {
+    try { WM_WIN.focus(); } catch (e) {}
+    return;
+  }
+  // 带时间戳强制绕过 WKWebView 缓存 —— 不带的话改完页面，用户点了还是旧界面，
+  // 表现就是「你说加了按钮，我这儿没有」。
+  WM_WIN = window.open('watermark.html?v=' + Date.now(), '_blank', 'width=940,height=820');
+  if (!WM_WIN) location.href = 'watermark.html?v=' + Date.now();
+};
+
+/* 文件转 MD：独立窗口，不经过脱敏流水线（2026-11-12 用户要求）
+   以前只能在「最近脱敏」里对成品点「转 MD」，想单独转个文件得先跑一遍脱敏，
+   纯属绕远路。这里直接选文件就转，输出位置还能选。 */
+let MD_WIN = null;
+$('openMd').onclick = () => {
+  if (MD_WIN && !MD_WIN.closed) {
+    try { MD_WIN.focus(); } catch (e) {}
+    return;
+  }
+  MD_WIN = window.open('tomd.html?v=' + Date.now(), '_blank', 'width=940,height=820');
+  if (!MD_WIN) location.href = 'tomd.html?v=' + Date.now();
+};
+
+/* 逆向还原：在原文件副本上换回真名、保留格式（2026-11-12） */
+let DE_WIN = null;
+$('openDe').onclick = () => {
+  if (DE_WIN && !DE_WIN.closed) {
+    try { DE_WIN.focus(); } catch (e) {}
+    return;
+  }
+  DE_WIN = window.open('derestore.html?v=' + Date.now(), '_blank', 'width=940,height=820');
+  if (!DE_WIN) location.href = 'derestore.html?v=' + Date.now();
+};
+
+const _rm = $('rModal');
+if(_rm) _rm.addEventListener('click', e => { if(e.target === _rm) closeRestore(); });
+
+/* ---------- 未通过质检 ---------- */
+/* 拦截之后必须有下文：为什么被拦、原件还在不在、能不能重脱、还是干脆放弃。
+   以前这一块完全缺席——文件被挪进「不合格」后，界面上连痕迹都没有，
+   用户只看到「少了几个文件」，不知道发生了什么，也不知道该做什么。 */
+let REJ = [];
+
+async function loadRejected(){
+  try{
+    const r = await fetch(API + '/api/rejected');
+    const d = await r.json();
+    REJ = d.items || [];
+    renderRejected(d.pending || 0);
+  }catch(e){
+    /* 这一块坏了不能影响主流程，静默 */
+  }
+}
+
+function renderRejected(pending){
+  const sec = $('rejSec'), box = $('rejBox'), cnt = $('rejCnt');
+  if(!sec || !box) return;
+  // 2026-11-05 用户死命令：质检结论已并入历史行标红，不再单独占一块「未通过质检」。
+  sec.style.display = 'none';
+  return;
+  const show = REJ.filter(x => x.status !== 'retried' && x.status !== 'accepted');
+  if(!show.length){ sec.style.display = 'none'; return; }
+  sec.style.display = '';
+  cnt.textContent = pending ? '（' + pending + ' 份待处理）' : '';
+  box.innerHTML = '';
+  show.slice(0, 20).forEach(it => box.appendChild(rejRow(it)));
+  if(show.length > 20){
+    const more = document.createElement('div');
+    more.style.cssText = 'padding:9px 14px;text-align:center;font-size:12px;color:var(--muted)';
+    more.textContent = '另有 ' + (show.length - 20) + ' 条，见不合格文件夹';
+    box.appendChild(more);
+  }
+}
+
+function rejRow(it){
+  const ignored = it.status === 'ignored';
+  const el = document.createElement('div');
+  el.className = 'h-item rej' + (ignored ? ' ignored' : '');
+
+  const r1 = document.createElement('div');
+  r1.className = 'h-row';
+  const nm = document.createElement('span');
+  nm.className = 'nm'; nm.textContent = it.source || it.output || '未命名';
+  nm.title = it.source || '';
+  const tm = document.createElement('span');
+  tm.className = 'tm'; tm.textContent = (it.ts || '').slice(5, 16);
+  const ct = document.createElement('span');
+  ct.className = 'ct'; ct.textContent = (it.issues || []).length + ' 项';
+  const st = document.createElement('span');
+  st.className = 'st ' + (ignored ? 'ignored' : 'pending');
+  st.textContent = ignored ? '已忽略' : '待处理';
+  r1.append(nm, tm, ct, st);
+
+  const r2 = document.createElement('div');
+  r2.className = 'h-row sub';
+  const out = document.createElement('span');
+  out.className = 'out';
+  const first = (it.issues || [])[0];
+  out.textContent = first ? (first.text || '') : (it.fix_label || '未通过质检');
+  out.title = (it.issues || []).map(x => x.text).join('\n') || '';
+  r2.appendChild(out);
+
+  const bO = document.createElement('button');
+  bO.textContent = '查看原因';
+  bO.onclick = () => fetch(API + '/api/rejected/open', {method:'POST', body: JSON.stringify({id: it.id})});
+  r2.appendChild(bO);
+
+  if(!ignored){
+    const bR = document.createElement('button');
+    bR.className = 'key';
+    bR.textContent = '重新脱敏';
+    if(!it.has_orig){
+      bR.disabled = true;
+      bR.title = '原件已不在「不合格/原件」里，只能把原文件重新拖进来';
+    }else{
+      bR.title = it.fix_label || '';
+      bR.onclick = () => retryRejected(it);
+    }
+    r2.appendChild(bR);
+
+    const bA = document.createElement('button');
+    bA.textContent = '已改好，转合格';
+    bA.title = '我已经在别处把这份改好了：放进成品区，并从「不合格」里移除';
+    bA.onclick = async () => {
+      const r = await fetch(API + '/api/rejected/accept', {method:'POST', body: JSON.stringify({id: it.id})});
+      const d = await r.json();
+      if(d.ok){ loadRejected(); loadHistory(); } else { alert(d.msg || '放行失败'); }
+    };
+    r2.appendChild(bA);
+
+    const bI = document.createElement('button');
+    bI.textContent = '忽略';
+    bI.title = '不再出现在待处理列表；记录与文件都保留';
+    bI.onclick = async () => {
+      await fetch(API + '/api/rejected/ignore', {method:'POST', body: JSON.stringify({id: it.id})});
+      loadRejected();
+    };
+    r2.appendChild(bI);
+
+    if(it.has_orig){
+      const ext = ((it.output || '').split('.').pop() || '').toLowerCase();
+      const isScan = ['pdf', 'png', 'jpg', 'jpeg', 'tif', 'tiff', 'bmp'].includes(ext);
+      const bM = document.createElement('button');
+      if(isScan){
+        // 扫描件/图片没有文字可选，只能拉框涂黑
+        bM.textContent = '手动涂黑';
+        bM.title = '在页面上拉框，框住的地方导出时真正抹掉（文字层一并清除）';
+        bM.onclick = () => paintFix(it);
+      }else{
+        bM.textContent = '手动处理';
+        bM.title = '打开这份成品本身（不重跑）：缺哪处补标记、选类别，确认后导出覆盖';
+        bM.onclick = () => manualFix(it);
+      }
+      r2.appendChild(bM);
+    }
+  }else{
+    const bD = document.createElement('button');
+    bD.textContent = '恢复待处理';
+    bD.onclick = async () => {
+      await fetch(API + '/api/rejected/ignore', {method:'POST', body: JSON.stringify({id: it.id, undo: 1})});
+      loadRejected();
+    };
+    r2.appendChild(bD);
+  }
+
+  el.append(r1, r2);
+  return el;
+}
+
+/* 手动处理：不重跑引擎，直接把这份不合格成品做成预览任务打开。
+   以前这里是「用原件再跑一遍」，跑完还是同一份结果、还是不合格——
+   用户白等十几分钟，什么也没改到。现在进去就是原文，缺哪处自己点、自己选类别，
+   确认后导出覆盖。 */
+async function manualFix(it){
+  const r = await fetch(API + '/api/rejected/review', {
+    method:'POST', body: JSON.stringify({id: it.id})
+  });
+  let d = {};
+  try{ d = await r.json(); }catch(e){}
+  if(!d.ok){ alert(d.msg || '打不开这份文件'); return; }
+  gotoPreview(d.task_id, 1);
+}
+
+/* 手动涂黑：扫描件/图片没有文字层，选中不了，只能让人拉框 */
+async function paintFix(it){
+  const r = await fetch(API + '/api/rejected/paint', {
+    method:'POST', body: JSON.stringify({id: it.id})
+  });
+  let d = {};
+  try{ d = await r.json(); }catch(e){}
+  if(!d.ok){ alert(d.msg || '打不开这份文件'); return; }
+  location.href = 'paint.html?task=' + encodeURIComponent(d.task_id);
+}
+
+async function retryRejected(it){  if(it.fix === 'engine'){
+    if(!confirm('这一类问题（' + ((it.issues||[])[0]||{}).code + '）是引擎层面的，重跑结果通常不会变。\n' +
+                '除非你刚改过规则或换了词表，否则建议先「查看原因」再人工核对。\n\n仍要重试吗？')) return;
+  }
+  const r = await fetch(API + '/api/rejected/retry', {method:'POST', body: JSON.stringify({id: it.id})});
+  const d = await r.json();
+  if(!d.ok){ alert(d.msg || '重脱未能开始'); loadRejected(); return; }
+
+  const prog = $('prog');
+  if(prog) prog.classList.add('show');
+  setTxt('progPct', '0%');
+  setTxt('progCur', '正在重脱：' + (it.source || ''));
+  setTxt('progStage', '');
+  if(timer) clearInterval(timer);
+  timer = setInterval(async () => {
+    let s;
+    try{ s = await (await fetch(API + '/api/status')).json(); }catch(e){ return; }
+    const pct = Math.max(0, Math.min(100, s.percent || 0));
+    const bf = $('barFill'); if(bf) bf.style.width = pct + '%';
+    setTxt('progPct', pct + '%');
+    setTxt('progCur', '正在重脱：' + (s.current || it.source || ''));
+    setTxt('progStage', s.stage ? '· ' + s.stage : '');
+    if(s.running) return;
+    clearInterval(timer); timer = null;
+    if(prog) prog.classList.remove('show');
+    await loadRejected();
+    await loadHistory();
+  }, 900);
+}
+
+$('openRej').onclick = () => {
+  if(REJ.length){
+    fetch(API + '/api/rejected/open', {method:'POST', body: JSON.stringify({id: REJ[0].id})});
+  }else{
+    fetch(API + '/api/openout');
+  }
+};
+
+/* ---------- 清除记录与文件 ---------- */
+/* 危险动作，所以分三步：先列清单（删什么、多大、删了会怎样）→ 逐项勾选 → 二次确认。
+   落地方式是「移入废纸篓」而不是直接 rm，给用户留一条回头路。 */
+// 每个元素都判空：任何一个 id 找不到，不能把后面的启动代码一起带崩
+const _ca = $('clearAll'); if(_ca) _ca.onclick = openClear;
+
+/* 撤销上次清除：清错了的回头路。按 _清除清单.json 每一项回原位，
+   没有清单（旧版本清的）就按名字认分组，认不出的放回数据根目录。 */
+const _cu = $('clearUndo'); if(_cu) _cu.onclick = async () => {
+  if(!confirm('把上次清除的文件搬回原位？\n同名文件会跳过。')) return;
+  _cu.disabled = true;
+  const old = _cu.textContent;
+  _cu.textContent = '还原中…';
+  try{
+    const r = await fetch(API + '/api/clear-undo', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({confirm:'1'})
+    });
+    const d = await r.json();
+    if(!d.ok){ alert(d.msg || '还原失败'); return; }
+    let msg = '已还原 ' + d.moved + ' 项';
+    if((d.skipped||[]).length) msg += '\n跳过 ' + d.skipped.length + ' 项（目标位置已有同名文件）';
+    if((d.failed||[]).length) msg += '\n失败 ' + d.failed.length + ' 项：' + d.failed.slice(0,3).join('；');
+    alert(msg);
+    location.reload();
+  }catch(e){
+    alert('还原失败：' + e.message);
+  }finally{
+    _cu.disabled = false; _cu.textContent = old;
+  }
+};
+
+async function openClear(){
+  const modal = $('clrModal');
+  if(!modal){ alert('界面没加载完整，刷新一下再试'); return; }
+  CLR_ARMED = null;
+  const ok = $('clrOk');
+  if(ok){ ok.textContent = '清除选中项'; ok.disabled = true; }
+  modal.classList.add('show');
+  $('clrSum').textContent = '正在统计…';
+  $('clrList').innerHTML = '';
+  $('clrKeep').textContent = '';
+  $('clrOk').disabled = true;
+  try{
+    const r = await fetch(API + '/api/clear-all/preview');
+    const d = await r.json();
+    if(!d.ok) throw new Error('统计失败');
+    const list = $('clrList');
+    list.innerHTML = '';
+    (d.groups || []).forEach(g => {
+      const row = document.createElement('label');
+      row.className = 'clr-item';
+const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.dataset.key = g.key;
+        // 默认勾哪几组由**服务端**决定（g.default），前端不再自己拿主意。
+        // 2026-11-07 事故：这里原来是「除涂黑外全勾」，于是「预览任务」
+        // 和「导出账本」被默认带走 —— 用户点一次「清除全部」，
+        // 在办未核对的预览就被搬进废纸篓，此后历史里点「查看」、
+        // 旧标签、旧书签全部报「任务不存在或已过期」。
+        // 现在预览任务 / 导出账本 / 涂黑任务一律默认不勾，想清自己勾。
+        const risky = (g.key === 'paint' || g.key === 'preview' || g.key === 'history');
+        const defOn = (g.default === undefined) ? !risky : !!g.default;
+        cb.checked = !!g.exists && !d.running && defOn && !risky;
+        cb.disabled = !g.exists || d.running;
+      const t = document.createElement('div');
+      t.className = 't';
+      t.innerHTML = '<b>' + esc(g.label) + '</b><span>' + esc(g.note || '') + '</span>';
+      const sz = document.createElement('div');
+      sz.className = 'sz';
+      sz.textContent = g.exists ? (g.count + ' 个 · ' + g.size) : '空';
+      row.append(cb, t, sz);
+      list.appendChild(row);
+    });
+    $('clrSum').textContent = d.running
+      ? '正在脱敏，请稍后再清'
+      : ('默认清除 ' + d.default_count + ' 个文件 · ' + d.default_size + '，可勾选调整');
+    // 关键提醒写进弹窗正文，不能只藏在复选框里：
+    // 用户就是靠这句话知道「预览任务不勾 = 在办的任务不会被清掉」。
+    $('clrKeep').textContent = '保留：' + (d.keep || []).join('、');
+    $('clrOk').disabled = !!d.running || !d.total_count;
+  }catch(e){
+    $('clrSum').textContent = '统计失败：' + e.message;
+  }
+}
+
+const _cc = $('clrCancel'); if(_cc) _cc.onclick = () => $('clrModal').classList.remove('show');
+const _cm = $('clrModal'); if(_cm) _cm.addEventListener('click', e => {
+  if(e.target === _cm) _cm.classList.remove('show');
+});
+
+let CLR_ARMED = null;      // 第一次点只是"上膛"，第二次才真删
+
+const _co = $('clrOk'); if(_co) _co.onclick = async () => {
+  const keys = Array.from(document.querySelectorAll('#clrList input:checked'))
+    .map(x => x.dataset.key);
+  const btn = $('clrOk');
+  if(!keys.length){ $('clrSum').textContent = '没有选中任何一项'; return; }
+
+  // 不依赖 confirm()：这个 App 原生壳一度没实现 JS 对话框代理，
+  // confirm 会被静默当成"取消"，用户点了按钮像没反应。
+  // 改成「点两次」——第一次上膛并改文案，第二次才执行，比弹窗还稳。
+  if(!CLR_ARMED || CLR_ARMED.join(',') !== keys.join(',')){
+    CLR_ARMED = keys;
+    btn.textContent = '再点一次确认（' + keys.length + ' 组）';
+    $('clrSum').textContent = '再点一次即执行（文件进废纸篓，可找回）';
+    return;
+  }
+  CLR_ARMED = null;
+  btn.disabled = true; btn.textContent = '正在清除…';
+  try{
+    const r = await fetch(API + '/api/clear-all', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      // confirm=1：界面明确点了两次才走这里，服务端要的就是这个确认
+      body: JSON.stringify({groups: keys, confirm: "1"})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.msg || '清除失败');
+    $('clrModal').classList.remove('show');
+    const bad = (d.failed || []).length;
+    $('clrSum').textContent = '';
+    setTimeout(() => {
+      alert('已清除 ' + d.moved + ' 项' + (bad ? ('，' + bad + ' 项被占用') : '') +
+            '\n找回：废纸篓「立丰脱敏-清除-…」');
+    }, 60);
+    await loadHistory();
+    await loadRejected();
+  }catch(e){
+    $('clrSum').textContent = '清除失败：' + e.message;
+  }finally{
+    btn.disabled = false; btn.textContent = '清除选中项';
+  }
+};
+
+/* ---------- 本地 AI ---------- */
+const _aiBtn = $('openAi'); if(_aiBtn) _aiBtn.onclick = () => {
+  const m = $('aiModal'); if(!m) return;
+  m.classList.add('show'); loadAi();
+};
+const _aiC = $('aiCancel'); if(_aiC) _aiC.onclick = () => $('aiModal').classList.remove('show');
+const _aiT = $('aiTest'); if(_aiT) _aiT.onclick = loadAi;
+const _aiS = $('aiSave'); if(_aiS) _aiS.onclick = async () => {
+  const body = {enabled: $('aiEnabled').checked, model: $('aiModel').value};
+  try{
+    await fetch(API + '/api/ai/config', {method:'POST',
+      headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)});
+    $('aiModal').classList.remove('show');
+  }catch(e){ alert('保存失败：' + e.message); }
+};
+const _aiM = $('aiModal'); if(_aiM) _aiM.addEventListener('click', e => {
+  if(e.target === _aiM) _aiM.classList.remove('show');
+});
+
+async function loadAi(){
+  const st = $('aiState');
+  if(st) st.textContent = '正在检测本地模型…';
+  try{
+    const d = await (await fetch(API + '/api/ai/status')).json();
+    const c = d.config || {};
+    $('aiEnabled').checked = !!c.enabled;
+    const sel = $('aiModel'); sel.innerHTML = '';
+    const list = d.models || [];
+    if(!list.length){
+      const o = document.createElement('option');
+      o.value = c.model || 'qwen2.5:7b';
+      o.textContent = (c.model || 'qwen2.5:7b') + '（未检测到）';
+      sel.appendChild(o);
+    }else{
+      list.forEach(n => {
+        const o = document.createElement('option');
+        o.value = n; o.textContent = n;
+        if(n === c.model) o.selected = true;
+        sel.appendChild(o);
+      });
+    }
+    st.textContent = d.up
+      ? ('本地模型已就绪：' + list.length + ' 个可用')
+      : '未检测到本地模型（规则脱敏照常可用）';
+    $('aiHint').textContent = d.up ? '' :
+      '检测不到 Ollama 时，识敏与「AI 重命名假名」会自动跳过，不影响正常脱敏。';
+  }catch(e){
+    if(st) st.textContent = '检测失败：' + e.message;
+  }
+}
+
+/* ---------- Agent 接入 ---------- */
+let AG = null;
+const _agBtn = $('openAgent'); if(_agBtn) _agBtn.onclick = () => {
+  const m = $('agentModal'); if(!m) return;
+  m.classList.add('show'); loadAgent();
+};
+const _agClose = $('agClose'); if(_agClose) _agClose.onclick = () => $('agentModal').classList.remove('show');
+const _agModal = $('agentModal'); if(_agModal) _agModal.addEventListener('click', e => {
+  if(e.target === _agModal) _agModal.classList.remove('show');
+});
+
+async function loadAgent(){
+  try{
+    const d = await (await fetch(API + '/api/agent/status')).json();
+    AG = d;
+    $('agEnabled').checked = !!d.enabled;
+    $('agBase').textContent = d.base;
+    $('agToken').textContent = d.token;
+    $('agState').textContent = d.enabled
+      ? '已开启：本机 agent 可用令牌调用（' + d.blocked + ' 次拦截记录）'
+      : '已关闭：所有 agent 调用都会被拒绝并记录';
+    const log = $('agLog');
+    log.innerHTML = (d.recent || []).length
+      ? (d.recent || []).map(r =>
+          '<div style="color:' + (r.ok ? 'var(--muted)' : 'var(--warn)') + '">' +
+          esc(r.ts) + '　' + esc(r.action || '') +
+          (r.ok ? '　通过' : '　拦截：' + esc(r.reason || '')) + '</div>').join('')
+      : '<div style="color:var(--muted)">还没有 agent 调用记录</div>';
+    $('agHint').textContent = d.enabled
+      ? '只用本机回环地址，不对外网开放；令牌泄露时点「保存」换不了新的，需要重新生成。'
+      : '关闭状态下 agent 拿不到任何能力，适合不想让外部程序碰文件的时候。';
+  }catch(e){
+    $('agState').textContent = '读取失败：' + e.message;
+  }
+}
+
+const _agSave = $('agSave'); if(_agSave) _agSave.onclick = async () => {
+  try{
+    await fetch(API + '/api/agent/config', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({enabled: $('agEnabled').checked})});
+    await loadAgent();
+  }catch(e){ alert('保存失败：' + e.message); }
+};
+const _agCopy = $('agCopy'); if(_agCopy) _agCopy.onclick = async () => {
+  try{ await navigator.clipboard.writeText(AG ? AG.token : ''); _agCopy.textContent = '已复制'; }
+  catch(e){ alert('复制失败，手动选中令牌吧'); }
+};
+const _agPrompt = $('agPrompt'); if(_agPrompt) _agPrompt.onclick = async () => {
+  const base = (AG && AG.base) || 'http://127.0.0.1:8791';
+  const tok = (AG && AG.token) || '<令牌>';
+  const txt =
+    '你可以调用本机的「立丰脱敏」App，它是本地 HTTP 服务，只监听回环地址。\n' +
+    '统一入口：POST ' + base + '/api/agent/exec\n' +
+    '请求体：{"token":"' + tok + '","action":"<动作>", ...}\n' +
+    '动作：\n' +
+    '  1) status            查看当前任务状态\n' +
+    '  2) products          列出「文稿/立丰脱敏/成品」里的文件\n' +
+    '  3) desensitize       参数 paths:["/绝对路径/xx.docx"]，返回 task_id，随后用 status 轮询\n' +
+    '  4) to-md             参数 path 或 paths:[]，把成品转 Markdown，返回 {md: 路径}\n' +
+    '                       （自动写到 文稿/MD，占位符原样保留，可直接读来做研判）\n' +
+    '  5) list-md           列出已转换的 md 文件\n' +
+    '  6) restore           参数 path（脱敏件绝对路径）、map（映射表绝对路径）\n' +
+    '返回里若出现 {"blocked":true}，说明 App 里关闭了接入或令牌不对，不要重试，先让人打开开关。';
+  try{ await navigator.clipboard.writeText(txt); _agPrompt.textContent = '已复制'; }
+  catch(e){ alert(txt); }
+};
+
+/* ---------- Agent 联动：它跑完活，界面自己跟上 ---------- */
+let _navTs = null;      // 首次取值只做基线，避免一进页面就乱跳
+let _lastTask = '';
+
+async function agentTick(){
+  try{
+    const n = await (await fetch(API + '/api/agent/nav')).json();
+    if(_navTs === null){
+      _navTs = n.ts || 0;
+    } else if((n.ts || 0) > _navTs){
+      _navTs = n.ts || 0;
+      if(n.url){ location.href = n.url; return; }
+    }
+  }catch(e){ /* 服务没起来就先不管 */ }
+
+  // agent 起的任务不会走这里的手动流程，靠轮询发现后刷新「最近脱敏」
+  try{
+    const s = await (await fetch(API + '/api/status')).json();
+    if(s.task_id && s.task_id !== _lastTask){
+      const first = !_lastTask;
+      _lastTask = s.task_id;
+      if(!first) loadHistory();
+    }
+  }catch(e){}
+}
+setInterval(agentTick, 2000);
+
+/* ---------- 启动 ---------- */
+poll();
+setInterval(() => { if(!timer) poll(); }, 25000);
+loadHistory();
+setInterval(() => { if(!timer) loadHistory(); }, 20000);
+loadRejected();
+setInterval(() => { if(!timer) loadRejected(); }, 20000);
+</script>
+<div id="rModal"><div class="rbox" id="rbox"></div></div>
+
+<script src="rules.js?v=20261112"></script>
+</body>
+</html>
